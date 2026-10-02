@@ -1,0 +1,149 @@
+<title>The Underground: Reborn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Barlow:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one dark column down a rail tunnel - logo, what it is, how to join, the few rules that matter. Single dark look by choice. */
+:root {
+  --soot: #0e0c0b;
+  --tunnel: #191513;
+  --seam: #2e2723;
+  --bone: #ebe4da;
+  --ash: #a69c91;
+  --ember: #e8622c;
+  --ember-hot: #ff8a4c;
+  --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --body: "Barlow", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme: dark;
+}
+html { background: var(--soot); }
+body {
+  background: var(--soot);
+  color: var(--bone);
+  font: 400 1.0625rem/1.6 var(--body);
+  padding-inline: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 60rem; margin-inline: auto; }
+a { color: var(--ember-hot); }
+a:focus-visible, .btn:focus-visible { outline: 2px solid var(--ember-hot); outline-offset: 3px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 800; text-transform: uppercase; letter-spacing: .02em; line-height: 1.05; text-wrap: balance; margin: 0; }
+h2 { font-size: clamp(2rem, 5vw, 2.75rem); }
+h3 { font-size: 1.35rem; font-weight: 600; letter-spacing: .04em; }
+p { margin: 0; }
+.label { font-family: var(--mono); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ash); }
+
+/* Hero */
+.hero { padding-block: clamp(2rem, 6vw, 4.5rem) 2.5rem; display: grid; justify-items: center; text-align: center; gap: 1.5rem; position: relative; }
+.hero::before {
+  content: ""; position: absolute; inset: 0 -16px auto; height: 32rem; z-index: -1;
+  background: radial-gradient(38rem 20rem at 50% 38%, rgb(232 98 44 / .16), transparent 70%);
+}
+.hero img { width: min(100%, 42rem); height: auto; }
+.hero h1 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.thesis { font-size: clamp(1.15rem, 2.6vw, 1.4rem); max-width: 36rem; color: var(--bone); }
+.cta { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; }
+.btn {
+  display: inline-block; padding: .8rem 1.4rem; text-decoration: none;
+  font: 600 1.15rem/1 var(--display); letter-spacing: .08em; text-transform: uppercase;
+  border: 2px solid var(--ember); color: var(--bone);
+}
+.btn.primary { background: var(--ember); color: var(--soot); }
+.btn:hover { background: var(--ember-hot); border-color: var(--ember-hot); color: var(--soot); }
+
+/* Server plate: the facts a player checks first */
+.plate { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); border-block: 1px solid var(--seam); margin-block: 1rem 0; }
+.plate div { padding: 1rem .75rem; display: grid; gap: .2rem; }
+.plate div + div { border-left: 1px solid var(--seam); }
+.plate strong { font: 600 1.4rem/1.1 var(--display); letter-spacing: .03em; }
+@media (max-width: 40rem) { .plate div + div { border-left: 0; border-top: 1px solid var(--seam); } }
+
+section { padding-block: clamp(2.5rem, 6vw, 4rem); display: grid; gap: 1.5rem; }
+section + section { border-top: 1px solid var(--seam); }
+.lede { max-width: 40rem; color: var(--ash); }
+.lede strong { color: var(--bone); font-weight: 600; }
+
+/* Features */
+.features { display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); gap: 1.75rem 2rem; list-style: none; margin: 0; padding: 0; }
+.features li { display: grid; gap: .35rem; align-content: start; min-width: 0; }
+.features h3 { color: var(--bone); }
+.features h3::before { content: ""; display: inline-block; width: .55rem; height: .55rem; background: var(--ember); margin-right: .6rem; vertical-align: .18em; }
+.features p { color: var(--ash); }
+
+/* Join: a real sequence, so it is numbered */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; counter-reset: step; max-width: 44rem; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: 3rem 1fr; gap: 1rem; align-items: baseline; padding: 1rem 1.25rem; background: var(--tunnel); border: 1px solid var(--seam); }
+.steps li::before { content: counter(step); font: 800 2rem/1 var(--display); color: var(--ember); }
+.steps li > div { min-width: 0; }
+.steps code { font-family: var(--mono); font-size: .92em; color: var(--bone); background: var(--soot); padding: .1em .4em; overflow-wrap: anywhere; }
+
+/* Rules */
+.rules { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; max-width: 44rem; }
+.rules li { padding-left: 1.4rem; position: relative; }
+.rules li::before { content: "\2715"; position: absolute; left: 0; color: var(--ember); font-size: .85em; top: .2em; }
+.rules strong { font-weight: 600; }
+
+footer { border-top: 1px solid var(--seam); padding-block: 2rem 3rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; color: var(--ash); font-size: .9rem; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .btn { transition: background .15s, border-color .15s, color .15s; }
+}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <img src="assets/logo.png" width="678" height="282" alt="The Underground: Reborn, a phoenix rising beside a rail tunnel">
+    <h1>The Underground: Reborn</h1>
+    <p class="thesis">A DayZ server on Deer Isle. PvE across the island, PvP zones when you want a fight, and a story that unfolds the longer you survive.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://discord.gg/tudayz">Join the Discord</a>
+      <a class="btn" href="#join">How to play</a>
+    </div>
+  </header>
+
+  <div class="plate" role="list">
+    <div role="listitem"><span class="label">Map</span><strong>Deer Isle</strong></div>
+    <div role="listitem"><span class="label">Mode</span><strong>PvE + PvP zones</strong></div>
+    <div role="listitem"><span class="label">Slots</span><strong>60 players</strong></div>
+    <div role="listitem"><span class="label">Raiding</span><strong>Off (Purge only)</strong></div>
+  </div>
+
+  <section id="about">
+    <h2>Twelve years on</h2>
+    <p class="lede">STAG's hold on Deer Isle is slipping. Its experiments left the island full of things that shouldn't exist, and an underground network led by <strong>Calamity Jayne</strong> is fighting to undo the damage. You wake up on the shore with no memory. What you do next is up to you.</p>
+    <ul class="features">
+      <li><h3>A story to follow</h3><p>A main questline that starts at Groot Hill and branches out across the island's factions.</p></li>
+      <li><h3>Notoriety</h3><p>Every job you finish gets you noticed. Factions rank you up, and some only reveal themselves as the story unfolds.</p></li>
+      <li><h3>Missions that move</h3><p>AI patrols, guarded camps, hordes, hunts and loot crates appear across the map.</p></li>
+      <li><h3>Dinosaurs</h3><p>The south-east islands belong to them. The mainland is safer. Mostly.</p></li>
+      <li><h3>Skills and souls</h3><p>Nine skills level up as you use them. Souls carry your progress through death.</p></li>
+      <li><h3>Traders and markets</h3><p>Safe-zone traders, a Grey Market casino, and a Black Market for those who brave the PvP zones.</p></li>
+    </ul>
+  </section>
+
+  <section id="join">
+    <h2>How to play</h2>
+    <ol class="steps">
+      <li><div><h3>Get the DZSA Launcher</h3><p>Free from <a href="https://dayzsalauncher.com">dayzsalauncher.com</a>. It downloads every mod the server needs for you.</p></div></li>
+      <li><div><h3>Find the server</h3><p>Search <code>The Underground</code> in the launcher and hit Play.</p></div></li>
+      <li><div><h3>Join the Discord</h3><p>Rules, wipe dates, events and help all live at <a href="https://discord.gg/tudayz">discord.gg/tudayz</a>.</p></div></li>
+    </ol>
+  </section>
+
+  <section id="rules">
+    <h2>The short rules</h2>
+    <ul class="rules">
+      <li><strong>No killing outside PvP zones.</strong> The island is PvE. Fights happen in the marked zones.</li>
+      <li><strong>No base raiding.</strong> The exception is the Purge before a wipe, always announced on Discord first.</li>
+      <li><strong>No combat logging.</strong> Wait 10 minutes after taking PvP damage before you log out.</li>
+      <li><strong>No cheating, glitching or griefing.</strong></li>
+    </ul>
+    <p class="lede">The full rules are on <a href="https://discord.gg/tudayz">Discord</a>, and they're the ones that count.</p>
+  </section>
+
+  <footer>
+    <span>The Underground: Reborn &middot; Deer Isle</span>
+    <span>Not affiliated with Bohemia Interactive. DayZ is a trademark of Bohemia Interactive a.s.</span>
+  </footer>
+</div>
