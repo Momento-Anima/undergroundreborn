@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parent
 
 # Change to https://theundergroundserver.com once the domain is bought AND the CNAME
 # file is added. Until then the site lives at the github.io address.
-SITE_URL = "https://momento-anima.github.io/undergroundreborn"
+SITE_URL = "https://theundergroundserver.com"
 
 DESCRIPTION = ("A DayZ server on Deer Isle. PvE across the island, PvP zones when you "
                "want a fight, and a story that unfolds the longer you survive.")
