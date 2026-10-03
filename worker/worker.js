@@ -145,7 +145,7 @@ async function cfAuth(env, force) {
     // Trim: a pasted secret can carry a trailing space or line break.
     body: JSON.stringify({ application_id: String(env.CFTOOLS_APP_ID).trim(), secret: String(env.CFTOOLS_SECRET).trim() }),
   });
-  if (!r.ok) throw new Error('login to CFTools failed: ' + r.status + ' ' + (await r.text()).slice(0, 80) + ' (stored secret length: ' + String(env.CFTOOLS_SECRET).trim().length + ' characters)');
+  if (!r.ok) throw new Error('login to CFTools failed: ' + r.status + ' ' + (await r.text()).slice(0, 80));
   cfToken = { t: (await r.json()).token, until: Date.now() + 20 * 3600 * 1000 };
   return cfToken.t;
 }
@@ -180,8 +180,9 @@ async function players(req, env, cors) {
       loaded: !!(x.live && x.live.loaded),
       ping: x.live && x.live.ping ? Math.round(x.live.ping.actual) : null,
       x: pos ? Math.round(pos[0]) : null,
-      y: pos ? Math.round(pos[1]) : null,
-      z: pos ? Math.round(pos[2]) : null,
+      // CFTools orders the numbers (east, NORTH, height): NOT DayZ's (east, height, north) (cftools-sdk Coordinates note).
+      z: pos ? Math.round(pos[1]) : null,   // north, the map's vertical axis
+      y: pos ? Math.round(pos[2]) : null,   // height
     };
   });
   const body = JSON.stringify({ ok: true, updated: new Date().toISOString(), players: out });
