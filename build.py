@@ -30,9 +30,9 @@ QUERY_PORT = 2816
 GA_ID = "G-6Y451GF7E2"          # Google Analytics measurement ID, "G-XXXXXXXXXX"
 ADSENSE_ID = ""     # AdSense publisher ID, "ca-pub-XXXXXXXXXXXXXXXX"
 
-# Discord login (worker/worker.js). Leave False until the Worker is deployed and the
-# privacy page describes the login.
-LOGIN_ENABLED = False
+# Discord login (worker/worker.js, deployed at api.theundergroundserver.com 2026-10-03).
+# Turning it off also hides the login paragraph on the privacy page.
+LOGIN_ENABLED = True
 API_BASE = "https://api.theundergroundserver.com"
 
 # (src stem, nav label). Order = nav order. Pages not listed (privacy) still build.
@@ -53,6 +53,10 @@ def parse(src):
     desc = m.group(1).strip() if m else ""
     body = re.sub(r"<title>.*?</title>\s*", "", src, count=1, flags=re.S)
     body = re.sub(r"<!--\s*desc:.*?-->\s*", "", body, count=1, flags=re.S)
+    if LOGIN_ENABLED:
+        body = body.replace("<!--login-->", "").replace("<!--/login-->", "")
+    else:
+        body = re.sub(r"<!--login-->.*?<!--/login-->\s*", "", body, flags=re.S)
     return title, desc, body.strip()
 
 
