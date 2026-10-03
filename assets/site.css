@@ -149,14 +149,15 @@ td:first-child { font-weight: 600; white-space: nowrap; }
 .mapbox img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .9; }
 .mapbox svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .mapbox .z { stroke-width: 1.5; vector-effect: non-scaling-stroke; fill-opacity: .22; cursor: pointer; }
-.mapbox .z.pvp { stroke: var(--pvp); fill: var(--pvp); }
+.mapbox .blob circle { fill: var(--pvp); stroke: none; }
+.mapbox .blob { cursor: pointer; }
 .mapbox .z.pve { stroke: var(--pve); fill: var(--pve); }
 .mapbox .z.safe { stroke: var(--safe); fill: var(--safe); fill-opacity: .4; }
 .mapbox .z.gas { stroke: var(--gas); fill: var(--gas); stroke-dasharray: 6 4; }
 .mapbox .z.dino { stroke: var(--ember-hot); fill: var(--ember-hot); stroke-dasharray: 2 3; }
 .mapbox .z:hover, .mapbox .z.hit { fill-opacity: .5; }
 .mapbox .pin { fill: var(--bone); stroke: var(--soot); stroke-width: 2; vector-effect: non-scaling-stroke; cursor: pointer; }
-.mapbox text { font-family: var(--mono); font-size: 11px; fill: var(--bone); paint-order: stroke; stroke: var(--soot); stroke-width: 3px; stroke-linejoin: round; pointer-events: none; }
+.mapbox text { font-family: var(--mono); fill: var(--bone); paint-order: stroke; stroke: var(--soot); stroke-linejoin: round; pointer-events: none; }
 .mapbox .hidden { display: none; }
 .maptip { position: absolute; left: 0; top: 0; transform: translate(-50%, calc(-100% - 10px)); background: var(--soot); border: 1px solid var(--seam); padding: .4rem .6rem; font-size: .85rem; white-space: nowrap; pointer-events: none; display: none; }
 .maptip b { display: block; font: 600 1rem/1.1 var(--display); letter-spacing: .04em; text-transform: uppercase; }

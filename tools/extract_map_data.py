@@ -11,6 +11,7 @@ Deer Isle is 16384 m square (world.pbo centerPosition 8192, 8192).
     python tools/extract_map_data.py [G:\\TU\\dayz-deer-isle]
 """
 import json
+import math
 import re
 import sys
 import xml.etree.ElementTree as ET
@@ -50,6 +51,9 @@ def clean(name):
     return name.replace("AREA 42", "Area 42").strip()
 
 
+QUEST_AREA_42 = "(Quest) Area 42"
+
+
 def zones():
     out = []
     root = REPO / "DayZServerData" / "NinjinsPvPPvE" / "Config" / "zones"
@@ -63,7 +67,8 @@ def zones():
         if t == "label" and not gas:
             continue                                  # shop labels, not zones
         out.append({
-            "name": clean(raw), "type": "gas" if gas else t,
+            "name": "Area 42 (quest site)" if raw == QUEST_AREA_42 else clean(raw),
+            "type": "gas" if gas else t,
             "x": round(z["center"][0]), "z": round(z["center"][2]),
             "r": round(z["radius"]),
         })
@@ -80,6 +85,45 @@ def zones():
                 continue
         keep.append(z)
     return keep
+
+
+def pvp_areas(zs):
+    """Merge overlapping PvP circles into one area each (circles overlap when the gap
+    between centres is smaller than the sum of the radii). Returns the areas and the
+    zone list without its PvP circles."""
+    pvp = [z for z in zs if z["type"] == "pvp"]
+    parent = list(range(len(pvp)))
+
+    def find(i):
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+
+    for i in range(len(pvp)):
+        for j in range(i + 1, len(pvp)):
+            a, b = pvp[i], pvp[j]
+            if math.hypot(a["x"] - b["x"], a["z"] - b["z"]) < a["r"] + b["r"]:
+                parent[find(i)] = find(j)
+    groups = defaultdict(list)
+    for i, z in enumerate(pvp):
+        groups[find(i)].append(z)
+    areas = []
+    for members in groups.values():
+        names = sorted({m["name"] for m in members})
+        biggest = max(members, key=lambda m: m["r"])
+        area = {
+            "name": " / ".join(names),
+            "label": names[0] if len(names) == 1 else f"{names[0]} +{len(names) - 1}",
+            "names": names,
+            "circles": [{"x": m["x"], "z": m["z"], "r": m["r"]} for m in members],
+            "x": biggest["x"], "z": biggest["z"],
+        }
+        if any(m.get("gas") for m in members):
+            area["gas"] = True
+        areas.append(area)
+    areas.sort(key=lambda a: a["name"])
+    return areas, [z for z in zs if z["type"] != "pvp"]
 
 
 def traders():
@@ -117,9 +161,10 @@ def dinos():
 
 
 def main():
-    data = {"world": WORLD, "zones": zones(), "traders": traders(), "dinos": dinos()}
+    areas, zs = pvp_areas(zones())
+    data = {"world": WORLD, "pvp": areas, "zones": zs, "traders": traders(), "dinos": dinos()}
     OUT.write_bytes((json.dumps(data, indent=1) + "\n").encode("utf-8"))
-    print(f"{OUT}: {len(data['zones'])} zones, {len(data['traders'])} trader hubs, "
+    print(f"{OUT}: {sum(len(a['circles']) for a in areas)} PvP circles -> {len(areas)} areas, {len(data['zones'])} other zones, {len(data['traders'])} trader hubs, "
           f"{sum(len(d['areas']) for d in data['dinos'])} dino areas")
 
 

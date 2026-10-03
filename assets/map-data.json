@@ -1,5 +1,521 @@
 {
  "world": 16384,
+ "pvp": [
+  {
+   "name": "Airfield",
+   "label": "Airfield",
+   "names": [
+    "Airfield"
+   ],
+   "circles": [
+    {
+     "x": 5444,
+     "z": 3511,
+     "r": 750
+    }
+   ],
+   "x": 5444,
+   "z": 3511
+  },
+  {
+   "name": "Alcatraz",
+   "label": "Alcatraz",
+   "names": [
+    "Alcatraz"
+   ],
+   "circles": [
+    {
+     "x": 15770,
+     "z": 4802,
+     "r": 600
+    }
+   ],
+   "x": 15770,
+   "z": 4802
+  },
+  {
+   "name": "Area 42 (quest site)",
+   "label": "Area 42 (quest site)",
+   "names": [
+    "Area 42 (quest site)"
+   ],
+   "circles": [
+    {
+     "x": 8219,
+     "z": 12141,
+     "r": 125
+    }
+   ],
+   "x": 8219,
+   "z": 12141
+  },
+  {
+   "name": "Area 42 / East Harbor / Scorched Earth Bridge",
+   "label": "Area 42 +2",
+   "names": [
+    "Area 42",
+    "East Harbor",
+    "Scorched Earth Bridge"
+   ],
+   "circles": [
+    {
+     "x": 13175,
+     "z": 9842,
+     "r": 600
+    },
+    {
+     "x": 13650,
+     "z": 9821,
+     "r": 600
+    },
+    {
+     "x": 13395,
+     "z": 9838,
+     "r": 600
+    },
+    {
+     "x": 11304,
+     "z": 10156,
+     "r": 600
+    },
+    {
+     "x": 12261,
+     "z": 9927,
+     "r": 600
+    }
+   ],
+   "x": 13175,
+   "z": 9842
+  },
+  {
+   "name": "Bayville Military Camp",
+   "label": "Bayville Military Camp",
+   "names": [
+    "Bayville Military Camp"
+   ],
+   "circles": [
+    {
+     "x": 10054,
+     "z": 12563,
+     "r": 175
+    },
+    {
+     "x": 10036,
+     "z": 12325,
+     "r": 85
+    }
+   ],
+   "x": 10054,
+   "z": 12563
+  },
+  {
+   "name": "Black Market",
+   "label": "Black Market",
+   "names": [
+    "Black Market"
+   ],
+   "circles": [
+    {
+     "x": 7587,
+     "z": 6889,
+     "r": 390
+    }
+   ],
+   "x": 7587,
+   "z": 6889
+  },
+  {
+   "name": "Camp Bear",
+   "label": "Camp Bear",
+   "names": [
+    "Camp Bear"
+   ],
+   "circles": [
+    {
+     "x": 8670,
+     "z": 5990,
+     "r": 150
+    },
+    {
+     "x": 8902,
+     "z": 5995,
+     "r": 175
+    }
+   ],
+   "x": 8902,
+   "z": 5995
+  },
+  {
+   "name": "Camp Eagle",
+   "label": "Camp Eagle",
+   "names": [
+    "Camp Eagle"
+   ],
+   "circles": [
+    {
+     "x": 8792,
+     "z": 3647,
+     "r": 350
+    }
+   ],
+   "x": 8792,
+   "z": 3647
+  },
+  {
+   "name": "Crater",
+   "label": "Crater",
+   "names": [
+    "Crater"
+   ],
+   "circles": [
+    {
+     "x": 13999,
+     "z": 2102,
+     "r": 1000
+    },
+    {
+     "x": 12938,
+     "z": 1476,
+     "r": 400
+    }
+   ],
+   "x": 13999,
+   "z": 2102
+  },
+  {
+   "name": "Dam of the Damned",
+   "label": "Dam of the Damned",
+   "names": [
+    "Dam of the Damned"
+   ],
+   "circles": [
+    {
+     "x": 10994,
+     "z": 2294,
+     "r": 100
+    }
+   ],
+   "x": 10994,
+   "z": 2294
+  },
+  {
+   "name": "Deep Water Oil Rig",
+   "label": "Deep Water Oil Rig",
+   "names": [
+    "Deep Water Oil Rig"
+   ],
+   "circles": [
+    {
+     "x": 1670,
+     "z": 12731,
+     "r": 200
+    }
+   ],
+   "x": 1670,
+   "z": 12731,
+   "gas": true
+  },
+  {
+   "name": "Dreadbeard's Landing",
+   "label": "Dreadbeard's Landing",
+   "names": [
+    "Dreadbeard's Landing"
+   ],
+   "circles": [
+    {
+     "x": 2693,
+     "z": 11049,
+     "r": 150
+    }
+   ],
+   "x": 2693,
+   "z": 11049
+  },
+  {
+   "name": "Horizon Oil Rig",
+   "label": "Horizon Oil Rig",
+   "names": [
+    "Horizon Oil Rig"
+   ],
+   "circles": [
+    {
+     "x": 4136,
+     "z": 15472,
+     "r": 150
+    }
+   ],
+   "x": 4136,
+   "z": 15472,
+   "gas": true
+  },
+  {
+   "name": "KMUK Bunker",
+   "label": "KMUK Bunker",
+   "names": [
+    "KMUK Bunker"
+   ],
+   "circles": [
+    {
+     "x": 7235,
+     "z": 11633,
+     "r": 160
+    }
+   ],
+   "x": 7235,
+   "z": 11633
+  },
+  {
+   "name": "Lost Island",
+   "label": "Lost Island",
+   "names": [
+    "Lost Island"
+   ],
+   "circles": [
+    {
+     "x": 9666,
+     "z": 15356,
+     "r": 1250
+    }
+   ],
+   "x": 9666,
+   "z": 15356
+  },
+  {
+   "name": "No Man's Land",
+   "label": "No Man's Land",
+   "names": [
+    "No Man's Land"
+   ],
+   "circles": [
+    {
+     "x": 14430,
+     "z": 5261,
+     "r": 250
+    }
+   ],
+   "x": 14430,
+   "z": 5261
+  },
+  {
+   "name": "No Man's Land",
+   "label": "No Man's Land",
+   "names": [
+    "No Man's Land"
+   ],
+   "circles": [
+    {
+     "x": 12612,
+     "z": 7641,
+     "r": 200
+    }
+   ],
+   "x": 12612,
+   "z": 7641
+  },
+  {
+   "name": "North Haven Airfield",
+   "label": "North Haven Airfield",
+   "names": [
+    "North Haven Airfield"
+   ],
+   "circles": [
+    {
+     "x": 1116,
+     "z": 15643,
+     "r": 1250
+    }
+   ],
+   "x": 1116,
+   "z": 15643
+  },
+  {
+   "name": "Oil Rig",
+   "label": "Oil Rig",
+   "names": [
+    "Oil Rig"
+   ],
+   "circles": [
+    {
+     "x": 3505,
+     "z": 12432,
+     "r": 150
+    }
+   ],
+   "x": 3505,
+   "z": 12432,
+   "gas": true
+  },
+  {
+   "name": "Paris Island",
+   "label": "Paris Island",
+   "names": [
+    "Paris Island"
+   ],
+   "circles": [
+    {
+     "x": 2330,
+     "z": 2736,
+     "r": 250
+    },
+    {
+     "x": 2380,
+     "z": 2946,
+     "r": 300
+    },
+    {
+     "x": 2481,
+     "z": 3355,
+     "r": 450
+    },
+    {
+     "x": 3025,
+     "z": 3162,
+     "r": 300
+    },
+    {
+     "x": 3025,
+     "z": 3695,
+     "r": 450
+    },
+    {
+     "x": 3288,
+     "z": 3862,
+     "r": 240
+    },
+    {
+     "x": 2870,
+     "z": 4240,
+     "r": 700
+    }
+   ],
+   "x": 2870,
+   "z": 4240
+  },
+  {
+   "name": "Power Plant",
+   "label": "Power Plant",
+   "names": [
+    "Power Plant"
+   ],
+   "circles": [
+    {
+     "x": 4731,
+     "z": 7140,
+     "r": 400
+    }
+   ],
+   "x": 4731,
+   "z": 7140,
+   "gas": true
+  },
+  {
+   "name": "Prison Island",
+   "label": "Prison Island",
+   "names": [
+    "Prison Island"
+   ],
+   "circles": [
+    {
+     "x": 5510,
+     "z": 683,
+     "r": 250
+    },
+    {
+     "x": 5223,
+     "z": 697,
+     "r": 250
+    },
+    {
+     "x": 5464,
+     "z": 970,
+     "r": 250
+    }
+   ],
+   "x": 5510,
+   "z": 683
+  },
+  {
+   "name": "RCFI",
+   "label": "RCFI",
+   "names": [
+    "RCFI"
+   ],
+   "circles": [
+    {
+     "x": 3740,
+     "z": 8788,
+     "r": 200
+    }
+   ],
+   "x": 3740,
+   "z": 8788
+  },
+  {
+   "name": "Rogue Wave Oil Rig",
+   "label": "Rogue Wave Oil Rig",
+   "names": [
+    "Rogue Wave Oil Rig"
+   ],
+   "circles": [
+    {
+     "x": 2152,
+     "z": 14623,
+     "r": 50
+    }
+   ],
+   "x": 2152,
+   "z": 14623,
+   "gas": true
+  },
+  {
+   "name": "Sandy Bay Mili",
+   "label": "Sandy Bay Mili",
+   "names": [
+    "Sandy Bay Mili"
+   ],
+   "circles": [
+    {
+     "x": 5313,
+     "z": 9171,
+     "r": 270
+    }
+   ],
+   "x": 5313,
+   "z": 9171
+  },
+  {
+   "name": "Snow Island Aircraft Carrier",
+   "label": "Snow Island Aircraft Carrier",
+   "names": [
+    "Snow Island Aircraft Carrier"
+   ],
+   "circles": [
+    {
+     "x": 13219,
+     "z": 15533,
+     "r": 250
+    }
+   ],
+   "x": 13219,
+   "z": 15533
+  },
+  {
+   "name": "South Haven",
+   "label": "South Haven",
+   "names": [
+    "South Haven"
+   ],
+   "circles": [
+    {
+     "x": 1116,
+     "z": 13348,
+     "r": 500
+    }
+   ],
+   "x": 1116,
+   "z": 13348
+  }
+ ],
  "zones": [
   {
    "name": "Asheville Ruins",
@@ -175,305 +691,6 @@
    "x": 1142,
    "z": 10618,
    "r": 75
-  },
-  {
-   "name": "Dam of the Damned",
-   "type": "pvp",
-   "x": 10994,
-   "z": 2294,
-   "r": 100
-  },
-  {
-   "name": "Airfield",
-   "type": "pvp",
-   "x": 5444,
-   "z": 3511,
-   "r": 750
-  },
-  {
-   "name": "Alcatraz",
-   "type": "pvp",
-   "x": 15770,
-   "z": 4802,
-   "r": 600
-  },
-  {
-   "name": "Area 42",
-   "type": "pvp",
-   "x": 13175,
-   "z": 9842,
-   "r": 600
-  },
-  {
-   "name": "Area 42",
-   "type": "pvp",
-   "x": 13650,
-   "z": 9821,
-   "r": 600
-  },
-  {
-   "name": "Area 42",
-   "type": "pvp",
-   "x": 13395,
-   "z": 9838,
-   "r": 600
-  },
-  {
-   "name": "Bayville Military Camp",
-   "type": "pvp",
-   "x": 10054,
-   "z": 12563,
-   "r": 175
-  },
-  {
-   "name": "Bayville Military Camp",
-   "type": "pvp",
-   "x": 10036,
-   "z": 12325,
-   "r": 85
-  },
-  {
-   "name": "Black Market",
-   "type": "pvp",
-   "x": 7587,
-   "z": 6889,
-   "r": 390
-  },
-  {
-   "name": "Camp Bear",
-   "type": "pvp",
-   "x": 8670,
-   "z": 5990,
-   "r": 150
-  },
-  {
-   "name": "Camp Bear",
-   "type": "pvp",
-   "x": 8902,
-   "z": 5995,
-   "r": 175
-  },
-  {
-   "name": "Camp Eagle",
-   "type": "pvp",
-   "x": 8792,
-   "z": 3647,
-   "r": 350
-  },
-  {
-   "name": "Crater",
-   "type": "pvp",
-   "x": 13999,
-   "z": 2102,
-   "r": 1000
-  },
-  {
-   "name": "Crater",
-   "type": "pvp",
-   "x": 12938,
-   "z": 1476,
-   "r": 400
-  },
-  {
-   "name": "Deep Water Oil Rig",
-   "type": "pvp",
-   "x": 1670,
-   "z": 12731,
-   "r": 200,
-   "gas": true
-  },
-  {
-   "name": "Dreadbeard's Landing",
-   "type": "pvp",
-   "x": 2693,
-   "z": 11049,
-   "r": 150
-  },
-  {
-   "name": "East Harbor",
-   "type": "pvp",
-   "x": 11304,
-   "z": 10156,
-   "r": 600
-  },
-  {
-   "name": "Horizon Oil Rig",
-   "type": "pvp",
-   "x": 4136,
-   "z": 15472,
-   "r": 150,
-   "gas": true
-  },
-  {
-   "name": "KMUK Bunker",
-   "type": "pvp",
-   "x": 7235,
-   "z": 11633,
-   "r": 160
-  },
-  {
-   "name": "Lost Island",
-   "type": "pvp",
-   "x": 9666,
-   "z": 15356,
-   "r": 1250
-  },
-  {
-   "name": "No Man's Land",
-   "type": "pvp",
-   "x": 14430,
-   "z": 5261,
-   "r": 250
-  },
-  {
-   "name": "No Man's Land",
-   "type": "pvp",
-   "x": 12612,
-   "z": 7641,
-   "r": 200
-  },
-  {
-   "name": "North Haven Airfield",
-   "type": "pvp",
-   "x": 1116,
-   "z": 15643,
-   "r": 1250
-  },
-  {
-   "name": "Oil Rig",
-   "type": "pvp",
-   "x": 3505,
-   "z": 12432,
-   "r": 150,
-   "gas": true
-  },
-  {
-   "name": "Paris Island",
-   "type": "pvp",
-   "x": 2330,
-   "z": 2736,
-   "r": 250
-  },
-  {
-   "name": "Paris Island",
-   "type": "pvp",
-   "x": 2380,
-   "z": 2946,
-   "r": 300
-  },
-  {
-   "name": "Paris Island",
-   "type": "pvp",
-   "x": 2481,
-   "z": 3355,
-   "r": 450
-  },
-  {
-   "name": "Paris Island",
-   "type": "pvp",
-   "x": 3025,
-   "z": 3162,
-   "r": 300
-  },
-  {
-   "name": "Paris Island",
-   "type": "pvp",
-   "x": 3025,
-   "z": 3695,
-   "r": 450
-  },
-  {
-   "name": "Paris Island",
-   "type": "pvp",
-   "x": 3288,
-   "z": 3862,
-   "r": 240
-  },
-  {
-   "name": "Paris Island",
-   "type": "pvp",
-   "x": 2870,
-   "z": 4240,
-   "r": 700
-  },
-  {
-   "name": "Power Plant",
-   "type": "pvp",
-   "x": 4731,
-   "z": 7140,
-   "r": 400,
-   "gas": true
-  },
-  {
-   "name": "Prison Island",
-   "type": "pvp",
-   "x": 5510,
-   "z": 683,
-   "r": 250
-  },
-  {
-   "name": "Prison Island",
-   "type": "pvp",
-   "x": 5223,
-   "z": 697,
-   "r": 250
-  },
-  {
-   "name": "Prison Island",
-   "type": "pvp",
-   "x": 5464,
-   "z": 970,
-   "r": 250
-  },
-  {
-   "name": "RCFI",
-   "type": "pvp",
-   "x": 3740,
-   "z": 8788,
-   "r": 200
-  },
-  {
-   "name": "Rogue Wave Oil Rig",
-   "type": "pvp",
-   "x": 2152,
-   "z": 14623,
-   "r": 50,
-   "gas": true
-  },
-  {
-   "name": "Sandy Bay Mili",
-   "type": "pvp",
-   "x": 5313,
-   "z": 9171,
-   "r": 270
-  },
-  {
-   "name": "Scorched Earth Bridge",
-   "type": "pvp",
-   "x": 12261,
-   "z": 9927,
-   "r": 600
-  },
-  {
-   "name": "Snow Island Aircraft Carrier",
-   "type": "pvp",
-   "x": 13219,
-   "z": 15533,
-   "r": 250
-  },
-  {
-   "name": "South Haven",
-   "type": "pvp",
-   "x": 1116,
-   "z": 13348,
-   "r": 500
-  },
-  {
-   "name": "Area",
-   "type": "pvp",
-   "x": 8219,
-   "z": 12141,
-   "r": 125
   },
   {
    "name": "Collectibles Trader",

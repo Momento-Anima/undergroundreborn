@@ -35,6 +35,21 @@
 
   fetch(dataUrl).then(function (r) { return r.json(); }).then(function (d) {
     var W = d.world;
+    /* PvP areas are drawn as solid blobs (so overlapping circles read as one shape) and the
+       filter turns that shape into a faint fill plus a single outline round the outside. */
+    var defs = el('defs', {});
+    var filt = el('filter', { id: 'blobfx', filterUnits: 'userSpaceOnUse', x: -600, y: -600, width: W + 1200, height: W + 1200 }, defs);
+    var morph = el('feMorphology', { 'in': 'SourceAlpha', operator: 'dilate', radius: 30, result: 'grown' }, filt);
+    el('feComposite', { 'in': 'grown', in2: 'SourceAlpha', operator: 'out', result: 'ring' }, filt);
+    var flood = el('feFlood', { result: 'ink' }, filt);
+    flood.setAttribute('style', 'flood-color: var(--pvp)');
+    el('feComposite', { 'in': 'ink', in2: 'ring', operator: 'in', result: 'edge' }, filt);
+    var tint = el('feFlood', { result: 'tint' }, filt);
+    tint.setAttribute('style', 'flood-color: var(--pvp); flood-opacity: .22');
+    el('feComposite', { 'in': 'tint', in2: 'SourceAlpha', operator: 'in', result: 'fill' }, filt);
+    var merge = el('feMerge', {}, filt);
+    el('feMergeNode', { 'in': 'fill' }, merge);
+    el('feMergeNode', { 'in': 'edge' }, merge);
     var layers = {};
     ['pve', 'dino', 'gas', 'pvp', 'safe', 'trader'].forEach(function (k) {
       layers[k] = el('g', { 'data-layer': k, 'class': k === 'pve' ? 'hidden' : '' });
@@ -42,14 +57,28 @@
     var sub = { pvp: 'PvP zone', pve: 'PvE', safe: 'Safe zone', gas: 'Contaminated' };
 
     // Big circles first so small ones stay clickable.
+    d.pvp.slice().sort(function (a, b) {
+      return Math.max.apply(null, b.circles.map(function (c) { return c.r; })) - Math.max.apply(null, a.circles.map(function (c) { return c.r; }));
+    }).forEach(function (a) {
+      var grp = el('g', { 'class': 'blob', filter: 'url(#blobfx)' }, layers.pvp);
+      var x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9;
+      a.circles.forEach(function (c) {
+        el('circle', { cx: c.x, cy: Y(c.z, W), r: c.r }, grp);
+        x0 = Math.min(x0, c.x - c.r); x1 = Math.max(x1, c.x + c.r);
+        z0 = Math.min(z0, c.z - c.r); z1 = Math.max(z1, c.z + c.r);
+      });
+      var span = Math.max(x1 - x0, z1 - z0);
+      wire(grp, a.name, 'PvP zone' + (a.gas ? ', gas mask needed' : '') + ' · ' + (span / 1000).toFixed(1) + ' km across');
+      if (span >= 800 && !/Oil Rig/.test(a.name)) {
+        var t = el('text', { x: a.x, y: Y(a.z, W), 'text-anchor': 'middle' }, layers.pvp);
+        t.textContent = a.label;
+      }
+    });
+
     d.zones.slice().sort(function (a, b) { return b.r - a.r; }).forEach(function (z) {
       var g = layers[z.type]; if (!g) return;
       var c = el('circle', { cx: z.x, cy: Y(z.z, W), r: z.r, 'class': 'z ' + z.type }, g);
       wire(c, z.name, (z.gas ? 'PvP zone, gas mask needed' : sub[z.type]) + ' · ' + (z.r * 2 / 1000).toFixed(1) + ' km across');
-      if (z.type === 'pvp' && z.r >= 380 && !/Oil Rig/.test(z.name)) {
-        var t = el('text', { x: z.x, y: Y(z.z, W), 'text-anchor': 'middle', 'font-size': 220 }, g);
-        t.textContent = z.name;
-      }
     });
 
     d.dinos.forEach(function (sp) {
@@ -63,32 +92,29 @@
       var y = Y(t.z, W), s = 150;
       var p = el('path', { d: 'M' + t.x + ' ' + (y - s) + 'L' + (t.x + s) + ' ' + y + 'L' + t.x + ' ' + (y + s) + 'L' + (t.x - s) + ' ' + y + 'Z', 'class': 'pin' }, layers.trader);
       wire(p, t.name, t.npcs + ' traders');
-      var lab = el('text', { x: t.x, y: y - s - 80, 'text-anchor': 'middle', 'font-size': 240 }, layers.trader);
+      var lab = el('text', { x: t.x, y: y - s - 80, 'text-anchor': 'middle' }, layers.trader);
       lab.textContent = t.name;
     });
 
     // Text sizes are in world units; keep them readable at any box size.
     var fit = function () {
       var k = W / box.getBoundingClientRect().width;      // world units per CSS px
+      morph.setAttribute('radius', Math.round(1.6 * k));
       Array.prototype.forEach.call(svg.querySelectorAll('text'), function (t) {
         var base = t.parentNode.getAttribute('data-layer') === 'trader' ? 11 : 10;
-        t.setAttribute('font-size', Math.round(base * k));
-        t.setAttribute('stroke-width', Math.round(3 * k));
+        t.style.fontSize = Math.round(base * k) + 'px';
+        t.style.strokeWidth = Math.round(3 * k) + 'px';
       });
     };
     fit(); addEventListener('resize', fit);
 
     // The list under the map: PvP zones, deduplicated, alphabetical.
     if (list) {
-      var seen = {};
-      d.zones.filter(function (z) { return z.type === 'pvp'; })
-        .sort(function (a, b) { return a.name.localeCompare(b.name); })
-        .forEach(function (z) {
-          if (seen[z.name]) return; seen[z.name] = 1;
-          var li = document.createElement('li');
-          li.textContent = z.name + (z.gas ? ' (gas)' : '');
-          list.appendChild(li);
-        });
+      d.pvp.forEach(function (a) {
+        var li = document.createElement('li');
+        li.textContent = a.names.join(', ') + (a.gas ? ' (gas)' : '');
+        list.appendChild(li);
+      });
     }
   });
 
