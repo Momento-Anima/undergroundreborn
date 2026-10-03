@@ -38,7 +38,9 @@ API_BASE = "https://api.theundergroundserver.com"
 # Pages that are built into preview/ only, never deployed, until Momento approves their wording
 # (or, for staff.html, until the Worker has its staff role set). Remove a name to go live; add it
 # to NAV once it should be linked.
-DRAFT_PAGES = {"appeals", "staff"}
+DRAFT_PAGES = set()      # approved 2026-10-03 (unlinked): appeals, staff
+# Built and deployed but kept out of search engines until they are linked in NAV.
+NOINDEX = {"appeals", "staff"}
 
 # (src stem, nav label). Order = nav order. Pages not listed (privacy) still build.
 NAV = [("index", "Home"), ("news", "What's new"), ("notoriety", "Notoriety"), ("map", "Map")]
@@ -102,11 +104,13 @@ def build_page(stem):
               f'discord:"{DISCORD}"' + (f',api:"{API_BASE}"' if LOGIN_ENABLED else '') + '};</script>')
     shared = (f'{nav_html(stem)}\n<main class="wrap">\n{body}\n</main>\n{FOOTER}\n{config}\n'
               f'<script src="{asset("assets/site.js")}" defer></script>')
+    robots = '<meta name="robots" content="noindex">' if stem in NOINDEX else ""
     head = f"""<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{title}</title>
 <meta name="description" content="{desc}">
 <meta name="theme-color" content="#0e0c0b">
+{robots}
 <link rel="canonical" href="{page_url}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="The Underground: Reborn">

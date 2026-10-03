@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Staff hub</title>
+<meta name="description" content="Staff-only tools for The Underground: Reborn. Log in with a staff account.">
+<meta name="theme-color" content="#0e0c0b">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://theundergroundserver.com/staff/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Underground: Reborn">
+<meta property="og:title" content="Staff hub">
+<meta property="og:description" content="Staff-only tools for The Underground: Reborn. Log in with a staff account.">
+<meta property="og:url" content="https://theundergroundserver.com/staff/">
+<meta property="og:image" content="https://theundergroundserver.com/assets/share-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Barlow:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="/assets/site.css?v=cf043c78">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6Y451GF7E2"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-6Y451GF7E2",{anonymize_ip:true});</script>
+</head>
+<body>
+<nav class="nav wrap"><a class="brand" href="/"><img src="/assets/favicon-32.png" alt="" width="30" height="30">The Underground: Reborn</a><a href="/">Home</a><a href="/news/">What's new</a><a href="/notoriety/">Notoriety</a><a href="/map/">Map</a><a class="discord" href="https://discord.gg/tudayz">Discord</a><span class="account" data-account></span></nav>
+<main class="wrap">
+<header class="pagehead">
+  <span class="label">Staff only</span>
+  <h1>Staff hub</h1>
+</header>
+
+<section class="prose" data-staff>
+  <div data-state="loading" class="note">Checking your login&hellip;</div>
+
+  <div data-state="loggedout" hidden class="note">
+    <p>This page is for staff. Log in with Discord.</p>
+    <p><a class="btn primary login-btn" data-login href="#">Log in with Discord</a></p>
+  </div>
+
+  <div data-state="denied" hidden class="note">
+    <p>Your account doesn't have staff access. If it should, ask the owner to check your Discord role.</p>
+  </div>
+
+  <div data-state="hub" hidden>
+    <p class="lede">Signed in as <strong data-name></strong>. Staff sessions last 8 hours.</p>
+    <div data-links class="hublinks"></div>
+  </div>
+</section>
+
+<script src="/assets/forms.js" defer></script>
+</main>
+<footer class="wrap"><span>The Underground: Reborn &middot; Deer Isle &middot; <a href="/privacy/">Privacy</a></span><span>Not affiliated with Bohemia Interactive. DayZ is a trademark of Bohemia Interactive a.s.</span></footer>
+<script>window.TUR={ip:"74.50.72.74",gamePort:2744,queryPort:2816,discord:"https://discord.gg/tudayz",api:"https://api.theundergroundserver.com"};</script>
+<script src="/assets/site.js?v=22e32406" defer></script>
+</body>
+</html>

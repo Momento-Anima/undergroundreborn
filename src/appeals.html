@@ -1,0 +1,50 @@
+<title>Contact staff</title>
+<!-- desc: Appeal a ban, report a player or a bug, or apply to join the staff of The Underground: Reborn. -->
+<header class="pagehead">
+  <span class="label">Staff</span>
+  <h1>Contact staff</h1>
+  <p class="lede">Appeal a ban, report a player or a bug, or apply to join the team. Your message goes to a private staff channel on Discord, and staff reply to you on Discord, so keep an eye on your messages there.</p>
+</header>
+
+<section class="prose" data-appeal>
+  <div data-state="loading" class="note">Checking your login&hellip;</div>
+
+  <div data-state="loggedout" hidden class="note">
+    <p>To send a message you need to log in with Discord, so staff know who you are.</p>
+    <p><a class="btn primary login-btn" data-login href="#">Log in with Discord</a></p>
+  </div>
+
+  <div data-state="notmember" hidden class="note">
+    <p>You're logged in, but you aren't in our Discord server yet. Join it and come back.</p>
+    <p><a class="btn primary" href="https://discord.gg/tudayz">Join the Discord</a></p>
+  </div>
+
+  <form data-state="form" hidden novalidate>
+    <label for="ap-kind">What is this about?</label>
+    <select id="ap-kind" name="kind">
+      <option value="appeal">I want to appeal a ban</option>
+      <option value="report">I want to report a player</option>
+      <option value="bug">I found a bug</option>
+      <option value="application">I want to apply for staff</option>
+      <option value="other">Something else</option>
+    </select>
+
+    <label for="ap-who">Your in-game name or Steam ID <span class="hint">(optional but helps)</span></label>
+    <input id="ap-who" name="who" type="text" maxlength="120" autocomplete="off">
+
+    <label for="ap-text">What happened?</label>
+    <textarea id="ap-text" name="text" rows="9" maxlength="1800" required></textarea>
+    <p class="hint"><span data-count>0</span> / 1,800 characters. Include what, when and where, and any player names.</p>
+
+    <div class="cta" style="justify-content:flex-start">
+      <button class="btn primary" type="submit">Send to staff</button>
+    </div>
+    <p class="status" data-msg role="status" aria-live="polite"></p>
+  </form>
+
+  <div data-state="sent" hidden class="note">
+    <p><strong>Sent.</strong> Staff will reply to you on Discord.</p>
+  </div>
+</section>
+
+<script src="/assets/forms.js" defer></script>
