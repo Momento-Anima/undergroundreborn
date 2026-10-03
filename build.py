@@ -30,6 +30,11 @@ QUERY_PORT = 2816
 GA_ID = "G-6Y451GF7E2"          # Google Analytics measurement ID, "G-XXXXXXXXXX"
 ADSENSE_ID = ""     # AdSense publisher ID, "ca-pub-XXXXXXXXXXXXXXXX"
 
+# Discord login (worker/worker.js). Leave False until the Worker is deployed and the
+# privacy page describes the login.
+LOGIN_ENABLED = False
+API_BASE = "https://api.theundergroundserver.com"
+
 # (src stem, nav label). Order = nav order. Pages not listed (privacy) still build.
 NAV = [("index", "Home"), ("news", "What's new"), ("notoriety", "Notoriety"), ("map", "Map")]
 
@@ -59,7 +64,8 @@ def nav_html(stem):
         links.append(f'<a href="{href}"{cur}>{label}</a>')
     return ('<nav class="nav wrap"><a class="brand" href="/"><img src="/assets/favicon-32.png" '
             'alt="" width="30" height="30">The Underground: Reborn</a>'
-            + "".join(links) + f'<a class="discord" href="{DISCORD}">Discord</a></nav>')
+            + "".join(links) + f'<a class="discord" href="{DISCORD}">Discord</a>'
+            + ('<span class="account" data-account></span>' if LOGIN_ENABLED else '') + '</nav>')
 
 
 FOOTER = ('<footer class="wrap"><span>The Underground: Reborn &middot; Deer Isle &middot; '
@@ -84,7 +90,7 @@ def build_page(stem):
     title, desc, body = parse((ROOT / "src" / f"{stem}.html").read_text(encoding="utf-8"))
     page_url = SITE_URL + ("/" if stem == "index" else f"/{stem}/")
     config = (f'<script>window.TUR={{ip:"{SERVER_IP}",gamePort:{GAME_PORT},queryPort:{QUERY_PORT},'
-              f'discord:"{DISCORD}"}};</script>')
+              f'discord:"{DISCORD}"' + (f',api:"{API_BASE}"' if LOGIN_ENABLED else '') + '};</script>')
     shared = (f'{nav_html(stem)}\n<main class="wrap">\n{body}\n</main>\n{FOOTER}\n{config}\n'
               f'<script src="{asset("assets/site.js")}" defer></script>')
     head = f"""<meta charset="utf-8">

@@ -76,4 +76,21 @@
     load();
     setInterval(load, 60000);
   }
+
+  /* Discord login: the Worker at cfg.api knows who is logged in. */
+  var acct = document.querySelector('[data-account]');
+  if (acct && cfg.api) {
+    var login = function () {
+      acct.innerHTML = '<a class="login" href="' + cfg.api + '/login">Log in with Discord</a>';
+    };
+    fetch(cfg.api + '/me', { credentials: 'include', cache: 'no-store' })
+      .then(function (r) { return r.json(); })
+      .then(function (u) {
+        if (!u.loggedIn) return login();
+        acct.innerHTML = '<img alt="" width="24" height="24"><span></span><a href="' + cfg.api + '/logout">Log out</a>';
+        acct.querySelector('img').src = u.avatar;
+        acct.querySelector('span').textContent = u.name;
+      })
+      .catch(login);
+  }
 })();
