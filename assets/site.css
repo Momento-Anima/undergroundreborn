@@ -180,6 +180,7 @@ td:first-child { font-weight: 600; white-space: nowrap; }
 .mapbox .pin { fill: var(--bone); stroke: var(--soot); stroke-width: 2; vector-effect: non-scaling-stroke; cursor: pointer; }
 .mapbox text { font-family: var(--mono); fill: var(--bone); paint-order: stroke; stroke: var(--soot); stroke-linejoin: round; pointer-events: none; }
 .mapbox .hidden { display: none; }
+.mapbox .pl { fill: #ff9a2e; stroke: var(--soot); stroke-width: 1.5; vector-effect: non-scaling-stroke; cursor: pointer; }
 .maptip { position: absolute; left: 0; top: 0; transform: translate(-50%, calc(-100% - 10px)); background: var(--soot); border: 1px solid var(--seam); padding: .4rem .6rem; font-size: .85rem; white-space: nowrap; pointer-events: none; display: none; }
 .maptip b { display: block; font: 600 1rem/1.1 var(--display); letter-spacing: .04em; text-transform: uppercase; }
 .maptip small { color: var(--ash); }

@@ -77,8 +77,55 @@
             host.appendChild(ul);
           });
           show(st, 'hub');
+          livePlayers(st);
         });
       })
       .catch(function () { show(st, 'loggedout'); });
+  }
+
+  /* ---- live players (admins only) ---- */
+  function livePlayers(root) {
+    var note = root.querySelector('[data-live-note]');
+    var mapbox = root.querySelector('#livemap');
+    var svg = root.querySelector('#livesvg');
+    var tip = root.querySelector('#livetip');
+    var tbl = root.querySelector('#livetable');
+    var body = tbl.querySelector('tbody');
+    var NS = 'http://www.w3.org/2000/svg', W = 16384;
+    function load() {
+      if (document.hidden) return;
+      fetch(cfg.api + '/admin/players', { credentials: 'include', cache: 'no-store' })
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          if (!j.ok) { note.textContent = j.error || 'Could not load players.'; return; }
+          var list = j.players.slice().sort(function (a, b) { return a.name.localeCompare(b.name); });
+          note.textContent = list.length + ' online. Updated ' + new Date(j.updated).toLocaleTimeString() + ', refreshes every 10 seconds.';
+          mapbox.hidden = false; tbl.hidden = false;
+          while (svg.firstChild) svg.removeChild(svg.firstChild);
+          var k = W / mapbox.getBoundingClientRect().width;
+          body.textContent = '';
+          list.forEach(function (p) {
+            var tr = document.createElement('tr');
+            [p.name, p.steam64, p.x == null ? '' : p.x, p.z == null ? '' : p.z, p.ping == null ? '' : p.ping].forEach(function (v, i) {
+              var td = document.createElement('td'); td.textContent = v; if (i === 1) td.className = 'mono'; tr.appendChild(td);
+            });
+            body.appendChild(tr);
+            if (p.x == null) return;
+            var c = document.createElementNS(NS, 'circle');
+            c.setAttribute('cx', p.x); c.setAttribute('cy', W - p.z); c.setAttribute('r', Math.round(6 * k));
+            c.setAttribute('class', 'pl');
+            c.addEventListener('mouseenter', function () {
+              var r = c.getBoundingClientRect(), b = mapbox.getBoundingClientRect();
+              tip.innerHTML = '<b></b><small></small>'; tip.firstChild.textContent = p.name; tip.lastChild.textContent = p.x + ', ' + p.z;
+              tip.style.left = (r.left + r.width / 2 - b.left) + 'px'; tip.style.top = (r.top - b.top) + 'px'; tip.style.display = 'block';
+            });
+            c.addEventListener('mouseleave', function () { tip.style.display = 'none'; });
+            svg.appendChild(c);
+          });
+        })
+        .catch(function () { note.textContent = 'Could not reach the server.'; });
+    }
+    load();
+    setInterval(load, 10000);
   }
 })();

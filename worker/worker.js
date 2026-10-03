@@ -8,6 +8,7 @@
  *   /logout       clear the cookie
  *   /appeal       POST (members only): a report / appeal / bug / application, posted to a private admin
  *                 channel through a Discord webhook
+ *   /admin/players GET (admins only): who is online and where, from the CFTools Data API (live.position)
  *   /admin/hub    GET (admins only): the admin page's content. Served from here, NOT from the public
  *                 static site, because anything in the repo is public.
  *
@@ -17,6 +18,9 @@
  *   STAFF_ROLE_IDS   text    comma-separated role IDs in that server that count as staff
  *   CLIENT_SECRET    secret  Discord application's Client Secret
  *   SESSION_SECRET   secret  any long random string; signs the session cookie
+ *   CFTOOLS_APP_ID    text    CFTools Data API application ID (developer.cftools.cloud)
+ *   CFTOOLS_SERVER_ID text    the server's "Server API ID" in CFTools Cloud
+ *   CFTOOLS_SECRET    secret  the CFTools application's secret
  *   APPEALS_WEBHOOK  secret  Discord webhook URL of the private admin channel (appeals)
  *   TUR_KV           binding (optional) a KV namespace; if present it rate-limits /appeal per person
  *
@@ -128,6 +132,62 @@ async function appeal(req, env, cors) {
   return json(cors, { ok: true });
 }
 
+
+// ---- CFTools Data API (read-only): online players and their live positions ----
+const CF = 'https://data.cftools.cloud';
+let cfToken = { t: null, until: 0 };
+
+async function cfAuth(env, force) {
+  if (!force && cfToken.t && Date.now() < cfToken.until) return cfToken.t;
+  const r = await fetch(CF + '/v1/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'User-Agent': 'TUR-website-worker/1.0 (theundergroundserver.com)' },
+    body: JSON.stringify({ application_id: env.CFTOOLS_APP_ID, secret: env.CFTOOLS_SECRET }),
+  });
+  if (!r.ok) throw new Error('cftools auth ' + r.status);
+  cfToken = { t: (await r.json()).token, until: Date.now() + 20 * 3600 * 1000 };
+  return cfToken.t;
+}
+
+async function cfSessions(env) {
+  const url = `${CF}/v1/server/${env.CFTOOLS_SERVER_ID}/GSM/list`;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const r = await fetch(url, { headers: { Authorization: 'Bearer ' + await cfAuth(env, attempt > 0), 'User-Agent': 'TUR-website-worker/1.0' } });
+    if (r.status === 401 || r.status === 403) { cfToken = { t: null, until: 0 }; continue; }
+    if (!r.ok) throw new Error('cftools sessions ' + r.status);
+    return (await r.json()).sessions || [];
+  }
+  throw new Error('cftools unauthorized');
+}
+
+async function players(req, env, cors) {
+  const s = await session(req, env);
+  if (!s || !s.staff) return json(cors, { ok: false }, s ? 403 : 401);
+  if (!env.CFTOOLS_APP_ID || !env.CFTOOLS_SECRET || !env.CFTOOLS_SERVER_ID) return json(cors, { ok: false, error: 'CFTools is not connected yet.' }, 503);
+  // 8-second shared cache so a few admins refreshing do not hammer CFTools.
+  const key = new Request('https://cache.invalid/admin-players');
+  const hit = await caches.default.match(key);
+  if (hit) return new Response(hit.body, { status: 200, headers: { ...cors, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
+  let list;
+  try { list = await cfSessions(env); } catch (e) { return json(cors, { ok: false, error: 'CFTools did not answer.' }, 502); }
+  // Only what an admin needs. Never pass on IP addresses or locations.
+  const out = list.map((x) => {
+    const pos = x.live && x.live.position && (x.live.position.latest || x.live.position.join);
+    return {
+      name: (x.gamedata && x.gamedata.player_name) || '?',
+      steam64: (x.gamedata && x.gamedata.steam64) || '',
+      loaded: !!(x.live && x.live.loaded),
+      ping: x.live && x.live.ping ? Math.round(x.live.ping.actual) : null,
+      x: pos ? Math.round(pos[0]) : null,
+      y: pos ? Math.round(pos[1]) : null,
+      z: pos ? Math.round(pos[2]) : null,
+    };
+  });
+  const body = JSON.stringify({ ok: true, updated: new Date().toISOString(), players: out });
+  await caches.default.put(key, new Response(body, { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'max-age=8' } }));
+  return new Response(body, { status: 200, headers: { ...cors, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
+}
+
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
@@ -194,6 +254,8 @@ export default {
     }
 
     if (url.pathname === '/appeal' && req.method === 'POST') return appeal(req, env, cors);
+
+    if (url.pathname === '/admin/players') return players(req, env, cors);
 
     if (url.pathname === '/admin/hub') {
       const s = await session(req, env);

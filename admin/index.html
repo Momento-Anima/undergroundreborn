@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Barlow:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@500&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=cf043c78">
+<link rel="stylesheet" href="/assets/site.css?v=985bf998">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6Y451GF7E2"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-6Y451GF7E2",{anonymize_ip:true});</script>
 </head>
 <body>
@@ -46,6 +46,20 @@
   <div data-state="hub" hidden>
     <p class="lede">Signed in as <strong data-name></strong>. Admin sessions last 8 hours.</p>
     <div data-links class="hublinks"></div>
+
+    <h2 style="margin-top:2rem">Live players</h2>
+    <p class="hint" data-live-note>Connecting to CFTools&hellip;</p>
+    <div class="mapbox" id="livemap" hidden>
+      <img src="/assets/deerisle-land.png" alt="Outline of Deer Isle" width="1024" height="1024">
+      <svg id="livesvg" viewBox="0 0 16384 16384" preserveAspectRatio="none" role="img" aria-label="Live player positions"></svg>
+      <div class="maptip" id="livetip"></div>
+    </div>
+    <div class="tbl" id="livetable" hidden>
+      <table>
+        <thead><tr><th>Player</th><th>Steam ID</th><th>X</th><th>Z</th><th>Ping</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </div>
 </section>
 
