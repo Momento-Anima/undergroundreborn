@@ -149,7 +149,9 @@ td:first-child { font-weight: 600; white-space: nowrap; }
 .mapbox img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .9; }
 .mapbox svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .mapbox .z { stroke-width: 1.5; vector-effect: non-scaling-stroke; fill-opacity: .22; cursor: pointer; }
-.mapbox .blob circle { fill: var(--pvp); stroke: none; }
+.mapbox .blob circle { stroke: none; }
+.mapbox .blob.pvp circle { fill: var(--pvp); }
+.mapbox .blob.pve circle { fill: var(--pve); }
 .mapbox .blob { cursor: pointer; }
 .mapbox .z.pve { stroke: var(--pve); fill: var(--pve); }
 .mapbox .z.safe { stroke: var(--safe); fill: var(--safe); fill-opacity: .4; }

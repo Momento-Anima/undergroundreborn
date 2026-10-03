@@ -37,19 +37,21 @@
     var W = d.world;
     /* PvP areas are drawn as solid blobs (so overlapping circles read as one shape) and the
        filter turns that shape into a faint fill plus a single outline round the outside. */
-    var defs = el('defs', {});
-    var filt = el('filter', { id: 'blobfx', filterUnits: 'userSpaceOnUse', x: -600, y: -600, width: W + 1200, height: W + 1200 }, defs);
-    var morph = el('feMorphology', { 'in': 'SourceAlpha', operator: 'dilate', radius: 30, result: 'grown' }, filt);
-    el('feComposite', { 'in': 'grown', in2: 'SourceAlpha', operator: 'out', result: 'ring' }, filt);
-    var flood = el('feFlood', { result: 'ink' }, filt);
-    flood.setAttribute('style', 'flood-color: var(--pvp)');
-    el('feComposite', { 'in': 'ink', in2: 'ring', operator: 'in', result: 'edge' }, filt);
-    var tint = el('feFlood', { result: 'tint' }, filt);
-    tint.setAttribute('style', 'flood-color: var(--pvp); flood-opacity: .22');
-    el('feComposite', { 'in': 'tint', in2: 'SourceAlpha', operator: 'in', result: 'fill' }, filt);
-    var merge = el('feMerge', {}, filt);
-    el('feMergeNode', { 'in': 'fill' }, merge);
-    el('feMergeNode', { 'in': 'edge' }, merge);
+    var defs = el('defs', {}), morphs = [];
+    function blobFilter(id, color) {
+      var f = el('filter', { id: id, filterUnits: 'userSpaceOnUse', x: -600, y: -600, width: W + 1200, height: W + 1200 }, defs);
+      morphs.push(el('feMorphology', { 'in': 'SourceAlpha', operator: 'dilate', radius: 30, result: 'grown' }, f));
+      el('feComposite', { 'in': 'grown', in2: 'SourceAlpha', operator: 'out', result: 'ring' }, f);
+      el('feFlood', { result: 'ink', style: 'flood-color: var(' + color + ')' }, f);
+      el('feComposite', { 'in': 'ink', in2: 'ring', operator: 'in', result: 'edge' }, f);
+      el('feFlood', { result: 'tint', style: 'flood-color: var(' + color + '); flood-opacity: .22' }, f);
+      el('feComposite', { 'in': 'tint', in2: 'SourceAlpha', operator: 'in', result: 'fill' }, f);
+      var m = el('feMerge', {}, f);
+      el('feMergeNode', { 'in': 'fill' }, m);
+      el('feMergeNode', { 'in': 'edge' }, m);
+    }
+    blobFilter('blob-pvp', '--pvp');
+    blobFilter('blob-pve', '--pve');
     var layers = {};
     ['pve', 'dino', 'gas', 'pvp', 'safe', 'trader'].forEach(function (k) {
       layers[k] = el('g', { 'data-layer': k, 'class': k === 'pve' ? 'hidden' : '' });
@@ -57,23 +59,27 @@
     var sub = { pvp: 'PvP zone', pve: 'PvE', safe: 'Safe zone', gas: 'Contaminated' };
 
     // Big circles first so small ones stay clickable.
-    d.pvp.slice().sort(function (a, b) {
-      return Math.max.apply(null, b.circles.map(function (c) { return c.r; })) - Math.max.apply(null, a.circles.map(function (c) { return c.r; }));
-    }).forEach(function (a) {
-      var grp = el('g', { 'class': 'blob', filter: 'url(#blobfx)' }, layers.pvp);
-      var x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9;
-      a.circles.forEach(function (c) {
-        el('circle', { cx: c.x, cy: Y(c.z, W), r: c.r }, grp);
-        x0 = Math.min(x0, c.x - c.r); x1 = Math.max(x1, c.x + c.r);
-        z0 = Math.min(z0, c.z - c.r); z1 = Math.max(z1, c.z + c.r);
+    function drawAreas(areas, kind, noun, labelMin) {
+      areas.slice().sort(function (a, b) {
+        return Math.max.apply(null, b.circles.map(function (c) { return c.r; })) - Math.max.apply(null, a.circles.map(function (c) { return c.r; }));
+      }).forEach(function (a) {
+        var grp = el('g', { 'class': 'blob ' + kind, filter: 'url(#blob-' + kind + ')' }, layers[kind]);
+        var x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9;
+        a.circles.forEach(function (c) {
+          el('circle', { cx: c.x, cy: Y(c.z, W), r: c.r }, grp);
+          x0 = Math.min(x0, c.x - c.r); x1 = Math.max(x1, c.x + c.r);
+          z0 = Math.min(z0, c.z - c.r); z1 = Math.max(z1, c.z + c.r);
+        });
+        var span = Math.max(x1 - x0, z1 - z0);
+        wire(grp, a.name, noun + (a.gas ? ', gas mask needed' : '') + ' · ' + (span / 1000).toFixed(1) + ' km across');
+        if (span >= labelMin && !/Oil Rig/.test(a.name)) {
+          var t = el('text', { x: a.x, y: Y(a.z, W), 'text-anchor': 'middle' }, layers[kind]);
+          t.textContent = a.label;
+        }
       });
-      var span = Math.max(x1 - x0, z1 - z0);
-      wire(grp, a.name, 'PvP zone' + (a.gas ? ', gas mask needed' : '') + ' · ' + (span / 1000).toFixed(1) + ' km across');
-      if (span >= 800 && !/Oil Rig/.test(a.name)) {
-        var t = el('text', { x: a.x, y: Y(a.z, W), 'text-anchor': 'middle' }, layers.pvp);
-        t.textContent = a.label;
-      }
-    });
+    }
+    drawAreas(d.pve, 'pve', 'PvE', 700);
+    drawAreas(d.pvp, 'pvp', 'PvP zone', 800);
 
     d.zones.slice().sort(function (a, b) { return b.r - a.r; }).forEach(function (z) {
       var g = layers[z.type]; if (!g) return;
@@ -99,7 +105,7 @@
     // Text sizes are in world units; keep them readable at any box size.
     var fit = function () {
       var k = W / box.getBoundingClientRect().width;      // world units per CSS px
-      morph.setAttribute('radius', Math.round(1.6 * k));
+      morphs.forEach(function (m) { m.setAttribute('radius', Math.round(1.6 * k)); });
       Array.prototype.forEach.call(svg.querySelectorAll('text'), function (t) {
         var base = t.parentNode.getAttribute('data-layer') === 'trader' ? 11 : 10;
         t.style.fontSize = Math.round(base * k) + 'px';

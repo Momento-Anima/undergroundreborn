@@ -87,11 +87,11 @@ def zones():
     return keep
 
 
-def pvp_areas(zs):
-    """Merge overlapping PvP circles into one area each (circles overlap when the gap
+def merge_areas(zs, kind):
+    """Merge overlapping circles of one kind (pvp or pve) into one area each (circles overlap when the gap
     between centres is smaller than the sum of the radii). Returns the areas and the
     zone list without its PvP circles."""
-    pvp = [z for z in zs if z["type"] == "pvp"]
+    pvp = [z for z in zs if z["type"] == kind]
     parent = list(range(len(pvp)))
 
     def find(i):
@@ -123,7 +123,7 @@ def pvp_areas(zs):
             area["gas"] = True
         areas.append(area)
     areas.sort(key=lambda a: a["name"])
-    return areas, [z for z in zs if z["type"] != "pvp"]
+    return areas, [z for z in zs if z["type"] != kind]
 
 
 def traders():
@@ -161,10 +161,11 @@ def dinos():
 
 
 def main():
-    areas, zs = pvp_areas(zones())
-    data = {"world": WORLD, "pvp": areas, "zones": zs, "traders": traders(), "dinos": dinos()}
+    pvp, zs = merge_areas(zones(), "pvp")
+    pve, zs = merge_areas(zs, "pve")
+    data = {"world": WORLD, "pvp": pvp, "pve": pve, "zones": zs, "traders": traders(), "dinos": dinos()}
     OUT.write_bytes((json.dumps(data, indent=1) + "\n").encode("utf-8"))
-    print(f"{OUT}: {sum(len(a['circles']) for a in areas)} PvP circles -> {len(areas)} areas, {len(data['zones'])} other zones, {len(data['traders'])} trader hubs, "
+    print(f"{OUT}: {sum(len(a['circles']) for a in pvp)} PvP circles -> {len(pvp)} areas, {sum(len(a['circles']) for a in pve)} PvE circles -> {len(pve)} areas, {len(data['zones'])} other zones, {len(data['traders'])} trader hubs, "
           f"{sum(len(d['areas']) for d in data['dinos'])} dino areas")
 
 

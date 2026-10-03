@@ -516,182 +516,288 @@
    "z": 13348
   }
  ],
- "zones": [
+ "pve": [
   {
    "name": "Asheville Ruins",
-   "type": "pve",
+   "label": "Asheville Ruins",
+   "names": [
+    "Asheville Ruins"
+   ],
+   "circles": [
+    {
+     "x": 7237,
+     "z": 2583,
+     "r": 100
+    }
+   ],
    "x": 7237,
-   "z": 2583,
-   "r": 100
+   "z": 2583
   },
   {
    "name": "Grey Market",
-   "type": "pve",
+   "label": "Grey Market",
+   "names": [
+    "Grey Market"
+   ],
+   "circles": [
+    {
+     "x": 5434,
+     "z": 4973,
+     "r": 90
+    }
+   ],
    "x": 5434,
-   "z": 4973,
-   "r": 90
+   "z": 4973
   },
   {
    "name": "Ice Castle",
-   "type": "pve",
+   "label": "Ice Castle",
+   "names": [
+    "Ice Castle"
+   ],
+   "circles": [
+    {
+     "x": 15510,
+     "z": 14823,
+     "r": 800
+    }
+   ],
    "x": 15510,
-   "z": 14823,
-   "r": 800
-  },
-  {
-   "name": "Old Town Castle Ruins",
-   "type": "pve",
-   "x": 2546,
-   "z": 8846,
-   "r": 100
-  },
-  {
-   "name": "Pear Plantation",
-   "type": "pve",
-   "x": 9561,
-   "z": 7679,
-   "r": 125
-  },
-  {
-   "name": "Portland Shipping Yard",
-   "type": "pve",
-   "x": 5835,
-   "z": 14731,
-   "r": 100
-  },
-  {
-   "name": "Rockenheim Circuit",
-   "type": "pve",
-   "x": 9691,
-   "z": 12307,
-   "r": 70
-  },
-  {
-   "name": "Rockenheim Circuit",
-   "type": "pve",
-   "x": 10005,
-   "z": 11023,
-   "r": 110
-  },
-  {
-   "name": "Rockenheim Circuit",
-   "type": "pve",
-   "x": 10104,
-   "z": 11064,
-   "r": 110
-  },
-  {
-   "name": "Rockenheim Circuit",
-   "type": "pve",
-   "x": 10193,
-   "z": 11099,
-   "r": 110
-  },
-  {
-   "name": "Rockenheim Circuit",
-   "type": "pve",
-   "x": 9720,
-   "z": 12234,
-   "r": 75
-  },
-  {
-   "name": "Rockenheim Circuit",
-   "type": "pve",
-   "x": 9754,
-   "z": 12137,
-   "r": 85
-  },
-  {
-   "name": "Rockenheim Circuit",
-   "type": "pve",
-   "x": 9795,
-   "z": 12035,
-   "r": 110
-  },
-  {
-   "name": "Rockenheim Circuit",
-   "type": "pve",
-   "x": 9790,
-   "z": 11847,
-   "r": 125
-  },
-  {
-   "name": "Rockenheim Circuit",
-   "type": "pve",
-   "x": 9996,
-   "z": 11456,
-   "r": 400
-  },
-  {
-   "name": "Rockenheim Circuit",
-   "type": "pve",
-   "x": 9691,
-   "z": 11196,
-   "r": 310
-  },
-  {
-   "name": "Rockenheim Circuit",
-   "type": "pve",
-   "x": 9803,
-   "z": 10946,
-   "r": 110
-  },
-  {
-   "name": "Rockenheim Circuit",
-   "type": "pve",
-   "x": 9890,
-   "z": 10978,
-   "r": 110
-  },
-  {
-   "name": "Stark's Castle",
-   "type": "pve",
-   "x": 5845,
-   "z": 2378,
-   "r": 150
-  },
-  {
-   "name": "Storm the Castle",
-   "type": "pve",
-   "x": 6719,
-   "z": 2905,
-   "r": 150
-  },
-  {
-   "name": "Waldoboro Hills High",
-   "type": "pve",
-   "x": 8504,
-   "z": 10119,
-   "r": 150
-  },
-  {
-   "name": "Warren Cove Cemetery",
-   "type": "pve",
-   "x": 7181,
-   "z": 5971,
-   "r": 100
+   "z": 14823
   },
   {
    "name": "Jungle Temple No Build",
-   "type": "pve",
+   "label": "Jungle Temple No Build",
+   "names": [
+    "Jungle Temple No Build"
+   ],
+   "circles": [
+    {
+     "x": 366,
+     "z": 783,
+     "r": 2000
+    }
+   ],
    "x": 366,
-   "z": 783,
-   "r": 2000
-  },
-  {
-   "name": "Proving Grounds",
-   "type": "pve",
-   "x": 10488,
-   "z": 7342,
-   "r": 100
+   "z": 783
   },
   {
    "name": "Momento's Workshop",
-   "type": "pve",
+   "label": "Momento's Workshop",
+   "names": [
+    "Momento's Workshop"
+   ],
+   "circles": [
+    {
+     "x": 1142,
+     "z": 10618,
+     "r": 75
+    }
+   ],
    "x": 1142,
-   "z": 10618,
-   "r": 75
+   "z": 10618
   },
+  {
+   "name": "Old Town Castle Ruins",
+   "label": "Old Town Castle Ruins",
+   "names": [
+    "Old Town Castle Ruins"
+   ],
+   "circles": [
+    {
+     "x": 2546,
+     "z": 8846,
+     "r": 100
+    }
+   ],
+   "x": 2546,
+   "z": 8846
+  },
+  {
+   "name": "Pear Plantation",
+   "label": "Pear Plantation",
+   "names": [
+    "Pear Plantation"
+   ],
+   "circles": [
+    {
+     "x": 9561,
+     "z": 7679,
+     "r": 125
+    }
+   ],
+   "x": 9561,
+   "z": 7679
+  },
+  {
+   "name": "Portland Shipping Yard",
+   "label": "Portland Shipping Yard",
+   "names": [
+    "Portland Shipping Yard"
+   ],
+   "circles": [
+    {
+     "x": 5835,
+     "z": 14731,
+     "r": 100
+    }
+   ],
+   "x": 5835,
+   "z": 14731
+  },
+  {
+   "name": "Proving Grounds",
+   "label": "Proving Grounds",
+   "names": [
+    "Proving Grounds"
+   ],
+   "circles": [
+    {
+     "x": 10488,
+     "z": 7342,
+     "r": 100
+    }
+   ],
+   "x": 10488,
+   "z": 7342
+  },
+  {
+   "name": "Rockenheim Circuit",
+   "label": "Rockenheim Circuit",
+   "names": [
+    "Rockenheim Circuit"
+   ],
+   "circles": [
+    {
+     "x": 9691,
+     "z": 12307,
+     "r": 70
+    },
+    {
+     "x": 10005,
+     "z": 11023,
+     "r": 110
+    },
+    {
+     "x": 10104,
+     "z": 11064,
+     "r": 110
+    },
+    {
+     "x": 10193,
+     "z": 11099,
+     "r": 110
+    },
+    {
+     "x": 9720,
+     "z": 12234,
+     "r": 75
+    },
+    {
+     "x": 9754,
+     "z": 12137,
+     "r": 85
+    },
+    {
+     "x": 9795,
+     "z": 12035,
+     "r": 110
+    },
+    {
+     "x": 9790,
+     "z": 11847,
+     "r": 125
+    },
+    {
+     "x": 9996,
+     "z": 11456,
+     "r": 400
+    },
+    {
+     "x": 9691,
+     "z": 11196,
+     "r": 310
+    },
+    {
+     "x": 9803,
+     "z": 10946,
+     "r": 110
+    },
+    {
+     "x": 9890,
+     "z": 10978,
+     "r": 110
+    }
+   ],
+   "x": 9996,
+   "z": 11456
+  },
+  {
+   "name": "Stark's Castle",
+   "label": "Stark's Castle",
+   "names": [
+    "Stark's Castle"
+   ],
+   "circles": [
+    {
+     "x": 5845,
+     "z": 2378,
+     "r": 150
+    }
+   ],
+   "x": 5845,
+   "z": 2378
+  },
+  {
+   "name": "Storm the Castle",
+   "label": "Storm the Castle",
+   "names": [
+    "Storm the Castle"
+   ],
+   "circles": [
+    {
+     "x": 6719,
+     "z": 2905,
+     "r": 150
+    }
+   ],
+   "x": 6719,
+   "z": 2905
+  },
+  {
+   "name": "Waldoboro Hills High",
+   "label": "Waldoboro Hills High",
+   "names": [
+    "Waldoboro Hills High"
+   ],
+   "circles": [
+    {
+     "x": 8504,
+     "z": 10119,
+     "r": 150
+    }
+   ],
+   "x": 8504,
+   "z": 10119
+  },
+  {
+   "name": "Warren Cove Cemetery",
+   "label": "Warren Cove Cemetery",
+   "names": [
+    "Warren Cove Cemetery"
+   ],
+   "circles": [
+    {
+     "x": 7181,
+     "z": 5971,
+     "r": 100
+    }
+   ],
+   "x": 7181,
+   "z": 5971
+  }
+ ],
+ "zones": [
   {
    "name": "Collectibles Trader",
    "type": "safe",
