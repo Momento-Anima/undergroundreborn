@@ -1,0 +1,79 @@
+/* Shared page script: fireflies in the hero, live server status, the join link. */
+(function () {
+  var cfg = window.TUR || {};
+
+  /* Fireflies: the drifting canvas from the Deer Isle overview page. */
+  var c = document.getElementById('drift');
+  if (c && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var x = c.getContext('2d'), pts = [];
+    var rect = function () { return c.getBoundingClientRect(); };
+    var size = function () {
+      var r = rect(), dpr = window.devicePixelRatio || 1;
+      c.width = r.width * dpr; c.height = r.height * dpr;
+      x.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    var seed = function () {
+      var r = rect(), n = Math.round(r.width / 34);
+      pts = [];
+      for (var i = 0; i < n; i++) pts.push({
+        x: Math.random() * r.width, y: Math.random() * r.height,
+        r: Math.random() * 1.5 + .7, p: Math.random() * Math.PI * 2,
+        s: .10 + Math.random() * .22, d: Math.random() * Math.PI * 2
+      });
+    };
+    var frame = function (t) {
+      var r = rect();
+      x.clearRect(0, 0, r.width, r.height);
+      for (var i = 0; i < pts.length; i++) {
+        var p = pts[i];
+        p.x += Math.cos(p.d) * p.s * .36; p.y += Math.sin(p.d) * p.s * .24; p.d += .005;
+        if (p.x < -10) p.x = r.width + 10; if (p.x > r.width + 10) p.x = -10;
+        if (p.y < -10) p.y = r.height + 10; if (p.y > r.height + 10) p.y = -10;
+        var a = (Math.sin(t / 900 + p.p) * .5 + .5) * .5 + .08;
+        var g = x.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 5);
+        g.addColorStop(0, 'rgba(232,150,62,' + a + ')');
+        g.addColorStop(1, 'rgba(232,150,62,0)');
+        x.fillStyle = g; x.beginPath(); x.arc(p.x, p.y, p.r * 5, 0, 6.284); x.fill();
+      }
+      requestAnimationFrame(frame);
+    };
+    var boot = function () { size(); seed(); };
+    boot(); requestAnimationFrame(frame);
+    var tm; addEventListener('resize', function () { clearTimeout(tm); tm = setTimeout(boot, 180); });
+  }
+
+  /* Join link + address: DZSA Launcher registers dzsal://IP:QUERYPORT. */
+  if (cfg.ip) {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-join]'), function (a) {
+      a.href = 'dzsal://' + cfg.ip + ':' + cfg.queryPort;
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-addr]'), function (el) {
+      el.textContent = cfg.ip + ':' + cfg.gamePort;
+    });
+  }
+
+  /* Live status from the DZSA Launcher's public query (CORS open, no key). */
+  var status = document.querySelector('[data-status]');
+  if (status && cfg.ip) {
+    var players = status.querySelector('[data-players]');
+    var note = status.querySelector('[data-note]');
+    var dot = status.querySelector('.dot');
+    var set = function (txt, sub, state) {
+      if (players) players.textContent = txt;
+      if (note) note.textContent = sub;
+      if (dot) dot.className = 'dot ' + state;
+    };
+    var load = function () {
+      fetch('https://dayzsalauncher.com/api/v1/query/' + cfg.ip + '/' + cfg.queryPort, { cache: 'no-store' })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          var s = d && d.result;
+          if (!s || !s.maxPlayers) throw new Error('offline');
+          set(s.players + ' / ' + s.maxPlayers + ' online', 'In-game time ' + s.time, 'on');
+        })
+        .catch(function () { set('Offline or restarting', 'Check Discord for restart times', 'off'); });
+    };
+    load();
+    setInterval(load, 60000);
+  }
+})();

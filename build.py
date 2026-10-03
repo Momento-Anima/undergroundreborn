@@ -1,59 +1,131 @@
-"""Build index.html for GitHub Pages from page.html.
+"""Build the site: src/<page>.html fragments -> <page>/index.html, plus preview/ fragments.
 
-page.html is the editable source. It starts with <title>, font links and <style>, then
-the page body. That fragment form is what the Claude artifact preview takes, so the same
-file serves both the private preview and the public site.
+Each src file is a fragment: a <title>, an optional <!-- desc: ... --> line, then the page's
+own content (everything inside <main>). Links and assets in fragments are root-relative
+(/assets/..., /map/), because the site is served from the domain root. build.py adds the
+head, nav, footer and scripts so every page is the same.
 
-    python build.py                      # site URL = SITE_URL below
-    python build.py https://example.com  # override (used for share-card image links)
+preview/<page>.html is the same page without the document skeleton and with flat asset
+paths, for the private Claude artifact preview that Momento approves wording on.
+
+    python build.py
 
 Writes UTF-8 without a BOM.
 """
-import sys
+import re
+import zlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-
-# Change to https://theundergroundserver.com once the domain is bought AND the CNAME
-# file is added. Until then the site lives at the github.io address.
 SITE_URL = "https://theundergroundserver.com"
+DISCORD = "https://discord.gg/tudayz"
 
-DESCRIPTION = ("A DayZ server on Deer Isle. PvE across the island, PvP zones when you "
-               "want a fight, and a story that unfolds the longer you survive.")
+# The live server, as DZSA's public list shows it (2026-10-02). Game port is what
+# players connect to; the query port is what the status check and the join link use.
+SERVER_IP = "74.50.72.74"
+GAME_PORT = 2744
+QUERY_PORT = 2816
+
+# Fill these in when Momento has the IDs. Empty = the tag is not emitted.
+GA_ID = ""          # Google Analytics measurement ID, "G-XXXXXXXXXX"
+ADSENSE_ID = ""     # AdSense publisher ID, "ca-pub-XXXXXXXXXXXXXXXX"
+
+# (src stem, nav label). Order = nav order. Pages not listed (privacy) still build.
+NAV = [("index", "Home"), ("news", "What's new"), ("notoriety", "Notoriety"), ("map", "Map")]
+
+FONTS = ("https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800"
+         "&family=Barlow:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@500&display=swap")
 
 
-def build(site_url):
-    src = (ROOT / "page.html").read_text(encoding="utf-8")
-    split = src.index("</style>") + len("</style>")
-    head_part, body_part = src[:split].strip(), src[split:].strip()
-    site_url = site_url.rstrip("/")
+def asset(path):
+    """Root-relative URL with a cache-busting query from the file's contents."""
+    return f"/{path}?v={zlib.crc32((ROOT / path).read_bytes()):08x}"
+
+
+def parse(src):
+    title = re.search(r"<title>(.*?)</title>", src, re.S).group(1).strip()
+    m = re.search(r"<!--\s*desc:\s*(.*?)\s*-->", src, re.S)
+    desc = m.group(1).strip() if m else ""
+    body = re.sub(r"<title>.*?</title>\s*", "", src, count=1, flags=re.S)
+    body = re.sub(r"<!--\s*desc:.*?-->\s*", "", body, count=1, flags=re.S)
+    return title, desc, body.strip()
+
+
+def nav_html(stem):
+    links = []
+    for s, label in NAV:
+        href = "/" if s == "index" else f"/{s}/"
+        cur = ' aria-current="page"' if s == stem else ""
+        links.append(f'<a href="{href}"{cur}>{label}</a>')
+    return ('<nav class="nav wrap"><a class="brand" href="/"><img src="/assets/favicon-32.png" '
+            'alt="" width="30" height="30">The Underground: Reborn</a>'
+            + "".join(links) + f'<a class="discord" href="{DISCORD}">Discord</a></nav>')
+
+
+FOOTER = ('<footer class="wrap"><span>The Underground: Reborn &middot; Deer Isle &middot; '
+          '<a href="/privacy/">Privacy</a></span>'
+          '<span>Not affiliated with Bohemia Interactive. DayZ is a trademark of Bohemia Interactive a.s.</span>'
+          '</footer>')
+
+
+def analytics():
+    out = []
+    if GA_ID:
+        out.append(f'<script async src="https://www.googletagmanager.com/gtag/js?id={GA_ID}"></script>'
+                   '<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}'
+                   f'gtag("js",new Date());gtag("config","{GA_ID}",{{anonymize_ip:true}});</script>')
+    if ADSENSE_ID:
+        out.append(f'<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'
+                   f'?client={ADSENSE_ID}" crossorigin="anonymous"></script>')
+    return "\n".join(out)
+
+
+def build_page(stem):
+    title, desc, body = parse((ROOT / "src" / f"{stem}.html").read_text(encoding="utf-8"))
+    page_url = SITE_URL + ("/" if stem == "index" else f"/{stem}/")
+    config = (f'<script>window.TUR={{ip:"{SERVER_IP}",gamePort:{GAME_PORT},queryPort:{QUERY_PORT},'
+              f'discord:"{DISCORD}"}};</script>')
+    shared = (f'{nav_html(stem)}\n<main class="wrap">\n{body}\n</main>\n{FOOTER}\n{config}\n'
+              f'<script src="{asset("assets/site.js")}" defer></script>')
     head = f"""<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="{DESCRIPTION}">
+<title>{title}</title>
+<meta name="description" content="{desc}">
 <meta name="theme-color" content="#0e0c0b">
+<link rel="canonical" href="{page_url}">
 <meta property="og:type" content="website">
-<meta property="og:title" content="The Underground: Reborn">
-<meta property="og:description" content="{DESCRIPTION}">
-<meta property="og:url" content="{site_url}/">
-<meta property="og:image" content="{site_url}/assets/icon-512.png">
-<meta name="twitter:card" content="summary">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
-<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-{head_part}"""
-    html = f"""<!doctype html>
-<html lang="en">
-<head>
-{head}
-<style>body {{ margin: 0; }} img {{ max-width: 100%; }}</style>
-</head>
-<body>
-{body_part}
-</body>
-</html>
-"""
-    (ROOT / "index.html").write_bytes(html.encode("utf-8"))
-    print("wrote index.html for", site_url)
+<meta property="og:site_name" content="The Underground: Reborn">
+<meta property="og:title" content="{title}">
+<meta property="og:description" content="{desc}">
+<meta property="og:url" content="{page_url}">
+<meta property="og:image" content="{SITE_URL}/assets/share-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="{FONTS}">
+<link rel="stylesheet" href="{asset("assets/site.css")}">
+{analytics()}"""
+    html = f'<!doctype html>\n<html lang="en">\n<head>\n{head}\n</head>\n<body>\n{shared}\n</body>\n</html>\n'
+    out = ROOT / "index.html" if stem == "index" else ROOT / stem / "index.html"
+    out.parent.mkdir(exist_ok=True)
+    out.write_bytes(html.encode("utf-8"))
+
+    # Preview fragment: flat asset paths, page links point at the live site.
+    preview = re.sub(r'(src|href)="/assets/([^"?]+)(\?[^"]*)?"', r'\1="assets/\2"', shared)
+    preview = re.sub(r'href="/([a-z]*/?)"', rf'href="{SITE_URL}/\1"', preview)
+    preview = (f'<title>{title}</title>\n<link rel="stylesheet" href="{FONTS}">\n'
+               f'<link rel="stylesheet" href="assets/site.css">\n{preview}')
+    (ROOT / "preview").mkdir(exist_ok=True)
+    (ROOT / "preview" / f"{stem}.html").write_bytes(preview.encode("utf-8"))
+    return out
+
+
+def main():
+    for f in sorted((ROOT / "src").glob("*.html")):
+        print("wrote", build_page(f.stem).relative_to(ROOT))
 
 
 if __name__ == "__main__":
-    build(sys.argv[1] if len(sys.argv) > 1 else SITE_URL)
+    main()

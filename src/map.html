@@ -1,0 +1,32 @@
+<title>Map</title>
+<!-- desc: Where you can get shot on Deer Isle: PvP zones, safe-zone traders, contaminated areas and the dinosaur islands. -->
+<header class="pagehead">
+  <span class="label">Deer Isle</span>
+  <h1>Where you can get shot</h1>
+  <p class="lede">The island is PvE except inside the red circles. Blue is a safe zone with traders. Yellow needs a gas mask. Orange is dinosaur country. Hover or tap anything for its name.</p>
+</header>
+
+<div class="mapwrap">
+  <div class="legend" role="group" aria-label="Show or hide">
+    <button type="button" data-layer="pvp" aria-pressed="true"><span class="sw" style="color:var(--pvp)"></span>PvP zones</button>
+    <button type="button" data-layer="safe" aria-pressed="true"><span class="sw" style="color:var(--safe)"></span>Safe zones</button>
+    <button type="button" data-layer="trader" aria-pressed="true"><span class="sw pin" style="color:var(--bone);background:var(--bone)"></span>Traders</button>
+    <button type="button" data-layer="gas" aria-pressed="true"><span class="sw" style="color:var(--gas)"></span>Contaminated</button>
+    <button type="button" data-layer="dino" aria-pressed="true"><span class="sw" style="color:var(--ember-hot)"></span>Dinosaurs</button>
+    <button type="button" data-layer="pve" aria-pressed="false"><span class="sw" style="color:var(--pve)"></span>Named PvE spots</button>
+  </div>
+  <div class="mapbox" id="mapbox">
+    <img src="/assets/deerisle-land.png" alt="Outline of Deer Isle" width="1024" height="1024">
+    <svg id="mapsvg" viewBox="0 0 16384 16384" preserveAspectRatio="none" role="img" aria-label="Zone map of Deer Isle"></svg>
+    <div class="maptip" id="maptip"></div>
+  </div>
+  <p class="lede">North is up. The outline is drawn from the server's own zone data, so it's a sketch, not a satellite view: use the in-game map or the DZSA launcher's map for roads and buildings.</p>
+</div>
+
+<section>
+  <h2>PvP zones</h2>
+  <p class="lede">Leaving a PvP zone starts a 60-second timer. Stepping out and back in to get an advantage counts as zone strafing and is punished. Damage is disabled across the line, in both directions.</p>
+  <ul class="zonelist" id="zonelist"></ul>
+</section>
+
+<script src="/assets/map.js" defer></script>
