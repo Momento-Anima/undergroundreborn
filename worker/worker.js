@@ -145,7 +145,7 @@ async function cfAuth(env, force) {
     // Trim: a pasted secret can carry a trailing space or line break.
     body: JSON.stringify({ application_id: String(env.CFTOOLS_APP_ID).trim(), secret: String(env.CFTOOLS_SECRET).trim() }),
   });
-  if (!r.ok) throw new Error('login to CFTools failed: ' + r.status + ' ' + (await r.text()).slice(0, 80));
+  if (!r.ok) throw new Error('login to CFTools failed: ' + r.status + ' ' + (await r.text()).slice(0, 80) + ' (stored secret length: ' + String(env.CFTOOLS_SECRET).trim().length + ' characters)');
   cfToken = { t: (await r.json()).token, until: Date.now() + 20 * 3600 * 1000 };
   return cfToken.t;
 }
