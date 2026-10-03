@@ -144,7 +144,7 @@ async function cfAuth(env, force) {
     headers: { 'Content-Type': 'application/json', 'User-Agent': 'TUR-website-worker/1.0 (theundergroundserver.com)' },
     body: JSON.stringify({ application_id: env.CFTOOLS_APP_ID, secret: env.CFTOOLS_SECRET }),
   });
-  if (!r.ok) throw new Error('cftools auth ' + r.status);
+  if (!r.ok) throw new Error('login to CFTools failed: ' + r.status + ' ' + (await r.text()).slice(0, 80));
   cfToken = { t: (await r.json()).token, until: Date.now() + 20 * 3600 * 1000 };
   return cfToken.t;
 }
@@ -154,10 +154,10 @@ async function cfSessions(env) {
   for (let attempt = 0; attempt < 2; attempt++) {
     const r = await fetch(url, { headers: { Authorization: 'Bearer ' + await cfAuth(env, attempt > 0), 'User-Agent': 'TUR-website-worker/1.0' } });
     if (r.status === 401 || r.status === 403) { cfToken = { t: null, until: 0 }; continue; }
-    if (!r.ok) throw new Error('cftools sessions ' + r.status);
+    if (!r.ok) throw new Error('player list failed: ' + r.status + ' ' + (await r.text()).slice(0, 80));
     return (await r.json()).sessions || [];
   }
-  throw new Error('cftools unauthorized');
+  throw new Error('CFTools refused the token: the application has no access to this server (check the grant and CFTOOLS_SERVER_ID)');
 }
 
 async function players(req, env, cors) {
@@ -169,7 +169,7 @@ async function players(req, env, cors) {
   const hit = await caches.default.match(key);
   if (hit) return new Response(hit.body, { status: 200, headers: { ...cors, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
   let list;
-  try { list = await cfSessions(env); } catch (e) { return json(cors, { ok: false, error: 'CFTools did not answer.' }, 502); }
+  try { list = await cfSessions(env); } catch (e) { return json(cors, { ok: false, error: 'CFTools did not answer (' + e.message + ').' }, 502); }
   // Only what an admin needs. Never pass on IP addresses or locations.
   const out = list.map((x) => {
     const pos = x.live && x.live.position && (x.live.position.latest || x.live.position.join);
