@@ -1,4 +1,4 @@
-/* Appeals form and staff hub. Talks to the login Worker (window.TUR.api). Everything private is served by the
+/* Appeals form and admin hub. Talks to the login Worker (window.TUR.api). Everything private is served by the
    Worker after a role check; nothing sensitive is in this file or the repo. */
 (function () {
   var cfg = window.TUR || {};
@@ -51,11 +51,11 @@
     });
   }
 
-  /* ---- staff hub ---- */
-  var st = document.querySelector('[data-staff]');
+  /* ---- admin hub ---- */
+  var st = document.querySelector('[data-admin]');
   if (st) {
     loginLinks(st);
-    fetch(cfg.api + '/staff/hub', { credentials: 'include', cache: 'no-store' })
+    fetch(cfg.api + '/admin/hub', { credentials: 'include', cache: 'no-store' })
       .then(function (r) {
         if (r.status === 401) return show(st, 'loggedout');
         if (r.status === 403) return show(st, 'denied');

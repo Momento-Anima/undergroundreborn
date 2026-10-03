@@ -36,11 +36,11 @@ LOGIN_ENABLED = True
 API_BASE = "https://api.theundergroundserver.com"
 
 # Pages that are built into preview/ only, never deployed, until Momento approves their wording
-# (or, for staff.html, until the Worker has its staff role set). Remove a name to go live; add it
+# (or, for admin.html, until the Worker has its admin role set). Remove a name to go live; add it
 # to NAV once it should be linked.
-DRAFT_PAGES = set()      # approved 2026-10-03 (unlinked): appeals, staff
+DRAFT_PAGES = set()      # approved 2026-10-03 (unlinked): appeals, admin
 # Built and deployed but kept out of search engines until they are linked in NAV.
-NOINDEX = {"appeals", "staff"}
+NOINDEX = {"appeals", "admin"}
 
 # (src stem, nav label). Order = nav order. Pages not listed (privacy) still build.
 NAV = [("index", "Home"), ("news", "What's new"), ("notoriety", "Notoriety"), ("map", "Map")]

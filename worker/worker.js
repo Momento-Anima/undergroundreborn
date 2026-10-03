@@ -1,14 +1,14 @@
-/* The Underground: Reborn - Discord login, staff gate and appeals (Cloudflare Worker at api.theundergroundserver.com).
+/* The Underground: Reborn - Discord login, admin gate and appeals (Cloudflare Worker at api.theundergroundserver.com).
  *
  * Routes
  *   /login        send the visitor to Discord to approve the login
  *   /callback     Discord sends them back; we read who they are, whether they are in our server and
- *                 whether they hold a staff role, and set a signed session cookie
+ *                 whether they hold an admin role, and set a signed session cookie
  *   /me           JSON for the site: { loggedIn, id, name, avatar, inGuild, staff }
  *   /logout       clear the cookie
- *   /appeal       POST (members only): a report / appeal / bug / application, posted to a private staff
+ *   /appeal       POST (members only): a report / appeal / bug / application, posted to a private admin
  *                 channel through a Discord webhook
- *   /staff/hub    GET (staff only): the staff page's content. Served from here, NOT from the public
+ *   /admin/hub    GET (admins only): the admin page's content. Served from here, NOT from the public
  *                 static site, because anything in the repo is public.
  *
  * Settings (Worker > Settings > Variables and Secrets)
@@ -17,12 +17,12 @@
  *   STAFF_ROLE_IDS   text    comma-separated role IDs in that server that count as staff
  *   CLIENT_SECRET    secret  Discord application's Client Secret
  *   SESSION_SECRET   secret  any long random string; signs the session cookie
- *   APPEALS_WEBHOOK  secret  Discord webhook URL of the private staff channel (appeals)
+ *   APPEALS_WEBHOOK  secret  Discord webhook URL of the private admin channel (appeals)
  *   TUR_KV           binding (optional) a KV namespace; if present it rate-limits /appeal per person
  *
  * We keep nothing: Discord's access token is used once, during /callback, and thrown away. The cookie
- * holds only the Discord ID, display name, avatar hash, "is in our server" and "is staff".
- * Staff sessions last 8 hours (so removing a staff role takes effect the same day); everyone else's last 7 days.
+ * holds only the Discord ID, display name, avatar hash, "is in our server" and "is an admin" (the flag is still called staff in code and in STAFF_ROLE_IDS).
+ * Admin sessions last 8 hours (so removing an admin role takes effect the same day); everyone else's last 7 days.
  */
 const SITE = 'https://theundergroundserver.com';
 const API = 'https://api.theundergroundserver.com';
@@ -31,7 +31,7 @@ const STATE = 'tur_state';
 const DAY = 24 * 3600;
 const enc = new TextEncoder();
 
-// Starter links for the staff page. Links only, never secrets: this file is public.
+// Starter links for the admin page. Links only, never secrets: this file is public.
 const STAFF_LINKS = [
   { group: 'Server', title: 'Game server panel (Gatz)', url: 'https://gamepanel.gatzgamehosting.com', note: 'Restarts, mod list, files' },
   { group: 'Server', title: 'Server in the DZSA launcher', url: 'https://dayzsalauncher.com', note: 'Check the live listing' },
@@ -40,7 +40,7 @@ const STAFF_LINKS = [
   { group: 'Website', title: 'Cloudflare (DNS and the login Worker)', url: 'https://dash.cloudflare.com', note: 'Owner only' },
 ];
 
-const KINDS = { appeal: 'Ban appeal', report: 'Player report', bug: 'Bug report', application: 'Staff application', other: 'Other' };
+const KINDS = { appeal: 'Ban appeal', report: 'Player report', bug: 'Bug report', application: 'Admin application', other: 'Other' };
 
 const b64u = (bytes) => btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 const unb64u = (s) => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0));
@@ -195,7 +195,7 @@ export default {
 
     if (url.pathname === '/appeal' && req.method === 'POST') return appeal(req, env, cors);
 
-    if (url.pathname === '/staff/hub') {
+    if (url.pathname === '/admin/hub') {
       const s = await session(req, env);
       if (!s || !s.staff) return json(cors, { ok: false }, s ? 403 : 401);
       return json(cors, { ok: true, name: s.name, links: STAFF_LINKS });
