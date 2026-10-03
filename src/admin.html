@@ -23,6 +23,21 @@
 
     <h2 style="margin-top:2rem">Live players</h2>
     <p class="hint" data-live-note>Connecting to CFTools&hellip;</p>
+    <div class="searchbar" hidden>
+      <label for="pl-search">Find a player</label>
+      <input id="pl-search" type="search" placeholder="Name or Steam ID" autocomplete="off">
+      <span class="hint" data-match></span>
+    </div>
+    <div class="legend" id="livelegend" role="group" aria-label="Show or hide" hidden>
+      <button type="button" data-layer="players" aria-pressed="true"><span class="sw" style="color:#ff9a2e"></span>Players</button>
+      <button type="button" data-layer="pvp" aria-pressed="true"><span class="sw" style="color:var(--pvp)"></span>PvP zones</button>
+      <button type="button" data-layer="safe" aria-pressed="true"><span class="sw" style="color:var(--safe)"></span>Safe zones</button>
+      <button type="button" data-layer="trader" aria-pressed="false"><span class="sw pin" style="color:var(--bone);background:var(--bone)"></span>Traders</button>
+      <button type="button" data-layer="dino" aria-pressed="false"><span class="sw" style="color:var(--ember-hot)"></span>Dinosaurs</button>
+      <button type="button" data-layer="vehicles" aria-pressed="false" disabled title="Not connected yet"><span class="sw" style="color:var(--bone)"></span>Vehicles (not connected)</button>
+      <button type="button" data-layer="events" aria-pressed="false" disabled title="Not connected yet"><span class="sw" style="color:#d36bd0"></span>Events (not connected)</button>
+      <button type="button" data-layer="items" aria-pressed="false" disabled title="Not connected yet"><span class="sw" style="color:var(--gas)"></span>Items (not connected)</button>
+    </div>
     <div class="mapbox" id="livemap" hidden>
       <img src="/assets/deerisle-land.png" alt="Outline of Deer Isle" width="1024" height="1024">
       <svg id="livesvg" viewBox="0 0 16384 16384" preserveAspectRatio="none" role="img" aria-label="Live player positions"></svg>
