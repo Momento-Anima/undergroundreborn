@@ -1,44 +1,61 @@
-/* The Underground: Reborn - Discord login (Cloudflare Worker, served at api.theundergroundserver.com).
+/* The Underground: Reborn - Discord login, staff gate and appeals (Cloudflare Worker at api.theundergroundserver.com).
  *
  * Routes
- *   /login     send the visitor to Discord to approve the login
- *   /callback  Discord sends them back here; we read who they are and set a session cookie
- *   /me        JSON for the site: { loggedIn, id, name, avatar, inGuild }
- *   /logout    clear the cookie
+ *   /login        send the visitor to Discord to approve the login
+ *   /callback     Discord sends them back; we read who they are, whether they are in our server and
+ *                 whether they hold a staff role, and set a signed session cookie
+ *   /me           JSON for the site: { loggedIn, id, name, avatar, inGuild, staff }
+ *   /logout       clear the cookie
+ *   /appeal       POST (members only): a report / appeal / bug / application, posted to a private staff
+ *                 channel through a Discord webhook
+ *   /staff/hub    GET (staff only): the staff page's content. Served from here, NOT from the public
+ *                 static site, because anything in the repo is public.
  *
  * Settings (Worker > Settings > Variables and Secrets)
- *   CLIENT_ID       text    Discord application's Client ID (public)
- *   GUILD_ID        text    our Discord server's ID (public)
- *   CLIENT_SECRET   secret  Discord application's Client Secret
- *   SESSION_SECRET  secret  any long random string; signs the session cookie
+ *   CLIENT_ID        text    Discord application's Client ID (public)
+ *   GUILD_ID         text    our PUBLIC Discord server's ID ("The Underground")
+ *   STAFF_ROLE_IDS   text    comma-separated role IDs in that server that count as staff
+ *   CLIENT_SECRET    secret  Discord application's Client Secret
+ *   SESSION_SECRET   secret  any long random string; signs the session cookie
+ *   APPEALS_WEBHOOK  secret  Discord webhook URL of the private staff channel (appeals)
+ *   TUR_KV           binding (optional) a KV namespace; if present it rate-limits /appeal per person
  *
- * We keep nothing: Discord's access token is used once, during /callback, and thrown away.
- * The cookie holds only the Discord ID, display name, avatar hash and "is in our server".
+ * We keep nothing: Discord's access token is used once, during /callback, and thrown away. The cookie
+ * holds only the Discord ID, display name, avatar hash, "is in our server" and "is staff".
+ * Staff sessions last 8 hours (so removing a staff role takes effect the same day); everyone else's last 7 days.
  */
 const SITE = 'https://theundergroundserver.com';
 const API = 'https://api.theundergroundserver.com';
 const COOKIE = 'tur_session';
 const STATE = 'tur_state';
-const WEEK = 7 * 24 * 3600;
+const DAY = 24 * 3600;
 const enc = new TextEncoder();
+
+// Starter links for the staff page. Links only, never secrets: this file is public.
+const STAFF_LINKS = [
+  { group: 'Server', title: 'Game server panel (Gatz)', url: 'https://gamepanel.gatzgamehosting.com', note: 'Restarts, mod list, files' },
+  { group: 'Server', title: 'Server in the DZSA launcher', url: 'https://dayzsalauncher.com', note: 'Check the live listing' },
+  { group: 'Project', title: 'Project board', url: 'https://github.com/orgs/Momento-Anima/projects/2', note: 'What is planned and in progress' },
+  { group: 'Website', title: 'Visitor statistics (Google Analytics)', url: 'https://analytics.google.com', note: 'Property: theundergroundserver.com' },
+  { group: 'Website', title: 'Cloudflare (DNS and the login Worker)', url: 'https://dash.cloudflare.com', note: 'Owner only' },
+];
+
+const KINDS = { appeal: 'Ban appeal', report: 'Player report', bug: 'Bug report', application: 'Staff application', other: 'Other' };
 
 const b64u = (bytes) => btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 const unb64u = (s) => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0));
 
-async function hmac(secret, data) {
-  const key = await crypto.subtle.importKey('raw', enc.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign', 'verify']);
-  return key;
-}
+const hmacKey = (secret) => crypto.subtle.importKey('raw', enc.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign', 'verify']);
 async function sign(secret, payload) {
   const body = b64u(enc.encode(JSON.stringify(payload)));
-  const sig = new Uint8Array(await crypto.subtle.sign('HMAC', await hmac(secret), enc.encode(body)));
+  const sig = new Uint8Array(await crypto.subtle.sign('HMAC', await hmacKey(secret), enc.encode(body)));
   return body + '.' + b64u(sig);
 }
 async function verify(secret, token) {
   if (!token || !token.includes('.')) return null;
   const [body, sig] = token.split('.');
   let ok = false;
-  try { ok = await crypto.subtle.verify('HMAC', await hmac(secret), unb64u(sig), enc.encode(body)); } catch (e) { return null; }
+  try { ok = await crypto.subtle.verify('HMAC', await hmacKey(secret), unb64u(sig), enc.encode(body)); } catch (e) { return null; }
   if (!ok) return null;
   const data = JSON.parse(new TextDecoder().decode(unb64u(body)));
   return data.exp > Date.now() / 1000 ? data : null;
@@ -58,6 +75,59 @@ function redirect(to, ...setCookies) {
   return new Response(null, { status: 302, headers: h });
 }
 
+const json = (cors, body, status = 200) =>
+  new Response(JSON.stringify(body), { status, headers: { ...cors, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
+
+const avatarUrl = (s) => (s.avatar
+  ? `https://cdn.discordapp.com/avatars/${s.id}/${s.avatar}.png?size=64`
+  : `https://cdn.discordapp.com/embed/avatars/${Number((BigInt(s.id) >> 22n) % 6n)}.png`);
+
+async function session(req, env) {
+  return verify(env.SESSION_SECRET, cookies(req)[COOKIE]);
+}
+
+async function appeal(req, env, cors) {
+  const s = await session(req, env);
+  if (!s) return json(cors, { ok: false, error: 'Log in with Discord first.' }, 401);
+  if (!s.inGuild) return json(cors, { ok: false, error: 'You need to be a member of our Discord server to send this.' }, 403);
+  // Only our own pages may POST (cookies are SameSite=Lax too; this is a second lock).
+  if (req.headers.get('Origin') !== SITE) return json(cors, { ok: false, error: 'Not allowed.' }, 403);
+  let b;
+  try { b = await req.json(); } catch (e) { return json(cors, { ok: false, error: 'Bad request.' }, 400); }
+  const kind = KINDS[b.kind] ? b.kind : 'other';
+  const who = String(b.who || '').trim().slice(0, 120);
+  const text = String(b.text || '').trim();
+  if (text.length < 20) return json(cors, { ok: false, error: 'Please write a little more (at least 20 characters).' }, 400);
+  if (text.length > 1800) return json(cors, { ok: false, error: 'That is too long (1,800 characters at most).' }, 400);
+  if (!env.APPEALS_WEBHOOK) return json(cors, { ok: false, error: 'This form is not set up yet.' }, 503);
+  if (env.TUR_KV) {
+    const key = 'appeal:' + s.id;
+    if (await env.TUR_KV.get(key)) return json(cors, { ok: false, error: 'You sent one a moment ago. Please wait 10 minutes before sending another.' }, 429);
+    await env.TUR_KV.put(key, '1', { expirationTtl: 600 });
+  }
+  const r = await fetch(env.APPEALS_WEBHOOK, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      username: 'Website',
+      allowed_mentions: { parse: [] },   // never let a submission ping anyone
+      embeds: [{
+        title: KINDS[kind],
+        description: text,
+        color: 0xe8622c,
+        fields: [
+          { name: 'From', value: `<@${s.id}> (${s.name}, ${s.id})`, inline: false },
+          { name: 'In-game name / Steam ID given', value: who || 'not given', inline: false },
+        ],
+        footer: { text: 'Sent from theundergroundserver.com' },
+        timestamp: new Date().toISOString(),
+      }],
+    }),
+  });
+  if (!r.ok) return json(cors, { ok: false, error: 'Could not deliver that. Please try again, or ask in Discord.' }, 502);
+  return json(cors, { ok: true });
+}
+
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
@@ -65,6 +135,7 @@ export default {
       'Access-Control-Allow-Origin': SITE,
       'Access-Control-Allow-Credentials': 'true',
       'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Vary': 'Origin',
     };
     if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
@@ -73,7 +144,7 @@ export default {
       const state = b64u(crypto.getRandomValues(new Uint8Array(16)));
       const q = new URLSearchParams({
         client_id: env.CLIENT_ID, response_type: 'code', redirect_uri: API + '/callback',
-        scope: 'identify guilds', state, prompt: 'none',
+        scope: 'identify guilds guilds.members.read', state, prompt: 'none',
       });
       return redirect('https://discord.com/oauth2/authorize?' + q, setCookie(STATE, state, 600));
     }
@@ -81,7 +152,8 @@ export default {
     if (url.pathname === '/callback') {
       const code = url.searchParams.get('code');
       const state = url.searchParams.get('state');
-      if (!code || !state || cookies(req)[STATE] !== state) return redirect(SITE + '/?login=failed', setCookie(STATE, '', 0));
+      const fail = () => redirect(SITE + '/?login=failed', setCookie(STATE, '', 0));
+      if (!code || !state || cookies(req)[STATE] !== state) return fail();
       const tok = await fetch('https://discord.com/api/oauth2/token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -90,34 +162,43 @@ export default {
           code, redirect_uri: API + '/callback',
         }),
       });
-      if (!tok.ok) return redirect(SITE + '/?login=failed', setCookie(STATE, '', 0));
+      if (!tok.ok) return fail();
       const { access_token } = await tok.json();
       const auth = { headers: { Authorization: 'Bearer ' + access_token } };
-      const [me, guilds] = await Promise.all([
+      const [me, member] = await Promise.all([
         fetch('https://discord.com/api/users/@me', auth).then((r) => r.json()),
-        fetch('https://discord.com/api/users/@me/guilds', auth).then((r) => (r.ok ? r.json() : [])),
+        // 404 if they are not in our server; otherwise includes their role IDs.
+        fetch(`https://discord.com/api/users/@me/guilds/${env.GUILD_ID}/member`, auth).then((r) => (r.ok ? r.json() : null)),
       ]);
-      if (!me.id) return redirect(SITE + '/?login=failed', setCookie(STATE, '', 0));
-      const session = await sign(env.SESSION_SECRET, {
+      if (!me.id) return fail();
+      const staffRoles = String(env.STAFF_ROLE_IDS || '').split(',').map((x) => x.trim()).filter(Boolean);
+      const staff = !!(member && Array.isArray(member.roles) && member.roles.some((r) => staffRoles.includes(r)));
+      const life = staff ? 8 * 3600 : 7 * DAY;
+      const sess = await sign(env.SESSION_SECRET, {
         id: me.id, name: me.global_name || me.username, avatar: me.avatar || null,
-        inGuild: Array.isArray(guilds) && guilds.some((g) => g.id === env.GUILD_ID),
-        exp: Math.floor(Date.now() / 1000) + WEEK,
+        inGuild: !!member, staff,
+        exp: Math.floor(Date.now() / 1000) + life,
       });
-      return redirect(SITE + '/', setCookie(COOKIE, session, WEEK, 'theundergroundserver.com'), setCookie(STATE, '', 0));
+      return redirect(SITE + '/', setCookie(COOKIE, sess, life, 'theundergroundserver.com'), setCookie(STATE, '', 0));
     }
 
     if (url.pathname === '/me') {
-      const s = await verify(env.SESSION_SECRET, cookies(req)[COOKIE]);
-      const body = s
-        ? { loggedIn: true, id: s.id, name: s.name, inGuild: s.inGuild,
-            avatar: s.avatar ? `https://cdn.discordapp.com/avatars/${s.id}/${s.avatar}.png?size=64`
-                             : `https://cdn.discordapp.com/embed/avatars/${Number((BigInt(s.id) >> 22n) % 6n)}.png` }
-        : { loggedIn: false };
-      return new Response(JSON.stringify(body), { headers: { ...cors, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
+      const s = await session(req, env);
+      return json(cors, s
+        ? { loggedIn: true, id: s.id, name: s.name, inGuild: !!s.inGuild, staff: !!s.staff, avatar: avatarUrl(s) }
+        : { loggedIn: false });
     }
 
     if (url.pathname === '/logout') {
       return redirect(SITE + '/', setCookie(COOKIE, '', 0, 'theundergroundserver.com'));
+    }
+
+    if (url.pathname === '/appeal' && req.method === 'POST') return appeal(req, env, cors);
+
+    if (url.pathname === '/staff/hub') {
+      const s = await session(req, env);
+      if (!s || !s.staff) return json(cors, { ok: false }, s ? 403 : 401);
+      return json(cors, { ok: true, name: s.name, links: STAFF_LINKS });
     }
 
     return new Response('Not found', { status: 404 });

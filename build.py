@@ -35,6 +35,11 @@ ADSENSE_ID = ""     # AdSense publisher ID, "ca-pub-XXXXXXXXXXXXXXXX"
 LOGIN_ENABLED = True
 API_BASE = "https://api.theundergroundserver.com"
 
+# Pages that are built into preview/ only, never deployed, until Momento approves their wording
+# (or, for staff.html, until the Worker has its staff role set). Remove a name to go live; add it
+# to NAV once it should be linked.
+DRAFT_PAGES = {"appeals", "staff"}
+
 # (src stem, nav label). Order = nav order. Pages not listed (privacy) still build.
 NAV = [("index", "Home"), ("news", "What's new"), ("notoriety", "Notoriety"), ("map", "Map")]
 
@@ -119,8 +124,13 @@ def build_page(stem):
 {analytics()}"""
     html = f'<!doctype html>\n<html lang="en">\n<head>\n{head}\n</head>\n<body>\n{shared}\n</body>\n</html>\n'
     out = ROOT / "index.html" if stem == "index" else ROOT / stem / "index.html"
-    out.parent.mkdir(exist_ok=True)
-    out.write_bytes(html.encode("utf-8"))
+    if stem not in DRAFT_PAGES:
+        out.parent.mkdir(exist_ok=True)
+        out.write_bytes(html.encode("utf-8"))
+    elif out.exists():
+        out.unlink()            # a draft must never linger in the deploy tree
+        if out.parent != ROOT and not any(out.parent.iterdir()):
+            out.parent.rmdir()
 
     # Preview fragment: flat asset paths, page links point at the live site.
     preview = re.sub(r'(src|href)="/assets/([^"?]+)(\?[^"]*)?"', r'\1="assets/\2"', shared)
@@ -134,7 +144,8 @@ def build_page(stem):
 
 def main():
     for f in sorted((ROOT / "src").glob("*.html")):
-        print("wrote", build_page(f.stem).relative_to(ROOT))
+        out = build_page(f.stem)
+        print(("draft (preview only) " if f.stem in DRAFT_PAGES else "wrote ") + str(out.relative_to(ROOT)))
 
 
 if __name__ == "__main__":

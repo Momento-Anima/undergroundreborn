@@ -24,6 +24,7 @@ body {
   padding-inline: 16px; -webkit-font-smoothing: antialiased;
 }
 img { max-width: 100%; }
+[hidden] { display: none !important; }
 .wrap { max-width: 60rem; margin-inline: auto; }
 a { color: var(--ember-hot); }
 a:focus-visible, .btn:focus-visible, button:focus-visible { outline: 2px solid var(--ember-hot); outline-offset: 3px; }
@@ -69,6 +70,18 @@ code { color: var(--bone); background: var(--tunnel); padding: .1em .4em; overfl
 .btn:hover { background: var(--ember-hot); border-color: var(--ember-hot); color: var(--soot); }
 .pagehead { padding-block: clamp(2rem, 5vw, 3.5rem) 1.5rem; display: grid; gap: .75rem; }
 .pagehead .label { color: var(--ember-hot); }
+
+/* Forms (appeals) and staff hub */
+form { display: grid; gap: .6rem; max-width: 40rem; }
+label { font-family: var(--mono); font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ash); margin-top: .4rem; }
+input, select, textarea { font: inherit; color: var(--bone); background: var(--tunnel); border: 1px solid var(--seam); padding: .6rem .75rem; width: 100%; border-radius: 0; }
+textarea { resize: vertical; min-height: 9rem; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--ember-hot); outline-offset: 2px; }
+.hint { color: var(--ash); font-size: .9rem; text-transform: none; letter-spacing: 0; font-family: var(--body); }
+.status { min-height: 1.4em; color: var(--ember-hot); }
+.note { background: var(--tunnel); border: 1px solid var(--seam); padding: 1rem 1.25rem; display: grid; gap: .75rem; max-width: 40rem; }
+.hublinks { display: grid; gap: .5rem; }
+button.btn:disabled { opacity: .5; cursor: default; }
 
 /* Server plate + live status */
 .plate { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); border-block: 1px solid var(--seam); margin-block: 1rem 0; }
