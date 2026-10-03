@@ -142,7 +142,8 @@ async function cfAuth(env, force) {
   const r = await fetch(CF + '/v1/auth/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'User-Agent': 'TUR-website-worker/1.0 (theundergroundserver.com)' },
-    body: JSON.stringify({ application_id: env.CFTOOLS_APP_ID, secret: env.CFTOOLS_SECRET }),
+    // Trim: a pasted secret can carry a trailing space or line break.
+    body: JSON.stringify({ application_id: String(env.CFTOOLS_APP_ID).trim(), secret: String(env.CFTOOLS_SECRET).trim() }),
   });
   if (!r.ok) throw new Error('login to CFTools failed: ' + r.status + ' ' + (await r.text()).slice(0, 80));
   cfToken = { t: (await r.json()).token, until: Date.now() + 20 * 3600 * 1000 };
@@ -150,7 +151,7 @@ async function cfAuth(env, force) {
 }
 
 async function cfSessions(env) {
-  const url = `${CF}/v1/server/${env.CFTOOLS_SERVER_ID}/GSM/list`;
+  const url = `${CF}/v1/server/${String(env.CFTOOLS_SERVER_ID).trim()}/GSM/list`;
   for (let attempt = 0; attempt < 2; attempt++) {
     const r = await fetch(url, { headers: { Authorization: 'Bearer ' + await cfAuth(env, attempt > 0), 'User-Agent': 'TUR-website-worker/1.0' } });
     if (r.status === 401 || r.status === 403) { cfToken = { t: null, until: 0 }; continue; }
