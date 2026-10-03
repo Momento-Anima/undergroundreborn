@@ -89,7 +89,7 @@
         if (!u.loggedIn) return login();
         acct.innerHTML = '<img alt="" width="24" height="24"><span></span><a href="' + cfg.api + '/logout">Log out</a>';
         acct.querySelector('img').src = u.avatar;
-        acct.querySelector('span').textContent = u.name;
+        acct.querySelector('span').textContent = u.name + (u.staff ? ' (staff)' : '');
       })
       .catch(login);
   }
