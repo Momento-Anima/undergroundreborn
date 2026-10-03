@@ -80,7 +80,7 @@ def main():
     if not ch:
         ch = call("POST", "/guilds/%s/channels" % GUILD, {
             "name": CHANNEL, "type": 0, "parent_id": cat["id"], "permission_overwrites": overwrites(),
-            "topic": "Messages from the website's Contact staff form. Staff only."})
+            "topic": "Messages from the website's Contact admins form. Admins only."})
     hooks = [h for h in call("GET", "/channels/%s/webhooks" % ch["id"]) if h.get("name") == HOOK and h.get("token")]
     h = hooks[0] if hooks else call("POST", "/channels/%s/webhooks" % ch["id"], {"name": HOOK})
     url = "https://discord.com/api/webhooks/%s/%s" % (h["id"], h["token"])
