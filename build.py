@@ -27,7 +27,7 @@ GAME_PORT = 2744
 QUERY_PORT = 2816
 
 # Fill these in when Momento has the IDs. Empty = the tag is not emitted.
-GA_ID = ""          # Google Analytics measurement ID, "G-XXXXXXXXXX"
+GA_ID = "G-6Y451GF7E2"          # Google Analytics measurement ID, "G-XXXXXXXXXX"
 ADSENSE_ID = ""     # AdSense publisher ID, "ca-pub-XXXXXXXXXXXXXXXX"
 
 # (src stem, nav label). Order = nav order. Pages not listed (privacy) still build.
