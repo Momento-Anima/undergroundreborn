@@ -34,9 +34,11 @@ Nothing is stored server-side. The cookie (7 days) carries Discord ID, display n
   secret `CFTOOLS_SECRET`. Route `/admin/players` (admins only) returns name, steam64, ping and position only, never IPs.
 - API: `POST https://data.cftools.cloud/v1/auth/register {application_id, secret}` -> token (cached ~20 h);
   sessions carry `live.position.latest = [x, y, z]`. A wrong secret answers `403 bad-secret`, an unknown app id `404 not-found`.
-- **Gotcha that cost an hour:** the first CFTOOLS_SECRET held the 24-character application ID, because the secret's Copy
-  button did not take and the earlier clipboard content was pasted. The failure message reports the stored secret's LENGTH
-  (never the secret): a real secret is much longer than 24. That diagnostic is still in `worker.js`; drop it the next time
-  the Worker is redeployed.
+- **Gotcha 1 (cost an hour):** the first CFTOOLS_SECRET held the 24-character application ID, because the secret's Copy
+  button did not take and the earlier clipboard content was pasted. A temporary diagnostic showed the stored length (real
+  secret is far longer than 24); it has been removed. If login to CFTools ever fails again with `403 bad-secret`, re-copy.
+- **Gotcha 2:** CFTools orders positions as **(east, NORTH, height)**, not DayZ's (east, height, north) (see the
+  `Coordinates` note in cftools-sdk). `/admin/players` maps `z` = array[1] (north) and `y` = array[2] (height); the first
+  version used them the wrong way round and the dots were in the wrong places.
 - No reset option exists for the secret in the developer portal. If it is ever lost, create a new application and re-grant.
 
