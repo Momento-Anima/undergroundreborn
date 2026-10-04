@@ -19,17 +19,23 @@ from collections import defaultdict
 from pathlib import Path
 
 SITE = Path(__file__).resolve().parents[1]
+
+
+def hidden_places():
+    """Phrases for places that must never reach the public map. Local file, never committed; no file = refuse to run."""
+    f = SITE / "tools" / "hidden_places.txt"
+    if not f.exists():
+        raise SystemExit("tools/hidden_places.txt is missing: refusing to build public map data without the hidden-places list")
+    return tuple(x.strip().lower() for x in f.read_text(encoding="utf-8").splitlines() if x.strip() and not x.startswith("#"))
+
+
+HIDDEN_ZONES = hidden_places()
 REPO = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(r"G:\TU\dayz-deer-isle")
 OUT = SITE / "assets" / "map-data.json"
 
 WORLD = 16384
 TYPES = {1: "pvp", 2: "pve", 3: "label", 5: "safe"}
 
-# Hidden by design (switchboard, 2026-10-03): the Black Market's existence and location, the Huntsman, quest sites, pirate base,
-# and every named PvE spot (they are quest/story places). None of these may appear in the PUBLIC map data.
-# Dinosaur territories stay off the public map until the Dinos window confirms they are live and OK to show (2026-10-03).
-PUBLISH_DINOS = False
-HIDDEN_ZONES = ("black market", "dreadbeard", "quest site")
 
 # Trader .map files -> what the pin says. The file name is the hub.
 HUBS = {
@@ -55,8 +61,6 @@ def clean(name):
     return name.replace("AREA 42", "Area 42").strip()
 
 
-QUEST_AREA_42 = "(Quest) Area 42"
-
 
 def zones():
     out = []
@@ -67,11 +71,13 @@ def zones():
         if not t or z.get("Hide") or z.get("radius", 0) <= 0:
             continue
         raw = z["name"]
+        if any(h in raw.lower() for h in HIDDEN_ZONES):
+            continue                                  # hidden by design: never published
         gas = raw.startswith("(GAS)")
         if t == "label" and not gas:
             continue                                  # shop labels, not zones
         out.append({
-            "name": "Area 42 (quest site)" if raw == QUEST_AREA_42 else clean(raw),
+            "name": clean(raw),
             "type": "gas" if gas else t,
             "x": round(z["center"][0]), "z": round(z["center"][2]),
             "r": round(z["radius"]),
@@ -151,24 +157,36 @@ def traders():
 
 
 def dinos():
-    out = defaultdict(list)
+    """BROAD zones only (Momento, 2026-10-03): territories closer than LINK metres merge into one big circle, padded, so
+    the public map shows regions and never exact spawn circles. Species are not named."""
+    import math
+    pts = []
     env = REPO / "mpmissions" / "Empty.deerisle" / "env"
-    for fname, label in DINOS.items():
+    for fname in DINOS:
         f = env / fname
-        if not f.exists():
-            print("!! missing", f)
-            continue
-        for zone in ET.parse(f).getroot().iter("zone"):
-            out[label].append({"x": round(float(zone.get("x"))), "z": round(float(zone.get("z"))),
-                               "r": max(round(float(zone.get("r"))), 60)})
-    return [{"name": k, "areas": v} for k, v in out.items()]
+        if f.exists():
+            for zone in ET.parse(f).getroot().iter("zone"):
+                pts.append([float(zone.get("x")), float(zone.get("z")), float(zone.get("r"))])
+    LINK, PAD, MIN_R = 2500, 900, 1100
+    groups = []
+    for p in pts:
+        hit = [g for g in groups if any(math.hypot(p[0] - q[0], p[1] - q[1]) < LINK for q in g)]
+        merged = [p] + [q for g in hit for q in g]
+        groups = [g for g in groups if g not in hit] + [merged]
+    areas = []
+    for g in groups:
+        cx = sum(q[0] for q in g) / len(g)
+        cz = sum(q[1] for q in g) / len(g)
+        r = max(math.hypot(q[0] - cx, q[1] - cz) + q[2] for q in g) + PAD
+        areas.append({"x": round(cx / 100) * 100, "z": round(cz / 100) * 100, "r": max(round(r / 100) * 100, MIN_R)})
+    return [{"name": "Dinosaur country", "areas": areas}]
 
 
 def main():
     pvp, zs = merge_areas(zones(), "pvp")
     pvp = [a for a in pvp if not any(h in a["name"].lower() for h in HIDDEN_ZONES)]
     zs = [z for z in zs if z["type"] != "pve" and not any(h in z["name"].lower() for h in HIDDEN_ZONES)]
-    data = {"world": WORLD, "pvp": pvp, "zones": zs, "traders": traders(), "dinos": dinos() if PUBLISH_DINOS else []}
+    data = {"world": WORLD, "pvp": pvp, "zones": zs, "traders": traders(), "dinos": dinos()}
     OUT.write_bytes((json.dumps(data, indent=1) + "\n").encode("utf-8"))
     print(f"{OUT}: {sum(len(a['circles']) for a in pvp)} PvP circles -> {len(pvp)} areas, {len(data['zones'])} other zones, {len(data['traders'])} trader hubs, "
           f"{sum(len(d['areas']) for d in data['dinos'])} dino areas published")

@@ -1,1 +1,5 @@
 preview/
+# the hidden-places list must stay local
+tools/hidden_places.txt
+data_build/
+__pycache__/
