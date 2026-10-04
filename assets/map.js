@@ -51,9 +51,8 @@
       el('feMergeNode', { 'in': 'edge' }, m);
     }
     blobFilter('blob-pvp', '--pvp');
-    blobFilter('blob-pve', '--pve');
-    var layers = {};
-    ['pve', 'dino', 'gas', 'pvp', 'safe', 'trader'].forEach(function (k) {
+        var layers = {};
+    ['dino', 'gas', 'pvp', 'safe', 'trader'].forEach(function (k) {
       layers[k] = el('g', { 'data-layer': k, 'class': k === 'pve' ? 'hidden' : '' });
     });
     var sub = { pvp: 'PvP zone', pve: 'PvE', safe: 'Safe zone', gas: 'Contaminated' };
@@ -78,7 +77,6 @@
         }
       });
     }
-    drawAreas(d.pve, 'pve', 'PvE', 700);
     drawAreas(d.pvp, 'pvp', 'PvP zone', 800);
 
     d.zones.slice().sort(function (a, b) { return b.r - a.r; }).forEach(function (z) {

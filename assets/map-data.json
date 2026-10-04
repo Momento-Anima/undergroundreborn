@@ -34,22 +34,6 @@
    "z": 4802
   },
   {
-   "name": "Area 42 (quest site)",
-   "label": "Area 42 (quest site)",
-   "names": [
-    "Area 42 (quest site)"
-   ],
-   "circles": [
-    {
-     "x": 8219,
-     "z": 12141,
-     "r": 125
-    }
-   ],
-   "x": 8219,
-   "z": 12141
-  },
-  {
    "name": "Area 42 / East Harbor / Scorched Earth Bridge",
    "label": "Area 42 +2",
    "names": [
@@ -107,22 +91,6 @@
    ],
    "x": 10054,
    "z": 12563
-  },
-  {
-   "name": "Black Market",
-   "label": "Black Market",
-   "names": [
-    "Black Market"
-   ],
-   "circles": [
-    {
-     "x": 7587,
-     "z": 6889,
-     "r": 390
-    }
-   ],
-   "x": 7587,
-   "z": 6889
   },
   {
    "name": "Camp Bear",
@@ -214,22 +182,6 @@
    "x": 1670,
    "z": 12731,
    "gas": true
-  },
-  {
-   "name": "Dreadbeard's Landing",
-   "label": "Dreadbeard's Landing",
-   "names": [
-    "Dreadbeard's Landing"
-   ],
-   "circles": [
-    {
-     "x": 2693,
-     "z": 11049,
-     "r": 150
-    }
-   ],
-   "x": 2693,
-   "z": 11049
   },
   {
    "name": "Horizon Oil Rig",
@@ -516,287 +468,6 @@
    "z": 13348
   }
  ],
- "pve": [
-  {
-   "name": "Asheville Ruins",
-   "label": "Asheville Ruins",
-   "names": [
-    "Asheville Ruins"
-   ],
-   "circles": [
-    {
-     "x": 7237,
-     "z": 2583,
-     "r": 100
-    }
-   ],
-   "x": 7237,
-   "z": 2583
-  },
-  {
-   "name": "Grey Market",
-   "label": "Grey Market",
-   "names": [
-    "Grey Market"
-   ],
-   "circles": [
-    {
-     "x": 5434,
-     "z": 4973,
-     "r": 90
-    }
-   ],
-   "x": 5434,
-   "z": 4973
-  },
-  {
-   "name": "Ice Castle",
-   "label": "Ice Castle",
-   "names": [
-    "Ice Castle"
-   ],
-   "circles": [
-    {
-     "x": 15510,
-     "z": 14823,
-     "r": 800
-    }
-   ],
-   "x": 15510,
-   "z": 14823
-  },
-  {
-   "name": "Jungle Temple No Build",
-   "label": "Jungle Temple No Build",
-   "names": [
-    "Jungle Temple No Build"
-   ],
-   "circles": [
-    {
-     "x": 366,
-     "z": 783,
-     "r": 2000
-    }
-   ],
-   "x": 366,
-   "z": 783
-  },
-  {
-   "name": "Momento's Workshop",
-   "label": "Momento's Workshop",
-   "names": [
-    "Momento's Workshop"
-   ],
-   "circles": [
-    {
-     "x": 1142,
-     "z": 10618,
-     "r": 75
-    }
-   ],
-   "x": 1142,
-   "z": 10618
-  },
-  {
-   "name": "Old Town Castle Ruins",
-   "label": "Old Town Castle Ruins",
-   "names": [
-    "Old Town Castle Ruins"
-   ],
-   "circles": [
-    {
-     "x": 2546,
-     "z": 8846,
-     "r": 100
-    }
-   ],
-   "x": 2546,
-   "z": 8846
-  },
-  {
-   "name": "Pear Plantation",
-   "label": "Pear Plantation",
-   "names": [
-    "Pear Plantation"
-   ],
-   "circles": [
-    {
-     "x": 9561,
-     "z": 7679,
-     "r": 125
-    }
-   ],
-   "x": 9561,
-   "z": 7679
-  },
-  {
-   "name": "Portland Shipping Yard",
-   "label": "Portland Shipping Yard",
-   "names": [
-    "Portland Shipping Yard"
-   ],
-   "circles": [
-    {
-     "x": 5835,
-     "z": 14731,
-     "r": 100
-    }
-   ],
-   "x": 5835,
-   "z": 14731
-  },
-  {
-   "name": "Proving Grounds",
-   "label": "Proving Grounds",
-   "names": [
-    "Proving Grounds"
-   ],
-   "circles": [
-    {
-     "x": 10488,
-     "z": 7342,
-     "r": 100
-    }
-   ],
-   "x": 10488,
-   "z": 7342
-  },
-  {
-   "name": "Rockenheim Circuit",
-   "label": "Rockenheim Circuit",
-   "names": [
-    "Rockenheim Circuit"
-   ],
-   "circles": [
-    {
-     "x": 9691,
-     "z": 12307,
-     "r": 70
-    },
-    {
-     "x": 10005,
-     "z": 11023,
-     "r": 110
-    },
-    {
-     "x": 10104,
-     "z": 11064,
-     "r": 110
-    },
-    {
-     "x": 10193,
-     "z": 11099,
-     "r": 110
-    },
-    {
-     "x": 9720,
-     "z": 12234,
-     "r": 75
-    },
-    {
-     "x": 9754,
-     "z": 12137,
-     "r": 85
-    },
-    {
-     "x": 9795,
-     "z": 12035,
-     "r": 110
-    },
-    {
-     "x": 9790,
-     "z": 11847,
-     "r": 125
-    },
-    {
-     "x": 9996,
-     "z": 11456,
-     "r": 400
-    },
-    {
-     "x": 9691,
-     "z": 11196,
-     "r": 310
-    },
-    {
-     "x": 9803,
-     "z": 10946,
-     "r": 110
-    },
-    {
-     "x": 9890,
-     "z": 10978,
-     "r": 110
-    }
-   ],
-   "x": 9996,
-   "z": 11456
-  },
-  {
-   "name": "Stark's Castle",
-   "label": "Stark's Castle",
-   "names": [
-    "Stark's Castle"
-   ],
-   "circles": [
-    {
-     "x": 5845,
-     "z": 2378,
-     "r": 150
-    }
-   ],
-   "x": 5845,
-   "z": 2378
-  },
-  {
-   "name": "Storm the Castle",
-   "label": "Storm the Castle",
-   "names": [
-    "Storm the Castle"
-   ],
-   "circles": [
-    {
-     "x": 6719,
-     "z": 2905,
-     "r": 150
-    }
-   ],
-   "x": 6719,
-   "z": 2905
-  },
-  {
-   "name": "Waldoboro Hills High",
-   "label": "Waldoboro Hills High",
-   "names": [
-    "Waldoboro Hills High"
-   ],
-   "circles": [
-    {
-     "x": 8504,
-     "z": 10119,
-     "r": 150
-    }
-   ],
-   "x": 8504,
-   "z": 10119
-  },
-  {
-   "name": "Warren Cove Cemetery",
-   "label": "Warren Cove Cemetery",
-   "names": [
-    "Warren Cove Cemetery"
-   ],
-   "circles": [
-    {
-     "x": 7181,
-     "z": 5971,
-     "r": 100
-    }
-   ],
-   "x": 7181,
-   "z": 5971
-  }
- ],
  "zones": [
   {
    "name": "Collectibles Trader",
@@ -844,9 +515,9 @@
  "traders": [
   {
    "name": "Groot's Hill",
-   "x": 7524,
-   "z": 4591,
-   "npcs": 17
+   "x": 7521,
+   "z": 4588,
+   "npcs": 18
   },
   {
    "name": "Waldoboro",
@@ -859,12 +530,6 @@
    "x": 9038,
    "z": 13550,
    "npcs": 16
-  },
-  {
-   "name": "Black Market",
-   "x": 7568,
-   "z": 6806,
-   "npcs": 10
   },
   {
    "name": "Grey Market",
@@ -883,12 +548,6 @@
    "x": 6339,
    "z": 14304,
    "npcs": 2
-  },
-  {
-   "name": "The Huntsman",
-   "x": 9860,
-   "z": 7045,
-   "npcs": 4
   }
  ],
  "dinos": [
