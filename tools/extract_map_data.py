@@ -27,6 +27,8 @@ TYPES = {1: "pvp", 2: "pve", 3: "label", 5: "safe"}
 
 # Hidden by design (switchboard, 2026-10-03): the Black Market's existence and location, the Huntsman, quest sites, pirate base,
 # and every named PvE spot (they are quest/story places). None of these may appear in the PUBLIC map data.
+# Dinosaur territories stay off the public map until the Dinos window confirms they are live and OK to show (2026-10-03).
+PUBLISH_DINOS = False
 HIDDEN_ZONES = ("black market", "dreadbeard", "quest site")
 
 # Trader .map files -> what the pin says. The file name is the hub.
@@ -166,10 +168,10 @@ def main():
     pvp, zs = merge_areas(zones(), "pvp")
     pvp = [a for a in pvp if not any(h in a["name"].lower() for h in HIDDEN_ZONES)]
     zs = [z for z in zs if z["type"] != "pve" and not any(h in z["name"].lower() for h in HIDDEN_ZONES)]
-    data = {"world": WORLD, "pvp": pvp, "zones": zs, "traders": traders(), "dinos": dinos()}
+    data = {"world": WORLD, "pvp": pvp, "zones": zs, "traders": traders(), "dinos": dinos() if PUBLISH_DINOS else []}
     OUT.write_bytes((json.dumps(data, indent=1) + "\n").encode("utf-8"))
     print(f"{OUT}: {sum(len(a['circles']) for a in pvp)} PvP circles -> {len(pvp)} areas, {len(data['zones'])} other zones, {len(data['traders'])} trader hubs, "
-          f"{sum(len(d['areas']) for d in data['dinos'])} dino areas")
+          f"{sum(len(d['areas']) for d in data['dinos'])} dino areas published")
 
 
 if __name__ == "__main__":
