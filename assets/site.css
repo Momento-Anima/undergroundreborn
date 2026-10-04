@@ -300,3 +300,20 @@ body:has(.grove-quiet)::after { content: ""; position: absolute; left: 0; right:
   background: url(/assets/sak/moss-sakura.webp) center bottom / 100% 100% no-repeat; }
 .ff.still i { animation: none; opacity: .24; }
 .ff.still i + i { display: none; }
+
+/* Missions and events page */
+.mtag { display: inline-block; justify-self: start; font-family: var(--mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; padding: .15rem .5rem; border: 1px solid var(--seam); color: var(--ash); margin-bottom: .5rem; }
+.mtag.pvp { color: var(--pvp); border-color: var(--pvp); }
+.mtag.pve { color: var(--pve); border-color: var(--pve); }
+.mtag.soon { color: var(--ember-hot); border-color: var(--ember); }
+.dtf-grid { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+.dtf-grid li { min-width: 0; }
+.dtf-grid .ph { aspect-ratio: 16 / 9; display: grid; place-items: center; border-radius: 1rem; border: 1px dashed var(--seam); background: var(--tunnel); color: var(--ash); font-family: var(--mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; }
+.dtf-grid img { width: 100%; height: auto; display: block; border-radius: 1rem; border: 1px solid var(--seam); }
+.dtf-grid h4 { margin: .6rem 0 0; font-family: var(--display); font-weight: 600; font-size: 1.15rem; letter-spacing: .04em; text-transform: uppercase; }
+.dtf-grid p { color: var(--ash); font-size: .92rem; margin: .15rem 0 0; }
+.mission-sec { display: grid; gap: .75rem; max-width: 44rem; }
+.mission-sec p { color: var(--ash); }
+.mission-sec p strong { color: var(--bone); font-weight: 600; }
+@media (max-width: 46rem) { .dtf-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 30rem) { .dtf-grid { grid-template-columns: 1fr; } }
