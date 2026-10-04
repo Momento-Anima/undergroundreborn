@@ -93,4 +93,32 @@
       })
       .catch(login);
   }
+
+  /* Sakura look (pages with a .grove marker only): fireflies drift behind the page and petals fall slowly.
+     Visitors who prefer reduced motion get still fireflies and no petals (the stylesheet also stops the animation). */
+  if (document.querySelector('.grove')) {
+    var ff = document.createElement('div');
+    ff.className = 'ff'; ff.setAttribute('aria-hidden', 'true'); ff.innerHTML = '<i></i><i></i>';
+    document.body.insertBefore(ff, document.body.firstChild);
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!still) {
+      var host = document.createElement('div');
+      host.className = 'petals'; host.setAttribute('aria-hidden', 'true');
+      document.body.insertBefore(host, document.body.firstChild);
+      var seed = 7, clean = [0, 2, 3, 4, 5, 7, 8, 10, 11];
+      var rnd = function () { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+      for (var n = 0; n < 16; n++) {
+        var p = document.createElement('div'), i = document.createElement('i'), k = clean[Math.floor(rnd() * 9)];
+        var sc = 0.28 + rnd() * 0.32, dur = 26 + rnd() * 26;
+        p.className = 'petal';
+        p.style.left = (rnd() * 100) + 'vw';
+        p.style.setProperty('--dx', (rnd() * 24 - 6) + 'vw');
+        p.style.animationDuration = dur + 's'; p.style.animationDelay = (-rnd() * dur) + 's';
+        i.style.backgroundPosition = (-(k % 4) * 128) + 'px ' + (-Math.floor(k / 4) * 128) + 'px';
+        i.style.setProperty('--s', sc); i.style.setProperty('--r0', (rnd() * 180 - 90) + 'deg'); i.style.setProperty('--r1', (rnd() * 180 + 20) + 'deg');
+        i.style.animationDuration = (5 + rnd() * 5) + 's';
+        p.appendChild(i); host.appendChild(p);
+      }
+    }
+  }
 })();

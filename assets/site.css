@@ -221,7 +221,7 @@ footer a { color: var(--ash); }
   .loc:nth-child(even) figure { order: 0; }
 }
 
-/* Locations: the overgrown look. Only pages with a .grove layer get it. Painted foliage over the image
+/* Locations: the overgrown look. Only pages with a .grove layer get it. Sakura branches over the image
    corners, a green canopy shade and slow mist behind the page, and a moss strip at the very end. */
 .grove { display: none; }   /* marker only: its presence on a page switches the look on */
 body:has(.grove)::before { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
@@ -243,17 +243,17 @@ html:has(.grove)::after { content: ""; position: fixed; left: 0; bottom: 0; widt
 body:has(.grove) { position: relative; overflow-x: clip; padding-bottom: clamp(30px, 5vw, 70px); }
 body:has(.grove) > nav, body:has(.grove) > main, body:has(.grove) > footer { position: relative; z-index: 1; }
 body:has(.grove)::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: clamp(24px, 4vw, 60px); pointer-events: none;
-  background: url(/assets/fol/moss.webp) center bottom / 100% 100% no-repeat; }
+  background: url(/assets/sak/moss-sakura.webp) center bottom / 100% 100% no-repeat; }
 .loc figure::before, .loc figure::after { content: ""; position: absolute; width: 260px; height: 197px; z-index: 2; pointer-events: none;
-  background: url(/assets/fol/ivy-a.webp) left top / contain no-repeat; filter: drop-shadow(0 4px 5px rgb(0 0 0 / .6)); }
+  background: url(/assets/sak/branch-a.webp) left top / contain no-repeat; filter: drop-shadow(0 4px 5px rgb(0 0 0 / .6)); }
 .loc figure::before { top: -26px; left: -26px; }
-.loc figure::after { right: -26px; bottom: 1.2rem; transform: rotate(180deg); background-image: url(/assets/fol/ivy-b.webp); }
-.loc:nth-child(even) figure::before { left: auto; right: -26px; transform: scaleX(-1); background-image: url(/assets/fol/ivy-b.webp); }
-.loc:nth-child(even) figure::after { right: auto; left: -26px; transform: scaleY(-1); background-image: url(/assets/fol/ivy-a.webp); }
+.loc figure::after { right: -26px; bottom: 1.2rem; transform: rotate(180deg); background-image: url(/assets/sak/branch-b.webp); }
+.loc:nth-child(even) figure::before { left: auto; right: -26px; transform: scaleX(-1); background-image: url(/assets/sak/branch-b.webp); }
+.loc:nth-child(even) figure::after { right: auto; left: -26px; transform: scaleY(-1); background-image: url(/assets/sak/branch-a.webp); }
 @media (max-width: 46rem) {
   .loc figure::before, .loc figure::after { width: 150px; height: 114px; }
-  .loc figure::before, .loc:nth-child(even) figure::before { top: -14px; left: -10px; right: auto; transform: none; background-image: url(/assets/fol/ivy-a.webp); }
-  .loc figure::after, .loc:nth-child(even) figure::after { right: -10px; left: auto; bottom: 1.4rem; transform: rotate(180deg); background-image: url(/assets/fol/ivy-b.webp); }
+  .loc figure::before, .loc:nth-child(even) figure::before { top: -14px; left: -10px; right: auto; transform: none; background-image: url(/assets/sak/branch-a.webp); }
+  .loc figure::after, .loc:nth-child(even) figure::after { right: -10px; left: auto; bottom: 1.4rem; transform: rotate(180deg); background-image: url(/assets/sak/branch-b.webp); }
 }
 @media (prefers-reduced-motion: reduce) { html:has(.grove)::after { animation: none; } }
 
@@ -263,13 +263,26 @@ body:has(.grove)::after { content: ""; position: absolute; left: 0; right: 0; bo
 .scene img, .banner img { width: 100%; height: auto; display: block; border-radius: 1rem; border: 1px solid var(--seam); box-shadow: 0 1.2rem 2.5rem rgb(0 0 0 / .45); }
 .banner { margin: 1.5rem 0 0; }
 .scene::before, .scene::after { content: ""; position: absolute; width: 260px; height: 197px; z-index: 2; pointer-events: none;
-  background: url(/assets/fol/ivy-a.webp) left top / contain no-repeat; filter: drop-shadow(0 4px 5px rgb(0 0 0 / .6)); }
+  background: url(/assets/sak/branch-a.webp) left top / contain no-repeat; filter: drop-shadow(0 4px 5px rgb(0 0 0 / .6)); }
 .scene::before { top: -26px; left: -26px; }
-.scene::after { right: -26px; bottom: -26px; transform: rotate(180deg); background-image: url(/assets/fol/ivy-b.webp); }
-.scene:nth-child(even)::before { left: auto; right: -26px; transform: scaleX(-1); background-image: url(/assets/fol/ivy-b.webp); }
-.scene:nth-child(even)::after { right: auto; left: -26px; transform: scaleY(-1); background-image: url(/assets/fol/ivy-a.webp); }
+.scene::after { right: -26px; bottom: -26px; transform: rotate(180deg); background-image: url(/assets/sak/branch-b.webp); }
+.scene:nth-child(even)::before { left: auto; right: -26px; transform: scaleX(-1); background-image: url(/assets/sak/branch-b.webp); }
+.scene:nth-child(even)::after { right: auto; left: -26px; transform: scaleY(-1); background-image: url(/assets/sak/branch-a.webp); }
 @media (max-width: 46rem) {
   .scene::before, .scene::after { width: 150px; height: 114px; }
-  .scene::before, .scene:nth-child(even)::before { top: -14px; left: -10px; right: auto; transform: none; background-image: url(/assets/fol/ivy-a.webp); }
-  .scene::after, .scene:nth-child(even)::after { right: -10px; left: auto; bottom: -14px; transform: rotate(180deg); background-image: url(/assets/fol/ivy-b.webp); }
+  .scene::before, .scene:nth-child(even)::before { top: -14px; left: -10px; right: auto; transform: none; background-image: url(/assets/sak/branch-a.webp); }
+  .scene::after, .scene:nth-child(even)::after { right: -10px; left: auto; bottom: -14px; transform: rotate(180deg); background-image: url(/assets/sak/branch-b.webp); }
 }
+
+/* Sakura look: falling petals and drifting fireflies. The page script adds .petals and .ff to the body on .grove pages
+   only. Fireflies are a glow on black, blended with screen so only the light shows. */
+.petals, .ff { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.petal { position: absolute; top: -12vh; width: 128px; height: 128px; animation: fall linear infinite; will-change: transform; }
+.petal i { display: block; width: 128px; height: 128px; background: url(/assets/sak/petals.webp) 0 0 / 512px 384px; animation: sway ease-in-out infinite alternate; opacity: .9; }
+@keyframes fall { to { transform: translate3d(var(--dx), 118vh, 0); } }
+@keyframes sway { from { transform: translateX(-26px) rotate(var(--r0)) scale(var(--s)); } to { transform: translateX(26px) rotate(var(--r1)) scale(var(--s)); } }
+.ff i { position: absolute; inset: -6%; background: url(/assets/sak/fireflies.webp) center / cover; mix-blend-mode: screen; opacity: .4; animation: ffdrift 46s ease-in-out infinite alternate; }
+.ff i + i { transform: scaleX(-1) rotate(180deg); opacity: .3; animation-duration: 71s; animation-direction: alternate-reverse; }
+@keyframes ffdrift { from { transform: translate3d(-2%, 2%, 0); } to { transform: translate3d(2%, -3%, 0); } }
+@media (max-width: 46rem) { .petals { opacity: .45; } .petal { width: 90px; height: 90px; } }
+@media (prefers-reduced-motion: reduce) { .petal, .petal i, .ff i { animation: none; } .petals { display: none; } }
