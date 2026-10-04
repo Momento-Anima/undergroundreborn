@@ -45,6 +45,9 @@ NOINDEX = {"appeals", "admin", "404"}
 # (src stem, nav label). Order = nav order. Pages not listed (privacy) still build.
 NAV = [("index", "Home"), ("news", "News"), ("notoriety", "Notoriety"), ("map", "Map")]
 
+# Momento approved the keyword home title 2026-10-04 ("Go for it").
+HOME_TITLE = "The Underground: Reborn | DayZ Deer Isle PvE Server"
+
 FONTS = ("https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800"
          "&family=Barlow:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@500&display=swap")
 
@@ -198,7 +201,7 @@ def build_page(stem):
                 {"@type": "Organization", "@id": SITE_URL + "/#org", "name": "The Underground: Reborn", "url": SITE_URL + "/",
                  "logo": SITE_URL + "/assets/icon-512.png", "sameAs": [DISCORD]},
             ]}, separators=(",", ":")) + "</script>"
-    full_title = title if stem == "index" else f"{title} | The Underground: Reborn"
+    full_title = HOME_TITLE if stem == "index" else f"{title} | The Underground: Reborn"
     head = f"""<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{full_title}</title>
