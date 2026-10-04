@@ -38,8 +38,9 @@ ROOT = os.path.dirname(HERE)
 GUILD = "676213522463457325"                 # Radical Dreamers (staff server): destination of the Follow link
 CHANNEL_NAME = "announcements-mirror"      # created by Momento; the public announcements are followed into it
 # Only follower webhooks whose NAME contains one of these (after Unicode normalisation, lowercase) are mirrored. The public
-# server follows two source channels; the website is for the DayZ server, so only the DayZ one is mirrored.
-SOURCES = ("announcements-dayz",)
+# server follows two source channels ("Announcements" and "Announcements-DayZ"); Momento chose to mirror BOTH (2026-10-04), and
+# both names contain "announcements". Anything else that is ever followed into the channel stays out unless added here.
+SOURCES = ("announcements",)
 API = "https://discord.com/api/v10"
 DATA = os.path.join(ROOT, "data", "news.json")
 IMG_DIR = os.path.join(ROOT, "assets", "news")
@@ -310,6 +311,11 @@ def selftest():
     check("item has a date and no images yet", it["date"] == "2026-10-04" and it["images"] == [])
     bold = "".join(chr(0x1D5D4 + ord(c) - 65) if "A" <= c <= "Z" else chr(0x1D5EE + ord(c) - 97) if "a" <= c <= "z" else c for c in "Announcements-DayZ")
     check("fancy Unicode source names normalise", "announcements-dayz" in norm("The Underground #📢│" + bold) and bold != "Announcements-DayZ")
+    def fancy(txt):
+        return "".join(chr(0x1D5D4 + ord(c) - 65) if "A" <= c <= "Z" else chr(0x1D5EE + ord(c) - 97) if "a" <= c <= "z" else c for c in txt)
+    names = ["The Underground #📢│" + fancy("Announcements"), "The Underground #📢│" + fancy("Announcements-DayZ")]
+    check("both source channels are mirrored", all(any(x in norm(n) for x in SOURCES) for n in names))
+    check("an unrelated followed channel is NOT mirrored", not any(x in norm("Some Game #patch-notes") for x in SOURCES))
     multi = "\U0001F3C5 **Notoriety & Factions**\n\u2022 one\n\u2022 two\n\n\U0001F996 **Wildlife**\n\u2022 three"
     it2 = to_item(dict(good, content=multi))
     check("a multi-section post gets a generic title and ### headings", it2["title"] == "Server update" and it2["text"].count("### ") == 2)
@@ -351,6 +357,10 @@ def main():
             if src:
                 item["images"].append({"src": src, "alt": clean(alt) or "Image from the announcement"})
         item["done"] = True
+        twin = next((i for i in items.values() if i["id"] != item["id"] and i["title"] == item["title"] and i["text"] == item["text"]), None)
+        if twin:                                                    # same post sent to both channels: keep one
+            print("duplicate skipped:", item["date"], item["title"])
+            continue
         if items.get(msg["id"]) != item:
             items[msg["id"]] = item
             changed = True
