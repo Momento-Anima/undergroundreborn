@@ -286,3 +286,17 @@ body:has(.grove)::after { content: ""; position: absolute; left: 0; right: 0; bo
 @keyframes ffdrift { from { transform: translate3d(-2%, 2%, 0); } to { transform: translate3d(2%, -3%, 0); } }
 @media (max-width: 46rem) { .petals { opacity: .45; } .petal { width: 90px; height: 90px; } }
 @media (prefers-reduced-motion: reduce) { .petal, .petal i, .ff i { animation: none; } .petals { display: none; } }
+
+/* Quiet sakura look for reading pages (marker .grove-quiet): a soft green shade at the page edges, a few fireflies that glow
+   but do not move, and the petal moss strip at the end. No petals, no mist drift, no corner branches: nothing moves. */
+.grove-quiet { display: none; }
+body:has(.grove-quiet)::before { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse 85% 75% at 50% 45%, transparent 55%, rgb(10 26 10 / .42) 100%),
+              linear-gradient(rgb(12 30 12 / .4), transparent 160px),
+              linear-gradient(to top, rgb(86 118 84 / .10), transparent 30%); }
+body:has(.grove-quiet) { position: relative; overflow-x: clip; padding-bottom: clamp(30px, 5vw, 70px); }
+body:has(.grove-quiet) > nav, body:has(.grove-quiet) > main, body:has(.grove-quiet) > footer { position: relative; z-index: 1; }
+body:has(.grove-quiet)::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: clamp(24px, 4vw, 60px); pointer-events: none;
+  background: url(/assets/sak/moss-sakura.webp) center bottom / 100% 100% no-repeat; }
+.ff.still i { animation: none; opacity: .24; }
+.ff.still i + i { display: none; }

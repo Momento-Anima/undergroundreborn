@@ -121,4 +121,11 @@
       }
     }
   }
+
+  /* Quiet sakura look (reading pages, marker .grove-quiet): one firefly layer that does not move. */
+  if (document.querySelector('.grove-quiet')) {
+    var quietFf = document.createElement('div');
+    quietFf.className = 'ff still'; quietFf.setAttribute('aria-hidden', 'true'); quietFf.innerHTML = '<i></i>';
+    document.body.insertBefore(quietFf, document.body.firstChild);
+  }
 })();
