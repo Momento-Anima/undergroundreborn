@@ -43,7 +43,7 @@ DRAFT_PAGES = {"how-to-join", "rules", "systems"}      # built to preview/ only 
 NOINDEX = {"appeals", "admin", "404"}
 
 # (src stem, nav label). Order = nav order. Pages not listed (privacy) still build.
-NAV = [("index", "Home"), ("news", "News"), ("notoriety", "Notoriety"), ("map", "Map")]
+NAV = [("index", "Home"), ("news", "News"), ("notoriety", "Notoriety"), ("locations", "Locations"), ("map", "Map")]
 
 # Momento approved the keyword home title 2026-10-04 ("Go for it").
 HOME_TITLE = "The Underground: Reborn | DayZ Deer Isle PvE Server"

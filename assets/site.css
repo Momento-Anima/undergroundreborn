@@ -203,3 +203,55 @@ footer a { color: var(--ash); }
 .news ul { margin: 0; padding-left: 1.2rem; display: grid; gap: .3rem; }
 .news p { color: var(--bone); }
 .news a { overflow-wrap: anywhere; }
+
+/* Locations: image/text cards, alternating sides */
+.locations { display: grid; gap: 3rem; padding-bottom: 3rem; }
+.loc { display: grid; grid-template-columns: 1.45fr 1fr; gap: 2.25rem; align-items: center; }
+.loc:nth-child(even) { grid-template-columns: 1fr 1.45fr; }
+.loc:nth-child(even) figure { order: 2; }
+.loc figure { position: relative; margin: 0; }
+.loc img { width: 100%; height: auto; display: block; border-radius: 1rem; border: 1px solid var(--seam); box-shadow: 0 1.2rem 2.5rem rgb(0 0 0 / .45); }
+.loc-body { display: grid; gap: .6rem; align-content: center; min-width: 0; }
+.loc-body h2 { font-size: clamp(1.9rem, 4vw, 2.6rem); }
+.loc-body p { color: var(--ash); max-width: 28rem; }
+.loc-body .more { font-family: var(--mono); font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; }
+@media (max-width: 46rem) {
+  .loc, .loc:nth-child(even) { grid-template-columns: 1fr; gap: 1rem; }
+  .loc:nth-child(even) figure { order: 0; }
+}
+
+/* Locations: the overgrown look. Only pages with a .grove layer get it. Painted foliage over the image
+   corners, a green canopy shade and slow mist behind the page, and a moss strip at the very end. */
+.grove { display: none; }   /* marker only: its presence on a page switches the look on */
+body:has(.grove)::before { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse 85% 75% at 50% 45%, transparent 52%, rgb(10 26 10 / .5) 100%),
+              linear-gradient(rgb(12 30 12 / .5), transparent 180px),
+              linear-gradient(to top, rgb(86 118 84 / .12), transparent 34%); }
+html:has(.grove)::after { content: ""; position: fixed; left: 0; bottom: 0; width: 200%; height: 34vh; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 11% 55% at 6% 90%, rgb(150 180 150 / .10), transparent 70%),
+    radial-gradient(ellipse 14% 45% at 19% 100%, rgb(150 180 150 / .09), transparent 70%),
+    radial-gradient(ellipse 10% 50% at 31% 95%, rgb(150 180 150 / .10), transparent 70%),
+    radial-gradient(ellipse 13% 40% at 44% 100%, rgb(150 180 150 / .08), transparent 70%),
+    radial-gradient(ellipse 11% 55% at 56% 90%, rgb(150 180 150 / .09), transparent 70%),
+    radial-gradient(ellipse 14% 45% at 69% 100%, rgb(150 180 150 / .10), transparent 70%),
+    radial-gradient(ellipse 10% 50% at 81% 95%, rgb(150 180 150 / .08), transparent 70%),
+    radial-gradient(ellipse 13% 40% at 94% 100%, rgb(150 180 150 / .09), transparent 70%);
+  animation: grove-drift 120s linear infinite; }
+@keyframes grove-drift { to { transform: translateX(-50%); } }
+body:has(.grove) { position: relative; overflow-x: clip; padding-bottom: clamp(30px, 5vw, 70px); }
+body:has(.grove) > nav, body:has(.grove) > main, body:has(.grove) > footer { position: relative; z-index: 1; }
+body:has(.grove)::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: clamp(24px, 4vw, 60px); pointer-events: none;
+  background: url(/assets/fol/moss.webp) center bottom / 100% 100% no-repeat; }
+.loc figure::before, .loc figure::after { content: ""; position: absolute; width: 260px; height: 197px; z-index: 2; pointer-events: none;
+  background: url(/assets/fol/ivy-a.webp) left top / contain no-repeat; filter: drop-shadow(0 4px 5px rgb(0 0 0 / .6)); }
+.loc figure::before { top: -26px; left: -26px; }
+.loc figure::after { right: -26px; bottom: 1.2rem; transform: rotate(180deg); background-image: url(/assets/fol/ivy-b.webp); }
+.loc:nth-child(even) figure::before { left: auto; right: -26px; transform: scaleX(-1); background-image: url(/assets/fol/ivy-b.webp); }
+.loc:nth-child(even) figure::after { right: auto; left: -26px; transform: scaleY(-1); background-image: url(/assets/fol/ivy-a.webp); }
+@media (max-width: 46rem) {
+  .loc figure::before, .loc figure::after { width: 150px; height: 114px; }
+  .loc figure::before, .loc:nth-child(even) figure::before { top: -14px; left: -10px; right: auto; transform: none; background-image: url(/assets/fol/ivy-a.webp); }
+  .loc figure::after, .loc:nth-child(even) figure::after { right: -10px; left: auto; bottom: 1.4rem; transform: rotate(180deg); background-image: url(/assets/fol/ivy-b.webp); }
+}
+@media (prefers-reduced-motion: reduce) { html:has(.grove)::after { animation: none; } }
