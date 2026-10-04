@@ -196,3 +196,10 @@ td:first-child { font-weight: 600; white-space: nowrap; }
 footer { border-top: 1px solid var(--seam); padding-block: 2rem 3rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; color: var(--ash); font-size: .9rem; }
 footer a { color: var(--ash); }
 @media (prefers-reduced-motion: no-preference) { .btn, .nav a { transition: background .15s, border-color .15s, color .15s; } }
+
+.news img { display: block; max-width: 100%; height: auto; margin-top: .5rem; border: 1px solid var(--seam); }
+.news blockquote { margin: 0; padding: .4rem 1rem; border-left: 3px solid var(--ember); color: var(--ash); }
+.news h3 { font-size: 1.15rem; margin-top: .6rem; }
+.news ul { margin: 0; padding-left: 1.2rem; display: grid; gap: .3rem; }
+.news p { color: var(--bone); }
+.news a { overflow-wrap: anywhere; }

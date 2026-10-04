@@ -97,8 +97,90 @@ def analytics():
     return "\n".join(out)
 
 
+
+# ---- News page: render data/news.json (written by tools/mirror_announcements.py) ----
+def _inline(s):
+    """Discord-style inline markdown on ESCAPED text. Only http(s) links; everything else is plain text."""
+    import html as _h
+    s = _h.escape(s, quote=False)
+    keep = []
+
+    def stash(h):
+        keep.append(h)
+        return "\x00%d\x00" % (len(keep) - 1)
+    s = re.sub(r"`([^`\n]+)`", lambda m: stash("<code>%s</code>" % m.group(1)), s)
+    s = re.sub(r"\[([^\]\n]+)\]\((https?://[^\s)]+)\)",
+               lambda m: stash('<a href="%s" rel="noopener nofollow ugc">%s</a>' % (m.group(2), m.group(1))), s)
+    s = re.sub(r"(?<![\w\"=])(https?://[^\s<]+[^\s<.,;:!?)\]])",
+               lambda m: stash('<a href="%s" rel="noopener nofollow ugc">%s</a>' % (m.group(1), m.group(1))), s)
+    s = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", s)
+    s = re.sub(r"__(.+?)__", r"<u>\1</u>", s)
+    s = re.sub(r"(?<![\w*])\*(?!\s)(.+?)(?<!\s)\*(?![\w*])", r"<em>\1</em>", s)
+    s = re.sub(r"(?<![\w_])_(?!\s)(.+?)(?<!\s)_(?![\w_])", r"<em>\1</em>", s)
+    s = re.sub(r"~~(.+?)~~", r"<s>\1</s>", s)
+    return re.sub(r"\x00(\d+)\x00", lambda m: keep[int(m.group(1))], s)
+
+
+def md_to_html(text):
+    out, para, items, quote = [], [], [], []
+
+    def flush():
+        nonlocal para, items, quote
+        if para:
+            out.append("<p>%s</p>" % "<br>".join(_inline(x) for x in para))
+        if items:
+            out.append("<ul>%s</ul>" % "".join("<li>%s</li>" % _inline(x) for x in items))
+        if quote:
+            out.append("<blockquote>%s</blockquote>" % "<br>".join(_inline(x) for x in quote))
+        para, items, quote = [], [], []
+    for ln in text.split("\n"):
+        st = ln.strip()
+        m = re.match(r"^(#{1,3})\s+(.*)$", st)
+        if not st:
+            flush()
+        elif m:
+            flush()
+            out.append("<h3>%s</h3>" % _inline(m.group(2)))
+        elif re.match(r"^[-*\u2022]\s+", st):
+            if para or quote:
+                flush()
+            items.append(re.sub(r"^[-*\u2022]\s+", "", st))
+        elif st.startswith(">"):
+            if para or items:
+                flush()
+            quote.append(st.lstrip("> ").strip())
+        else:
+            if items or quote:
+                flush()
+            para.append(st)
+    flush()
+    return "".join(out)
+
+
+def render_news():
+    import html as _h
+    import json as _json
+    f = ROOT / "data" / "news.json"
+    if not f.exists():
+        return ""
+    items = _json.loads(f.read_text(encoding="utf-8")).get("items", [])
+    if not items:
+        return ""
+    parts = ['<div class="news">']
+    for it in items:
+        body = md_to_html(it.get("text", ""))
+        fields = "".join("<p><strong>%s</strong> %s</p>" % (_inline(x["name"]), _inline(x["value"])) for x in it.get("fields", []))
+        imgs = "".join('<img src="%s" alt="%s" loading="lazy">' % (_h.escape(i["src"]), _h.escape(i.get("alt", ""))) for i in it.get("images", []))
+        parts.append('<article id="n%s"><span class="label">%s</span><h2>%s</h2>%s%s%s</article>'
+                     % (_h.escape(it["id"]), _h.escape(it["date"]), _h.escape(it["title"]), body, fields, imgs))
+    parts.append("</div>")
+    return "\n".join(parts)
+
+
 def build_page(stem):
     title, desc, body = parse((ROOT / "src" / f"{stem}.html").read_text(encoding="utf-8"))
+    if stem == "news":
+        body = body + "\n" + render_news()
     page_url = SITE_URL + ("/" if stem == "index" else f"/{stem}/")
     config = (f'<script>window.TUR={{ip:"{SERVER_IP}",gamePort:{GAME_PORT},queryPort:{QUERY_PORT},'
               f'discord:"{DISCORD}"' + (f',api:"{API_BASE}"' if LOGIN_ENABLED else '') + '};</script>')

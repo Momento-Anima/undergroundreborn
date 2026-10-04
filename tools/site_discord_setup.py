@@ -12,6 +12,7 @@ printed.
 
     python tools/site_discord_setup.py plan
     python tools/site_discord_setup.py apply
+    python tools/site_discord_setup.py mirror        # #announcement-mirror: where the Discord Follow link delivers (no webhook needed)
 
 Test setup (2026-10-03): the bot only sits in "Radical Dreamers", so that is where this runs. When the public
 "The Underground" server is opened to the bot, change GUILD and STAFF_ROLES below and run it there.
@@ -28,6 +29,7 @@ BOT_ROLE = "1549499652494336063"                   # Phoenix
 CATEGORY = "Website"
 CHANNEL = "site-appeals"
 HOOK = "Website appeals"
+MIRROR = "announcement-mirror"   # destination of the Discord Follow link (news mirror)
 OUT = os.path.join(os.path.expanduser("~"), ".tur-bridge", "site_appeals_webhook.txt")
 API = "https://discord.com/api/v10"
 VIEW, SEND, HISTORY, MANAGE_HOOKS = 1 << 10, 1 << 11, 1 << 16, 1 << 29
@@ -68,6 +70,17 @@ def main():
     global TOKEN
     mode = sys.argv[1] if len(sys.argv) > 1 else "plan"
     TOKEN = token()
+    if mode in ("mirror", "mirror-plan"):
+        chans = call("GET", "/guilds/%s/channels" % GUILD)
+        cat = next((c for c in chans if c["type"] == 4 and c["name"].lower() == CATEGORY.lower()), None)
+        ch = next((c for c in chans if c["type"] == 0 and c["name"] == MIRROR), None)
+        print("category:", "exists" if cat else "MISSING (run apply first)", "| #%s:" % MIRROR, "exists" if ch else "will create")
+        if mode == "mirror" and cat and not ch:
+            ch = call("POST", "/guilds/%s/channels" % GUILD, {
+                "name": MIRROR, "type": 0, "parent_id": cat["id"], "permission_overwrites": overwrites(),
+                "topic": "Destination of the Discord Follow link from the public announcements channel. The website mirrors ONLY the followed posts. Admins only."})
+            print("created #%s" % MIRROR)
+        return
     chans = call("GET", "/guilds/%s/channels" % GUILD)
     cat = next((c for c in chans if c["type"] == 4 and c["name"].lower() == CATEGORY.lower()), None)
     ch = next((c for c in chans if c["type"] == 0 and c["name"] == CHANNEL), None)
