@@ -43,7 +43,7 @@ DRAFT_PAGES = set()      # approved 2026-10-03 (unlinked): appeals, admin
 NOINDEX = {"appeals", "admin", "404"}
 
 # (src stem, nav label). Order = nav order. Pages not listed (privacy) still build.
-NAV = [("index", "Home"), ("news", "What's new"), ("notoriety", "Notoriety"), ("map", "Map")]
+NAV = [("index", "Home"), ("news", "News"), ("notoriety", "Notoriety"), ("map", "Map")]
 
 FONTS = ("https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800"
          "&family=Barlow:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@500&display=swap")
