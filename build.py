@@ -38,12 +38,13 @@ API_BASE = "https://api.theundergroundserver.com"
 # Pages that are built into preview/ only, never deployed, until Momento approves their wording
 # (or, for admin.html, until the Worker has its admin role set). Remove a name to go live; add it
 # to NAV once it should be linked.
-DRAFT_PAGES = {"how-to-join", "rules", "systems"}      # built to preview/ only until Momento approves the wording (2026-10-04)
+DRAFT_PAGES = set()      # how-to-join, rules and systems approved by Momento 2026-10-04 and went live
 # Built and deployed but kept out of search engines until they are linked in NAV.
 NOINDEX = {"appeals", "admin", "404"}
 
 # (src stem, nav label). Order = nav order. Pages not listed (privacy) still build.
-NAV = [("index", "Home"), ("news", "News"), ("notoriety", "Notoriety"), ("locations", "Locations"), ("map", "Map")]
+NAV = [("index", "Home"), ("how-to-join", "How to join"), ("systems", "Systems"), ("rules", "Rules"), ("news", "News"),
+       ("notoriety", "Notoriety"), ("locations", "Locations"), ("map", "Map")]
 
 # Momento approved the keyword home title 2026-10-04 ("Go for it").
 HOME_TITLE = "The Underground: Reborn | DayZ Deer Isle PvE Server"

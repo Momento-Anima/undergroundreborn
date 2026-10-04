@@ -42,10 +42,11 @@ code, .mono { font-family: var(--mono); font-size: .92em; }
 code { color: var(--bone); background: var(--tunnel); padding: .1em .4em; overflow-wrap: anywhere; }
 
 /* Nav */
-.nav { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; padding-block: .9rem; border-bottom: 1px solid var(--seam); }
+.nav { display: flex; align-items: center; gap: .85rem; flex-wrap: wrap; padding-block: .9rem; border-bottom: 1px solid var(--seam); }
 .nav .brand { display: flex; align-items: center; gap: .6rem; text-decoration: none; color: var(--bone); font: 800 1.1rem/1 var(--display); letter-spacing: .06em; text-transform: uppercase; margin-right: auto; }
 .nav .brand img { width: 30px; height: 30px; }
-.nav a:not(.brand) { font-family: var(--mono); font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; color: var(--ash); padding: .3rem 0; border-bottom: 2px solid transparent; }
+nav.nav.wrap { max-width: 72rem; }   /* wider than the page content so eight links plus the login button stay on one line */
+.nav a:not(.brand) { font-family: var(--mono); font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; color: var(--ash); padding: .3rem 0; border-bottom: 2px solid transparent; }
 .nav a:not(.brand):hover { color: var(--bone); }
 .nav a[aria-current="page"] { color: var(--bone); border-bottom-color: var(--ember); }
 .nav a.discord { color: var(--ember-hot); }
