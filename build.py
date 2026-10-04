@@ -40,7 +40,7 @@ API_BASE = "https://api.theundergroundserver.com"
 # to NAV once it should be linked.
 DRAFT_PAGES = set()      # approved 2026-10-03 (unlinked): appeals, admin
 # Built and deployed but kept out of search engines until they are linked in NAV.
-NOINDEX = {"appeals", "admin"}
+NOINDEX = {"appeals", "admin", "404"}
 
 # (src stem, nav label). Order = nav order. Pages not listed (privacy) still build.
 NAV = [("index", "Home"), ("news", "What's new"), ("notoriety", "Notoriety"), ("map", "Map")]
@@ -105,16 +105,28 @@ def build_page(stem):
     shared = (f'{nav_html(stem)}\n<main class="wrap">\n{body}\n</main>\n{FOOTER}\n{config}\n'
               f'<script src="{asset("assets/site.js")}" defer></script>')
     robots = '<meta name="robots" content="noindex">' if stem in NOINDEX else ""
+    jsonld = ""
+    if stem == "index":
+        import json as _json
+        jsonld = '<script type="application/ld+json">' + _json.dumps({
+            "@context": "https://schema.org",
+            "@graph": [
+                {"@type": "WebSite", "@id": SITE_URL + "/#site", "url": SITE_URL + "/", "name": "The Underground: Reborn",
+                 "description": desc, "inLanguage": "en"},
+                {"@type": "Organization", "@id": SITE_URL + "/#org", "name": "The Underground: Reborn", "url": SITE_URL + "/",
+                 "logo": SITE_URL + "/assets/icon-512.png", "sameAs": [DISCORD]},
+            ]}, separators=(",", ":")) + "</script>"
+    full_title = title if stem == "index" else f"{title} | The Underground: Reborn"
     head = f"""<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>{title}</title>
+<title>{full_title}</title>
 <meta name="description" content="{desc}">
 <meta name="theme-color" content="#0e0c0b">
 {robots}
 <link rel="canonical" href="{page_url}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="The Underground: Reborn">
-<meta property="og:title" content="{title}">
+<meta property="og:title" content="{full_title}">
 <meta property="og:description" content="{desc}">
 <meta property="og:url" content="{page_url}">
 <meta property="og:image" content="{SITE_URL}/assets/share-card.png">
@@ -125,9 +137,10 @@ def build_page(stem):
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{FONTS}">
 <link rel="stylesheet" href="{asset("assets/site.css")}">
-{analytics()}"""
+{analytics()}
+{jsonld}"""
     html = f'<!doctype html>\n<html lang="en">\n<head>\n{head}\n</head>\n<body>\n{shared}\n</body>\n</html>\n'
-    out = ROOT / "index.html" if stem == "index" else ROOT / stem / "index.html"
+    out = ROOT / "index.html" if stem == "index" else (ROOT / "404.html" if stem == "404" else ROOT / stem / "index.html")
     if stem not in DRAFT_PAGES:
         out.parent.mkdir(exist_ok=True)
         out.write_bytes(html.encode("utf-8"))
@@ -146,7 +159,25 @@ def build_page(stem):
     return out
 
 
+def write_seo_files():
+    """sitemap.xml (indexable pages only), robots.txt. Pages in NOINDEX are left out."""
+    import datetime
+    today = datetime.date.today().isoformat()
+    stems = [f.stem for f in sorted((ROOT / "src").glob("*.html"))
+             if f.stem not in NOINDEX and f.stem not in DRAFT_PAGES and f.stem != "404"]
+    order = [s for s, _ in NAV] + [s for s in stems if s not in [n for n, _ in NAV]]
+    urls = "".join(
+        f"  <url><loc>{SITE_URL}{'/' if s == 'index' else '/' + s + '/'}</loc><lastmod>{today}</lastmod></url>\n"
+        for s in order if s in stems)
+    (ROOT / "sitemap.xml").write_bytes(
+        ('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+         + urls + "</urlset>\n").encode("utf-8"))
+    (ROOT / "robots.txt").write_bytes(f"User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n".encode("utf-8"))
+    print("wrote sitemap.xml (%d urls) and robots.txt" % urls.count("<url>"))
+
+
 def main():
+    write_seo_files()
     for f in sorted((ROOT / "src").glob("*.html")):
         out = build_page(f.stem)
         print(("draft (preview only) " if f.stem in DRAFT_PAGES else "wrote ") + str(out.relative_to(ROOT)))
