@@ -3,3 +3,7 @@ preview/
 tools/hidden_places.txt
 data_build/
 __pycache__/
+# unapproved drafts: kept local until Momento approves the wording
+src/how-to-join.html
+src/rules.html
+src/systems.html
