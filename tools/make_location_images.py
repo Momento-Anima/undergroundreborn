@@ -148,7 +148,12 @@ DTF = {   # slug -> source png under G:\TUR\_art\ (Defend the Flag places + the 
     "portland-shipping-yard": r"dtf\2026-10-04-portland-shipping-yard-v1\portland-shipping-yard_v1.png",
     "warren-cove-cemetery": r"dtf\2026-10-04-warren-cove-cemetery-v1\warren-cove-cemetery_v1.png",
     "loot-crate": r"loot-crate\2026-10-05-loot-crate-v1\loot-crate_v1.png",
-    # still to come: asheville-ruins, old-town-castle, racetrack-roundup, proving-grounds (art not made yet)
+    "asheville-ruins": r"dtf\2026-10-05-asheville-ruins-v1\asheville-ruins_v1.png",
+    "racetrack-roundup": r"dtf\2026-10-05-rockenheim-race-course-v2\rockenheim-race-course_v2.png",   # the race track card (v2: the track with the horde)
+    "king-of-the-hill": r"koth\2026-10-04-king-of-the-hill-v1\king-of-the-hill_v1.png",   # general flag fight, no named site
+    "heli-crash": r"heli-crash\2026-10-05-heli-crash-v1\heli-crash_v1.png",   # v1: the smoking wreck, no soldiers
+    # still to come: old-town-castle, proving-grounds (art not made yet)
+    # on file but unused: koth east-harbor-military + paris-island-ems-complex, heli-crash v2 (armed personnel), dragons (not on the page yet)
 }
 
 

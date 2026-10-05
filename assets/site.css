@@ -327,5 +327,6 @@ body:has(.grove-quiet)::after { content: ""; position: absolute; left: 0; right:
 .crate-feature { display: grid; grid-template-columns: 1fr 1.25fr; gap: 2rem; align-items: center; }
 .crate-feature figure { margin: 0; min-width: 0; }
 .crate-feature img { width: 100%; height: auto; display: block; border-radius: 1rem; border: 1px solid var(--seam); box-shadow: 0 1.2rem 2.5rem rgb(0 0 0 / .45); }
+@media (min-width: 46.01rem) { .crate-feature.flip { grid-template-columns: 1.25fr 1fr; } .crate-feature.flip figure { order: -1; } }
 @media (max-width: 46rem) { .dtf-arrow { display: none; } .dtf-slide { flex-basis: 84%; } .crate-feature { grid-template-columns: 1fr; gap: 1rem; } }
 @media (prefers-reduced-motion: reduce) { .dtf-track { scroll-behavior: auto; } }
