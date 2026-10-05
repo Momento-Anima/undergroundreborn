@@ -306,14 +306,26 @@ body:has(.grove-quiet)::after { content: ""; position: absolute; left: 0; right:
 .mtag.pvp { color: var(--pvp); border-color: var(--pvp); }
 .mtag.pve { color: var(--pve); border-color: var(--pve); }
 .mtag.soon { color: var(--ember-hot); border-color: var(--ember); }
-.dtf-grid { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
-.dtf-grid li { min-width: 0; }
-.dtf-grid .ph { aspect-ratio: 16 / 9; display: grid; place-items: center; border-radius: 1rem; border: 1px dashed var(--seam); background: var(--tunnel); color: var(--ash); font-family: var(--mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; }
-.dtf-grid img { width: 100%; height: auto; display: block; border-radius: 1rem; border: 1px solid var(--seam); }
-.dtf-grid h4 { margin: .6rem 0 0; font-family: var(--display); font-weight: 600; font-size: 1.15rem; letter-spacing: .04em; text-transform: uppercase; }
-.dtf-grid p { color: var(--ash); font-size: .92rem; margin: .15rem 0 0; }
 .mission-sec { display: grid; gap: .75rem; max-width: 44rem; }
 .mission-sec p { color: var(--ash); }
 .mission-sec p strong { color: var(--bone); font-weight: 600; }
-@media (max-width: 46rem) { .dtf-grid { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 30rem) { .dtf-grid { grid-template-columns: 1fr; } }
+
+/* Defend the Flag carousel (missions page): slides scroll sideways, title text over each picture */
+.dtf-carousel { position: relative; margin-top: 1.25rem; }
+.dtf-track { list-style: none; margin: 0; padding: 0 0 .75rem; display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--seam) transparent; }
+.dtf-track:focus-visible { outline: 2px solid var(--ember-hot); outline-offset: 4px; }
+.dtf-slide { position: relative; flex: 0 0 min(80%, 34rem); scroll-snap-align: start; aspect-ratio: 16 / 9; border-radius: 1rem; overflow: hidden; border: 1px solid var(--seam); background: var(--tunnel); }
+.dtf-slide .ph, .dtf-slide img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border: 0; border-radius: 0; display: grid; place-items: center; color: var(--ash); font-family: var(--mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; }
+.dtf-slide h4 { position: absolute; left: 0; right: 0; bottom: 0; margin: 0; padding: 2.5rem 1.1rem .9rem; background: linear-gradient(transparent, rgb(8 6 5 / .82)); font-family: var(--display); font-weight: 800; font-size: clamp(1.25rem, 3.2vw, 1.7rem); letter-spacing: .04em; text-transform: uppercase; color: var(--bone); }
+.dtf-arrow { position: absolute; top: calc(50% - 1.5rem); z-index: 3; width: 2.6rem; height: 2.6rem; border-radius: 50%; border: 1px solid var(--seam); background: rgb(14 12 11 / .85); color: var(--bone); font-size: 1.6rem; line-height: 1; cursor: pointer; }
+.dtf-arrow:hover { border-color: var(--ember); color: var(--ember-hot); }
+.dtf-arrow.prev { left: -.6rem; }
+.dtf-arrow.next { right: -.6rem; }
+.dtf-arrow[disabled] { opacity: .3; cursor: default; }
+.dtf-pause { display: block; margin: .25rem 0 0 auto; background: none; border: 1px solid var(--seam); color: var(--ash); font-family: var(--mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; padding: .3rem .7rem; cursor: pointer; }
+.dtf-pause:hover { border-color: var(--ember); color: var(--ember-hot); }
+.crate-feature { display: grid; grid-template-columns: 1fr 1.25fr; gap: 2rem; align-items: center; }
+.crate-feature figure { margin: 0; min-width: 0; }
+.crate-feature img { width: 100%; height: auto; display: block; border-radius: 1rem; border: 1px solid var(--seam); box-shadow: 0 1.2rem 2.5rem rgb(0 0 0 / .45); }
+@media (max-width: 46rem) { .dtf-arrow { display: none; } .dtf-slide { flex-basis: 84%; } .crate-feature { grid-template-columns: 1fr; gap: 1rem; } }
+@media (prefers-reduced-motion: reduce) { .dtf-track { scroll-behavior: auto; } }

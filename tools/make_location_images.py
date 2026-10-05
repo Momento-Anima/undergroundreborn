@@ -141,7 +141,30 @@ def sakura():
     save(moss.resize((1800, round(moss.height * 1800 / moss.width)), Image.LANCZOS), "moss-sakura.webp")
 
 
+DTF = {   # slug -> source png under G:\TUR\_art\ (Defend the Flag places + the guarded loot crate picture, 16:9)
+    "starks-castle": r"dtf\2026-10-04-starks-castle-v1\starks-castle_v1.png",
+    "pear-plantation": r"dtf\2026-10-04-pear-plantation-v1\pear-plantation_v1.png",
+    "waldoboro-hills-elementary": r"dtf\2026-10-04-waldoboro-elementary-school-v2\waldoboro-elementary-school_v2.png",   # v2 = with the horde, like the others
+    "portland-shipping-yard": r"dtf\2026-10-04-portland-shipping-yard-v1\portland-shipping-yard_v1.png",
+    "warren-cove-cemetery": r"dtf\2026-10-04-warren-cove-cemetery-v1\warren-cove-cemetery_v1.png",
+    "loot-crate": r"loot-crate\2026-10-05-loot-crate-v1\loot-crate_v1.png",
+    # still to come: asheville-ruins, old-town-castle, racetrack-roundup, proving-grounds (art not made yet)
+}
+
+
+def dtf():
+    out = os.path.join(ROOT, "assets", "dtf")
+    os.makedirs(out, exist_ok=True)
+    for slug, rel in DTF.items():
+        im = Image.open(os.path.join(ART, rel)).convert("RGB")
+        im = im.resize((1200, round(im.height * 1200 / im.width)), Image.LANCZOS)
+        dst = os.path.join(out, slug + ".webp")
+        im.save(dst, "WEBP", quality=80, method=6)
+        print("%-28s %dx%d %d KB" % (slug, im.width, im.height, os.path.getsize(dst) // 1024))
+
+
 if __name__ == "__main__":
     hubs()
     scenes()
     sakura()
+    dtf()

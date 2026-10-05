@@ -128,4 +128,27 @@
     quietFf.className = 'ff still'; quietFf.setAttribute('aria-hidden', 'true'); quietFf.innerHTML = '<i></i>';
     document.body.insertBefore(quietFf, document.body.firstChild);
   }
+
+  /* Defend the Flag carousel (missions page): arrows, plus a self-scroll of one slide every 5 s that loops to the start.
+     It pauses on hover, focus and touch and while the tab is hidden, stays off for visitors who prefer reduced motion,
+     and the Pause button stops it for good. */
+  var dtf = document.querySelector('.dtf-carousel');
+  if (dtf) {
+    var track = dtf.querySelector('.dtf-track'), prevBtn = dtf.querySelector('.prev'), nextBtn = dtf.querySelector('.next'), pauseBtn = dtf.querySelector('.dtf-pause');
+    var slideStep = function () { var sl = track.querySelector('.dtf-slide'); return sl ? sl.getBoundingClientRect().width + 16 : 300; };
+    var syncArrows = function () { prevBtn.disabled = track.scrollLeft < 4; nextBtn.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4; };
+    prevBtn.addEventListener('click', function () { track.scrollBy({ left: -slideStep() }); });
+    nextBtn.addEventListener('click', function () { track.scrollBy({ left: slideStep() }); });
+    track.addEventListener('scroll', syncArrows, { passive: true }); syncArrows();
+    var userOff = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches), held = false;
+    var pauseLabel = function () { pauseBtn.textContent = userOff ? 'Play' : 'Pause'; pauseBtn.setAttribute('aria-pressed', userOff ? 'true' : 'false'); };
+    ['mouseenter', 'focusin', 'touchstart', 'pointerdown'].forEach(function (ev) { dtf.addEventListener(ev, function () { held = true; }, { passive: true }); });
+    ['mouseleave', 'focusout', 'touchend', 'pointerup'].forEach(function (ev) { dtf.addEventListener(ev, function () { held = false; }, { passive: true }); });
+    pauseBtn.addEventListener('click', function () { userOff = !userOff; pauseLabel(); });
+    pauseLabel();
+    setInterval(function () {
+      if (userOff || held || document.hidden) { return; }
+      if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 4) { track.scrollTo({ left: 0 }); } else { track.scrollBy({ left: slideStep() }); }
+    }, 5000);
+  }
 })();
