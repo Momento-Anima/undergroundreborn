@@ -330,3 +330,13 @@ body:has(.grove-quiet)::after { content: ""; position: absolute; left: 0; right:
 @media (min-width: 46.01rem) { .crate-feature.flip { grid-template-columns: 1.25fr 1fr; } .crate-feature.flip figure { order: -1; } }
 @media (max-width: 46rem) { .dtf-arrow { display: none; } .dtf-slide { flex-basis: 84%; } .crate-feature { grid-template-columns: 1fr; gap: 1rem; } }
 @media (prefers-reduced-motion: reduce) { .dtf-track { scroll-behavior: auto; } }
+
+/* Centred, looping carousel: the current slide sits in the middle, neighbours peek in and fade at both edges.
+   --cw = width of the page column (60rem, or the screen minus the gutters); --fade is always narrower than the peek, so the
+   centred slide is never dimmed. The carousel box is capped because its parent is a grid and would otherwise size to the slides. */
+.dtf-carousel { width: 100%; max-width: 100%; min-width: 0; --cw: min(60rem, calc(100vw - 32px)); --sw: min(34rem, calc(var(--cw) - 6rem)); --fade: 8rem; }
+.dtf-track { padding-inline: calc((var(--cw) - var(--sw)) / 2); scroll-padding-inline: calc((var(--cw) - var(--sw)) / 2);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent); }
+.dtf-slide { flex: 0 0 var(--sw); scroll-snap-align: center; }
+@media (max-width: 46rem) { .dtf-carousel { --sw: calc(var(--cw) - 8rem); --fade: 3rem; } }

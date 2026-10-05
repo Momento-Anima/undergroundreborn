@@ -129,17 +129,46 @@
     document.body.insertBefore(quietFf, document.body.firstChild);
   }
 
-  /* Defend the Flag carousel (missions page): arrows, plus a self-scroll of one slide every 5 s that loops to the start.
-     It pauses on hover, focus and touch and while the tab is hidden, stays off for visitors who prefer reduced motion,
-     and the Pause button stops it for good. */
+  /* Defend the Flag carousel (missions page): the current slide is centred, the neighbours peek in and fade at the edges, and it loops
+     forever: the slides are cloned before and after the real ones and the strip quietly jumps back to the real set when it settles in a
+     clone. Self-scroll moves on one slide every 5 s; it pauses on hover, focus and touch and while the tab is hidden, stays off for
+     visitors who prefer reduced motion, and the Pause button stops it for good. Arrows (hidden on phones) move one slide. */
   var dtf = document.querySelector('.dtf-carousel');
   if (dtf) {
     var track = dtf.querySelector('.dtf-track'), prevBtn = dtf.querySelector('.prev'), nextBtn = dtf.querySelector('.next'), pauseBtn = dtf.querySelector('.dtf-pause');
-    var slideStep = function () { var sl = track.querySelector('.dtf-slide'); return sl ? sl.getBoundingClientRect().width + 16 : 300; };
-    var syncArrows = function () { prevBtn.disabled = track.scrollLeft < 4; nextBtn.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4; };
+    var real = Array.prototype.slice.call(track.querySelectorAll('.dtf-slide')), count = real.length;
+    var cloneSet = function () {
+      return real.map(function (sl) { var c = sl.cloneNode(true); c.setAttribute('aria-hidden', 'true'); c.setAttribute('data-clone', '1'); return c; });
+    };
+    cloneSet().forEach(function (c) { track.insertBefore(c, track.firstChild); });
+    cloneSet().forEach(function (c) { track.appendChild(c); });
+    var slides = Array.prototype.slice.call(track.querySelectorAll('.dtf-slide'));
+    var centreOf = function (i) { var sl = slides[i]; return sl.offsetLeft - (track.clientWidth - sl.offsetWidth) / 2; };
+    var nearest = function () {
+      var best = 0, gap = Infinity;
+      for (var i = 0; i < slides.length; i++) { var d = Math.abs(centreOf(i) - track.scrollLeft); if (d < gap) { gap = d; best = i; } }
+      return best;
+    };
+    var jump = function (i) {
+      track.style.scrollBehavior = 'auto'; track.style.scrollSnapType = 'none';
+      track.scrollLeft = centreOf(i);
+      track.style.scrollSnapType = ''; track.style.scrollBehavior = '';
+    };
+    var settle = function () {
+      var i = nearest();
+      if (i < count) { jump(i + count); } else if (i >= count * 2) { jump(i - count); }
+    };
+    var lastLeft = -1;
+    setInterval(function () {   /* when the strip has stopped moving, quietly step back from a clone to the real set */
+      var now = track.scrollLeft;
+      if (now === lastLeft) { settle(); }
+      lastLeft = now;
+    }, 200);
+    window.addEventListener('resize', function () { jump((nearest() % count) + count); });
+    jump(count);
+    var slideStep = function () { return slides[count + 1].offsetLeft - slides[count].offsetLeft; };
     prevBtn.addEventListener('click', function () { track.scrollBy({ left: -slideStep() }); });
     nextBtn.addEventListener('click', function () { track.scrollBy({ left: slideStep() }); });
-    track.addEventListener('scroll', syncArrows, { passive: true }); syncArrows();
     var userOff = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches), held = false;
     var pauseLabel = function () { pauseBtn.textContent = userOff ? 'Play' : 'Pause'; pauseBtn.setAttribute('aria-pressed', userOff ? 'true' : 'false'); };
     ['mouseenter', 'focusin', 'touchstart', 'pointerdown'].forEach(function (ev) { dtf.addEventListener(ev, function () { held = true; }, { passive: true }); });
@@ -148,7 +177,7 @@
     pauseLabel();
     setInterval(function () {
       if (userOff || held || document.hidden) { return; }
-      if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 4) { track.scrollTo({ left: 0 }); } else { track.scrollBy({ left: slideStep() }); }
+      track.scrollBy({ left: slideStep() });
     }, 5000);
   }
 })();
