@@ -152,8 +152,10 @@ DTF = {   # slug -> source png under G:\TUR\_art\ (Defend the Flag places + the 
     "racetrack-roundup": r"dtf\2026-10-05-rockenheim-race-course-v2\rockenheim-race-course_v2.png",   # the race track card (v2: the track with the horde)
     "king-of-the-hill": r"koth\2026-10-04-king-of-the-hill-v1\king-of-the-hill_v1.png",   # general flag fight, no named site
     "heli-crash": r"heli-crash\2026-10-05-heli-crash-v1\heli-crash_v1.png",   # v1: the smoking wreck, no soldiers
+    "dragons": r"dragons\2026-10-05-dragon-knights-v1\dragon-knights_v1.png",
+    "airdrops": r"airdrops\2026-10-05-airdrops-v1\airdrops_v1.png",
     # still to come: old-town-castle, proving-grounds (art not made yet)
-    # on file but unused: koth east-harbor-military + paris-island-ems-complex, heli-crash v2 (armed personnel), dragons (not on the page yet)
+    # on file but unused: koth east-harbor-military + paris-island-ems-complex, heli-crash v2 (armed personnel)
 }
 
 
