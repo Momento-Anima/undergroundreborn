@@ -247,13 +247,13 @@ body:has(.grove)::after { content: ""; position: absolute; left: 0; right: 0; bo
 .loc figure::before, .loc figure::after { content: ""; position: absolute; width: 260px; height: 197px; z-index: 2; pointer-events: none;
   background: url(/assets/sak/branch-a.webp) left top / contain no-repeat; filter: drop-shadow(0 4px 5px rgb(0 0 0 / .6)); }
 .loc figure::before { top: -26px; left: -26px; }
-.loc figure::after { right: -26px; bottom: 1.2rem; transform: rotate(180deg); background-image: url(/assets/sak/branch-b.webp); }
+.loc figure::after { right: -26px; bottom: -26px; transform: rotate(180deg); background-image: url(/assets/sak/branch-b.webp); }
 .loc:nth-child(even) figure::before { left: auto; right: -26px; transform: scaleX(-1); background-image: url(/assets/sak/branch-b.webp); }
 .loc:nth-child(even) figure::after { right: auto; left: -26px; transform: scaleY(-1); background-image: url(/assets/sak/branch-a.webp); }
 @media (max-width: 46rem) {
   .loc figure::before, .loc figure::after { width: 150px; height: 114px; }
   .loc figure::before, .loc:nth-child(even) figure::before { top: -14px; left: -10px; right: auto; transform: none; background-image: url(/assets/sak/branch-a.webp); }
-  .loc figure::after, .loc:nth-child(even) figure::after { right: -10px; left: auto; bottom: 1.4rem; transform: rotate(180deg); background-image: url(/assets/sak/branch-b.webp); }
+  .loc figure::after, .loc:nth-child(even) figure::after { right: -10px; left: auto; bottom: -14px; transform: rotate(180deg); background-image: url(/assets/sak/branch-b.webp); }
 }
 @media (prefers-reduced-motion: reduce) { html:has(.grove)::after { animation: none; } }
 
