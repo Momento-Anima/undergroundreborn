@@ -44,7 +44,9 @@ NOINDEX = {"appeals", "admin", "404"}
 
 # (src stem, nav label). Order = nav order. Pages not listed (privacy) still build.
 NAV = [("index", "Home"), ("how-to-join", "How to join"), ("systems", "Systems"), ("rules", "Rules"), ("news", "News"),
-       ("notoriety", "Notoriety"), ("locations", "Locations"), ("map", "Map")]
+       ("locations", "Locations"), ("map", "Map")]
+# Pages reached from the dropdown under Systems (they also keep their own addresses and sitemap entries)
+SYSTEMS_SUB = [("quests", "Quests"), ("notoriety", "Notoriety")]
 
 # Momento approved the keyword home title 2026-10-04 ("Go for it").
 HOME_TITLE = "The Underground: Reborn | DayZ Deer Isle PvE Server"
@@ -75,6 +77,13 @@ def nav_html(stem):
     links = []
     for s, label in NAV:
         href = "/" if s == "index" else f"/{s}/"
+        if s == "systems":
+            sub_stems = [x for x, _ in SYSTEMS_SUB]
+            cur = ' aria-current="page"' if stem == "systems" or stem in sub_stems else ""
+            subs = "".join(f'<a href="/{x}/"' + (' aria-current="page"' if x == stem else "") + f'>{l}</a>' for x, l in SYSTEMS_SUB)
+            links.append(f'<span class="navdrop"><a class="has-sub" href="{href}"{cur} aria-haspopup="true">{label}</a>'
+                         f'<span class="sub">{subs}</span></span>')
+            continue
         cur = ' aria-current="page"' if s == stem else ""
         links.append(f'<a href="{href}"{cur}>{label}</a>')
     return ('<nav class="nav wrap"><a class="brand" href="/"><img src="/assets/favicon-32.png" '

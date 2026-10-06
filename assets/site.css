@@ -357,3 +357,17 @@ body:has(.grove-quiet)::after { content: ""; position: absolute; left: 0; right:
 .qbadge.daily { color: var(--pve); }
 .qbadge.weekly { color: var(--safe); }
 @media (max-width: 46rem) { .qrow { grid-template-columns: 1fr; } .qrew { text-align: left; } }
+
+/* Systems dropdown: hover or keyboard focus shows Quests and Notoriety; on phones the two links sit inline (no hover there) */
+.navdrop { position: relative; display: inline-flex; align-items: center; }
+.navdrop > a.has-sub::after { content: " BE"; font-size: .75em; }
+.navdrop .sub { display: none; position: absolute; top: 100%; left: -.75rem; z-index: 30; min-width: 11rem; padding: .4rem 0; flex-direction: column;
+  background: var(--tunnel); border: 1px solid var(--seam); box-shadow: 0 1rem 2rem rgb(0 0 0 / .5); }
+.navdrop .sub a { padding: .55rem 1rem; border-bottom: 0; white-space: nowrap; }
+.navdrop:hover .sub, .navdrop:focus-within .sub { display: flex; }
+@media (max-width: 46rem) {
+  .navdrop { flex-wrap: wrap; }
+  .navdrop > a.has-sub::after { content: ""; }
+  .navdrop .sub { display: flex; position: static; flex-direction: row; gap: .9rem; min-width: 0; padding: 0 0 0 .6rem; border: 0; background: none; box-shadow: none; }
+  .navdrop .sub a { padding: .3rem 0; }
+}
