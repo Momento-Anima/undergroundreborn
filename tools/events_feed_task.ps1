@@ -44,6 +44,6 @@ try {
     $q = if ($Feed -eq 'test') { '?feed=test' } else { '' }
     $r = Invoke-WebRequest -Uri "$api/ingest/events$q" -Method Post -Body $body -ContentType 'application/json' -Headers @{ 'X-Ingest-Secret' = $secret } -UseBasicParsing
     @{ md5 = $md5; at = (Get-Date).ToString('s') } | ConvertTo-Json | Set-Content -Path $stateF -Encoding ascii
-    Log "posted $size bytes to $Feed, status $($r.StatusCode)"
+    Log "posted $size bytes (md5 $md5) to $Feed, status $($r.StatusCode)"
     Write-Output "posted, status $($r.StatusCode)"
 } catch { Log "EXCEPTION: $($_.Exception.Message)"; Write-Output "error: $($_.Exception.Message)"; exit 1 }
