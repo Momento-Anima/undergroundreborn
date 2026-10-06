@@ -373,3 +373,8 @@ body:has(.grove-quiet)::after { content: ""; position: absolute; left: 0; right:
 }
 /* the menu (and its dropdown) must sit above the page content on the pages that layer their content for the grove look */
 body:has(.grove) > nav.nav, body:has(.grove-quiet) > nav.nav { z-index: 40; }
+/* airdrop story strip: three pictures in order */
+.airdrop-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.25rem 0 0; padding: 0; list-style: none; }
+.airdrop-strip li { margin: 0; min-width: 0; }
+.airdrop-strip img { width: 100%; height: auto; display: block; border-radius: 1rem; border: 1px solid var(--seam); box-shadow: 0 1rem 2rem rgb(0 0 0 / .4); }
+@media (max-width: 46rem) { .airdrop-strip { grid-template-columns: 1fr; } }
