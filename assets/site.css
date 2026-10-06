@@ -340,3 +340,20 @@ body:has(.grove-quiet)::after { content: ""; position: absolute; left: 0; right:
   mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent); }
 .dtf-slide { flex: 0 0 var(--sw); scroll-snap-align: center; }
 @media (max-width: 46rem) { .dtf-carousel { --sw: calc(var(--cw) - 8rem); --fade: 3rem; } }
+/* Quest Log page */
+.qtoc { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.25rem 0 2rem; }
+.qtoc a { font-family: var(--mono); font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; text-decoration: none; color: var(--ash); border: 1px solid var(--seam); padding: .35rem .7rem; }
+.qtoc a:hover { color: var(--bone); border-color: var(--ember); }
+.qfoot { color: var(--ash); font-size: .82rem; margin: 2rem 0 0; }
+.qchain { margin-bottom: 2.25rem; scroll-margin-top: 1rem; }
+.qchain h2 { margin-bottom: .75rem; }
+.qlist { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--seam); }
+.qrow { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) minmax(0, 14rem); gap: .25rem 1.25rem; padding: .7rem 0; border-bottom: 1px solid var(--seam); align-items: start; }
+.qname { font-weight: 600; color: var(--bone); }
+.qsyn { color: var(--ash); }
+.qrew { color: var(--ember-hot); font-weight: 600; text-align: right; }
+.qrew b { color: var(--bone); }
+.qbadge { display: inline-block; font-family: var(--mono); font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; padding: .1rem .4rem; margin-left: .4rem; vertical-align: .1em; border: 1px solid currentColor; }
+.qbadge.daily { color: var(--pve); }
+.qbadge.weekly { color: var(--safe); }
+@media (max-width: 46rem) { .qrow { grid-template-columns: 1fr; } .qrew { text-align: left; } }
