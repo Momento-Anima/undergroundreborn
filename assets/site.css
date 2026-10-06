@@ -360,7 +360,7 @@ body:has(.grove-quiet)::after { content: ""; position: absolute; left: 0; right:
 
 /* Systems dropdown: hover or keyboard focus shows Quests and Notoriety; on phones the two links sit inline (no hover there) */
 .navdrop { position: relative; display: inline-flex; align-items: center; }
-.navdrop > a.has-sub::after { content: " BE"; font-size: .75em; }
+.navdrop > a.has-sub::after { content: " \25BE"; font-size: .75em; }
 .navdrop .sub { display: none; position: absolute; top: 100%; left: -.75rem; z-index: 30; min-width: 11rem; padding: .4rem 0; flex-direction: column;
   background: var(--tunnel); border: 1px solid var(--seam); box-shadow: 0 1rem 2rem rgb(0 0 0 / .5); }
 .navdrop .sub a { padding: .55rem 1rem; border-bottom: 0; white-space: nowrap; }
@@ -371,3 +371,5 @@ body:has(.grove-quiet)::after { content: ""; position: absolute; left: 0; right:
   .navdrop .sub { display: flex; position: static; flex-direction: row; gap: .9rem; min-width: 0; padding: 0 0 0 .6rem; border: 0; background: none; box-shadow: none; }
   .navdrop .sub a { padding: .3rem 0; }
 }
+/* the menu (and its dropdown) must sit above the page content on the pages that layer their content for the grove look */
+body:has(.grove) > nav.nav, body:has(.grove-quiet) > nav.nav { z-index: 40; }
