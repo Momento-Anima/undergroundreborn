@@ -42,3 +42,15 @@ Nothing is stored server-side. The cookie (7 days) carries Discord ID, display n
   version used them the wrong way round and the dots were in the wrong places.
 - No reset option exists for the secret in the developer portal. If it is ever lost, create a new application and re-grant.
 
+## Events feed for the admin map (added 2026-10-06, #285)
+- The game server is never contacted. A scheduled task on Momento's PC (`tools/events_feed_task.ps1`, task "TUR Events Feed", every 2 minutes)
+  does ONE read-only rclone copy of `tu:DayZServerData/TUR/EventsAdmin/state.json` and POSTs it to `/ingest/events` only when its md5
+  changed or 10 minutes passed. `tools/post_airdrop_zones.py` posts the 33 static airdrop zones (name, x, z, radius only) to `/ingest/airdrops`.
+- Routes: `POST /ingest/events[?feed=test]`, `POST /ingest/airdrops` (header `X-Ingest-Secret` must equal the secret `INGEST_SECRET`; 32 kB cap; JSON only);
+  `GET /admin/events[?feed=test]` (staff only; returns the stored file untouched plus `receivedAgeS`).
+- Storage: KV namespace `tur`, bound as **`TUR_KV`** (created 2026-10-06; it was NOT bound before, so the appeals 10-minute rate limit was silently off until then).
+  Keys `events:latest`, `events:test`, `airdrops:zones`, 24 h expiry.
+- Secret `INGEST_SECRET`: random value in `%USERPROFILE%\.tur-bridge\events_ingest.json` on the PC (outside the repo). **Never in chat, the repo or a screenshot.**
+  To rotate: write a new value into that file and paste it into the Worker's secret.
+- Stop the feed: `schtasks /Change /TN "TUR Events Feed" /DISABLE`. The task posts to the TEST key until TheConductor says live (then the task argument `-Feed test` changes to `-Feed live`).
+- This PC's Python has an old certificate store (urllib fails with "certificate has expired"); the scripts use PowerShell / curl for HTTPS.

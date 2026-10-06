@@ -190,6 +190,54 @@ async function players(req, env, cors) {
   return new Response(body, { status: 200, headers: { ...cors, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 }
 
+// ---- Events layer feed (admin map). The PC task pushes ONE small file; admins read it here. The game server is never contacted. ----
+const FEED_MAX = 32768;
+const FEED_TTL = 86400;   // a feed that stops arriving disappears after a day
+
+function sameSecret(a, b) {
+  a = String(a || ''); b = String(b || '');
+  let d = a.length ^ b.length;
+  for (let i = 0; i < Math.max(a.length, b.length); i++) d |= (a.charCodeAt(i) || 0) ^ (b.charCodeAt(i) || 0);
+  return d === 0;
+}
+
+// POST /ingest/events[?feed=test] and POST /ingest/airdrops. Header X-Ingest-Secret must match INGEST_SECRET.
+async function ingest(req, env, cors, url, kind) {
+  if (req.method !== 'POST') return json(cors, { ok: false }, 405);
+  if (!env.TUR_KV || !env.INGEST_SECRET) return json(cors, { ok: false, error: 'Feed is not set up.' }, 503);
+  if (!sameSecret(req.headers.get('X-Ingest-Secret'), env.INGEST_SECRET)) return json(cors, { ok: false }, 403);
+  const text = await req.text();
+  if (text.length > FEED_MAX) return json(cors, { ok: false, error: 'Too large.' }, 413);
+  let doc;
+  try { doc = JSON.parse(text); } catch (e) { return json(cors, { ok: false, error: 'Not JSON.' }, 400); }
+  if (!doc || typeof doc !== 'object') return json(cors, { ok: false, error: 'Bad shape.' }, 400);
+  let key;
+  if (kind === 'airdrops') key = 'airdrops:zones';
+  else key = url.searchParams.get('feed') === 'test' ? 'events:test' : 'events:latest';
+  await env.TUR_KV.put(key, JSON.stringify({ receivedAt: Date.now(), doc }), { expirationTtl: FEED_TTL });
+  return json(cors, { ok: true, key, bytes: text.length });
+}
+
+// GET /admin/events[?feed=test]: staff only. Passes the latest stored file through untouched, plus how old our copy is.
+async function adminEvents(req, env, cors, url) {
+  const s = await session(req, env);
+  if (!s || !s.staff) return json(cors, { ok: false }, s ? 403 : 401);
+  if (!env.TUR_KV) return json(cors, { ok: false, error: 'Feed is not set up.' }, 503);
+  const test = url.searchParams.get('feed') === 'test';
+  const [ev, zones] = await Promise.all([
+    env.TUR_KV.get(test ? 'events:test' : 'events:latest'),
+    env.TUR_KV.get('airdrops:zones'),
+  ]);
+  const e = ev ? JSON.parse(ev) : null;
+  const z = zones ? JSON.parse(zones) : null;
+  return json(cors, {
+    ok: true,
+    events: e ? e.doc : null,
+    receivedAgeS: e ? Math.round((Date.now() - e.receivedAt) / 1000) : null,
+    airdropZones: z ? z.doc : null,
+  });
+}
+
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
@@ -258,6 +306,9 @@ export default {
     if (url.pathname === '/appeal' && req.method === 'POST') return appeal(req, env, cors);
 
     if (url.pathname === '/admin/players') return players(req, env, cors);
+    if (url.pathname === '/admin/events') return adminEvents(req, env, cors, url);
+    if (url.pathname === '/ingest/events') return ingest(req, env, cors, url, 'events');
+    if (url.pathname === '/ingest/airdrops') return ingest(req, env, cors, url, 'airdrops');
 
     if (url.pathname === '/admin/hub') {
       const s = await session(req, env);
