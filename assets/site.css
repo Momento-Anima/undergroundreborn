@@ -378,3 +378,24 @@ body:has(.grove) > nav.nav, body:has(.grove-quiet) > nav.nav { z-index: 40; }
 .airdrop-strip li { margin: 0; min-width: 0; }
 .airdrop-strip img { width: 100%; height: auto; display: block; border-radius: 1rem; border: 1px solid var(--seam); box-shadow: 0 1rem 2rem rgb(0 0 0 / .4); }
 @media (max-width: 46rem) { .airdrop-strip { grid-template-columns: 1fr; } }
+/* admin map: events layer (running missions as dots, possible airdrop zones as dotted rings) */
+.mapbox .ev { fill: #d36bd0; stroke: var(--soot); stroke-width: 1.5; vector-effect: non-scaling-stroke; cursor: pointer; }
+.mapbox .z.evarea { stroke: #d36bd0; fill: #d36bd0; fill-opacity: .14; pointer-events: none; }
+.mapbox .z.az { stroke: var(--bone); fill: var(--bone); fill-opacity: .06; stroke-dasharray: 2 3; }
+/* Systems sections: text, with an optional picture beside it (sys-grid > sys-text + figure.sys-fig; flip puts the picture on the left) */
+.sys { padding: 2.25rem 0; border-top: 1px solid var(--seam); scroll-margin-top: 1rem; }
+.qtoc + .sys, .qtoc ~ .sys:first-of-type { border-top: 0; }
+.sys-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 2rem; align-items: center; }
+.sys-grid.flip { grid-template-columns: 1.25fr 1fr; }
+.sys-grid.flip .sys-fig { order: -1; }
+.sys-text { display: grid; gap: .75rem; max-width: 40rem; min-width: 0; }
+.sys-text p { color: var(--ash); }
+.sys-text .more { font-family: var(--mono); font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; }
+.sys-fig { margin: 0; min-width: 0; }
+.sys-fig img { width: 100%; height: auto; display: block; border-radius: 1rem; border: 1px solid var(--seam); box-shadow: 0 1.2rem 2.5rem rgb(0 0 0 / .45); }
+.sys-sub { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); margin-top: 1rem; }
+.sys-sub h3 { margin-bottom: .35rem; }
+.sys-sub p { color: var(--ash); }
+.sys-sub a { color: var(--ember-hot); }
+.qtoc a[hidden], .sys[hidden] { display: none; }
+@media (max-width: 46rem) { .sys-grid, .sys-grid.flip { grid-template-columns: 1fr; gap: 1rem; } .sys-grid.flip .sys-fig { order: 0; } }
