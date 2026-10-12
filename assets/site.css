@@ -408,3 +408,7 @@ body:has(.grove) > nav.nav, body:has(.grove-quiet) > nav.nav { z-index: 40; }
 .qchain > .qpair figure { margin: 0; min-width: 0; }
 .qchain > .qpair img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; border-radius: 1rem; border: 1px solid var(--seam); }
 @media (max-width: 46rem) { .qchain > .qpair { grid-template-columns: 1fr; } }
+.ladder-row { display: flex; align-items: center; gap: .9rem; }
+.ladder-row > .ranks { flex: 1 1 auto; min-width: 0; }
+.rank-sym { width: 4.5rem; height: auto; max-height: 4.5rem; object-fit: contain; flex: 0 0 auto; }
+@media (max-width: 44rem) { .rank-sym { width: 3rem; max-height: 3rem; } }
