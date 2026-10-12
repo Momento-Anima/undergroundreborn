@@ -404,3 +404,7 @@ body:has(.grove) > nav.nav, body:has(.grove-quiet) > nav.nav { z-index: 40; }
 .qchain > figure img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; border-radius: 1rem; border: 1px solid var(--seam); }
 .qchain > figure.portrait { max-width: 22rem; }
 .qchain > figure.portrait img { aspect-ratio: 4 / 5; }
+.qchain > .qpair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.qchain > .qpair figure { margin: 0; min-width: 0; }
+.qchain > .qpair img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; border-radius: 1rem; border: 1px solid var(--seam); }
+@media (max-width: 46rem) { .qchain > .qpair { grid-template-columns: 1fr; } }
