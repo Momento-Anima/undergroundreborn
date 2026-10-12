@@ -399,3 +399,6 @@ body:has(.grove) > nav.nav, body:has(.grove-quiet) > nav.nav { z-index: 40; }
 .sys-sub a { color: var(--ember-hot); }
 .qtoc a[hidden], .sys[hidden] { display: none; }
 @media (max-width: 46rem) { .sys-grid, .sys-grid.flip { grid-template-columns: 1fr; gap: 1rem; } .sys-grid.flip .sys-fig { order: 0; } }
+/* quest chain header picture */
+.qchain > figure { margin: 0 0 1.25rem; }
+.qchain > figure img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; border-radius: 1rem; border: 1px solid var(--seam); }
