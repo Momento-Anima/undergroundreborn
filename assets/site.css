@@ -402,3 +402,5 @@ body:has(.grove) > nav.nav, body:has(.grove-quiet) > nav.nav { z-index: 40; }
 /* quest chain header picture */
 .qchain > figure { margin: 0 0 1.25rem; }
 .qchain > figure img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; border-radius: 1rem; border: 1px solid var(--seam); }
+.qchain > figure.portrait { max-width: 22rem; }
+.qchain > figure.portrait img { aspect-ratio: 4 / 5; }
