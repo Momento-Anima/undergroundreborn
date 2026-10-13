@@ -412,3 +412,4 @@ body:has(.grove) > nav.nav, body:has(.grove-quiet) > nav.nav { z-index: 40; }
 .ladder-row > .ranks { flex: 1 1 auto; min-width: 0; }
 .rank-sym { width: 4.5rem; height: auto; max-height: 4.5rem; object-fit: contain; flex: 0 0 auto; }
 @media (max-width: 44rem) { .rank-sym { width: 3rem; max-height: 3rem; } }
+.qtoc.sep a + a::before { content: "•"; color: var(--ash); margin-right: .5rem; }

@@ -43,10 +43,10 @@ DRAFT_PAGES = set()      # how-to-join, rules and systems approved by Momento 20
 NOINDEX = {"appeals", "admin", "404"}
 
 # (src stem, nav label). Order = nav order. Pages not listed (privacy) still build.
-NAV = [("index", "Home"), ("how-to-join", "How to join"), ("systems", "Systems"), ("rules", "Rules"), ("news", "News"),
+NAV = [("index", "Home"), ("how-to-join", "How to join"), ("systems", "What We Offer"), ("rules", "Rules"), ("news", "News"),
        ("locations", "Locations"), ("map", "Map")]
 # Pages reached from the dropdown under Systems (they also keep their own addresses and sitemap entries)
-SYSTEMS_SUB = [("quests", "Quests"), ("notoriety", "Notoriety")]
+SYSTEMS_SUB = [("quests", "Quests"), ("notoriety", "Notoriety"), ("missions", "Missions")]
 
 # Momento approved the keyword home title 2026-10-04 ("Go for it").
 HOME_TITLE = "The Underground: Reborn | DayZ Deer Isle PvE Server"
