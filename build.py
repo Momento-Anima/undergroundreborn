@@ -46,7 +46,7 @@ NOINDEX = {"appeals", "admin", "404"}
 NAV = [("index", "Home"), ("how-to-join", "How to join"), ("systems", "What We Offer"), ("rules", "Rules"), ("news", "News"),
        ("locations", "Locations"), ("map", "Map")]
 # Pages reached from the dropdown under Systems (they also keep their own addresses and sitemap entries)
-SYSTEMS_SUB = [("quests", "Quests"), ("notoriety", "Notoriety"), ("missions", "Missions")]
+SYSTEMS_SUB = [("systems", "What makes us different"), ("quests", "Quests"), ("notoriety", "Notoriety"), ("missions", "Missions")]
 
 # Momento approved the keyword home title 2026-10-04 ("Go for it").
 HOME_TITLE = "The Underground: Reborn | DayZ Deer Isle PvE Server"
