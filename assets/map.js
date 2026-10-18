@@ -52,7 +52,7 @@
     }
     blobFilter('blob-pvp', '--pvp');
         var layers = {};
-    ['dino', 'gas', 'pvp', 'safe', 'trader'].forEach(function (k) {
+    ['gas', 'pvp', 'safe', 'trader'].forEach(function (k) {
       layers[k] = el('g', { 'data-layer': k, 'class': k === 'pve' ? 'hidden' : '' });
     });
     var sub = { pvp: 'PvP zone', pve: 'PvE', safe: 'Safe zone', gas: 'Contaminated' };
@@ -85,12 +85,6 @@
       wire(c, z.name, (z.gas ? 'PvP zone, gas mask needed' : sub[z.type]) + ' · ' + (z.r * 2 / 1000).toFixed(1) + ' km across');
     });
 
-    d.dinos.forEach(function (sp) {
-      sp.areas.forEach(function (a) {
-        var c = el('circle', { cx: a.x, cy: Y(a.z, W), r: Math.max(a.r, 90), 'class': 'z dino' }, layers.dino);
-        wire(c, sp.name, 'Territory');
-      });
-    });
 
     d.traders.forEach(function (t) {
       var y = Y(t.z, W), s = 150;
