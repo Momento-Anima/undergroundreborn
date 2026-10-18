@@ -50,6 +50,8 @@
     Array.prototype.forEach.call(document.querySelectorAll('[data-addr]'), function (el) {
       el.textContent = cfg.ip + ':' + cfg.gamePort;
     });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-ip]'), function (el) { el.textContent = cfg.ip; });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-gameport]'), function (el) { el.textContent = cfg.gamePort; });
   }
 
   /* Live status from the DZSA Launcher's public query (CORS open, no key). */

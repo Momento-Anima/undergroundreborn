@@ -414,3 +414,7 @@ body:has(.grove) > nav.nav, body:has(.grove-quiet) > nav.nav { z-index: 40; }
 @media (max-width: 44rem) { .rank-sym { width: 3rem; max-height: 3rem; } }
 /* top menu: a dot between items so the words are easy to tell apart */
 .nav > *:not(.brand):not(.account):not(:nth-child(2))::before { content: "•"; color: var(--ash); margin-right: .6rem; }
+.addr-box { display: grid; gap: .45rem; margin: 1rem 0 1.25rem; padding: 1rem 1.2rem; border: 1px solid var(--ember); border-radius: 1rem; background: var(--tunnel); max-width: 40rem; }
+.addr-box p { margin: 0; }
+.addr-box code { font-family: var(--mono); font-size: 1.1rem; color: var(--bone); user-select: all; }
+.addr-k { font-family: var(--mono); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ash); display: inline-block; min-width: 14ch; }
