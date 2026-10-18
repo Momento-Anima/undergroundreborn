@@ -419,3 +419,5 @@ body:has(.grove) > nav.nav, body:has(.grove-quiet) > nav.nav { z-index: 40; }
 .addr-box code { font-family: var(--mono); font-size: 1.1rem; color: var(--bone); user-select: all; }
 .addr-box a { font-family: var(--mono); font-size: 1rem; color: var(--ember-hot); word-break: break-all; }
 .addr-k { font-family: var(--mono); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ash); display: inline-block; min-width: 14ch; }
+.btn-steam { display: inline-flex; align-items: center; gap: .55rem; }
+.btn-steam img { width: 22px; height: 22px; display: block; }
