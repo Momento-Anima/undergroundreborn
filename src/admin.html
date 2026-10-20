@@ -23,6 +23,7 @@
 
     <h2 style="margin-top:2rem">Live players</h2>
     <p class="hint" data-live-note>Connecting to CFTools&hellip;</p>
+    <p class="hint" data-events-note hidden></p>
     <div class="searchbar" hidden>
       <label for="pl-search">Find a player</label>
       <input id="pl-search" type="search" placeholder="Name or Steam ID" autocomplete="off">
@@ -35,7 +36,7 @@
       <button type="button" data-layer="trader" aria-pressed="false"><span class="sw pin" style="color:var(--bone);background:var(--bone)"></span>Traders</button>
       <button type="button" data-layer="dino" aria-pressed="false"><span class="sw" style="color:var(--ember-hot)"></span>Dinosaurs</button>
       <button type="button" data-layer="vehicles" aria-pressed="false" disabled title="Not connected yet"><span class="sw" style="color:var(--bone)"></span>Vehicles (not connected)</button>
-      <button type="button" data-layer="events" aria-pressed="false" disabled title="Not connected yet"><span class="sw" style="color:#d36bd0"></span>Events (not connected)</button>
+      <button type="button" data-layer="events" aria-pressed="false"><span class="sw" style="color:#d36bd0"></span>Events</button>
       <button type="button" data-layer="items" aria-pressed="false" disabled title="Not connected yet"><span class="sw" style="color:var(--gas)"></span>Items (not connected)</button>
     </div>
     <div class="mapbox" id="livemap" hidden>

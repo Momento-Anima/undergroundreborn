@@ -96,7 +96,7 @@
     var legend = root.querySelector('#livelegend');
     var NS = 'http://www.w3.org/2000/svg', W = 16384;
     var players = [];          // latest list from the Worker
-    var layerOn = { players: true, pvp: true, safe: true, trader: false, dino: false };
+    var layerOn = { players: true, pvp: true, safe: true, trader: false, dino: false, events: false };
     var morphs = [];
 
     function el(tag, attrs, parent) {
@@ -131,7 +131,7 @@
     }
     blobFilter('lv-pvp', '--pvp');
     var groups = {};
-    ['dino', 'safe', 'pvp', 'trader', 'players'].forEach(function (k) {
+    ['dino', 'safe', 'pvp', 'trader', 'events', 'players'].forEach(function (k) {
       groups[k] = el('g', { 'data-layer': k, 'class': layerOn[k] ? '' : 'hidden' });
     });
 
@@ -168,6 +168,7 @@
         b.setAttribute('aria-pressed', on); layerOn[key] = on;
         if (groups[key]) groups[key].setAttribute('class', on ? '' : 'hidden');
         if (key === 'players') { tbl.hidden = !on; }
+        if (key === 'events' && on) loadEvents();
         tip.style.display = 'none';
       });
     });
@@ -217,6 +218,41 @@
         })
         .catch(function () { note.textContent = 'Could not reach the server.'; });
     }
+    /* ---- events layer: running missions + airdrop zones, from the Worker's private copy (never from the game server) ---- */
+    var STALE_S = 900;           // older than 15 minutes = the feed stopped
+    var evNote = root.querySelector('[data-events-note]');
+    function mmss(sec) { sec = Math.max(0, Math.round(sec)); return Math.floor(sec / 60) + ' min'; }
+    function renderEvents(j) {
+      var g = groups.events; while (g.firstChild) g.removeChild(g.firstChild);
+      var k = W / mapbox.getBoundingClientRect().width;
+      var d = j.events, now = Date.now() / 1000, fetched = now - (j.receivedAgeS || 0);
+      var age = d ? (d.writtenAtUnix ? now - d.writtenAtUnix : j.receivedAgeS) : null;
+      var stale = age == null || age > STALE_S;
+      (j.airdropZones && (j.airdropZones.zones || j.airdropZones) || []).forEach(function (z) {
+        if (typeof z.x !== 'number') return;
+        wire(el('circle', { cx: z.x, cy: W - z.z, r: Math.max(z.radius || 0, 90), 'class': 'z az' }, g), z.locationName || z.name || 'Airdrop zone', 'Possible airdrop zone');
+      });
+      var shown = 0;
+      if (d && !stale) (d.rows || []).forEach(function (r) {
+        if (!/^RUNNING/.test(String(r.state || '')) || (!r.x && !r.z)) return;
+        shown++;
+        var left = r.endsInS >= 0 ? (d.writtenAtUnix ? d.writtenAtUnix + r.endsInS - now : r.endsInS - (j.receivedAgeS || 0)) : null;
+        var sub = (r.type || r.schedule || 'Mission') + (left == null ? '' : ', about ' + mmss(left) + ' left') + (r.progress >= 0 && r.progress != null ? ', ' + Math.round(r.progress * 100) + '%' : '');
+        if (r.radius > 0) el('circle', { cx: r.x, cy: W - r.z, r: r.radius, 'class': 'z evarea' }, g);
+        wire(el('circle', { cx: r.x, cy: W - r.z, r: Math.round(7 * k), 'class': 'ev' }, g), r.title || r.schedule || 'Mission', sub);
+      });
+      evNote.hidden = false;
+      evNote.textContent = !d ? 'No events feed yet.' : stale ? 'Events feed is stale (' + mmss(age) + ' old); showing airdrop zones only.' : shown + ' running, feed ' + mmss(age) + ' old.';
+    }
+    function loadEvents() {
+      if (document.hidden || !layerOn.events) return;
+      var q = location.search.indexOf('feed=test') >= 0 ? '?feed=test' : '';
+      fetch(cfg.api + '/admin/events' + q, { credentials: 'include', cache: 'no-store' })
+        .then(function (r) { return r.json(); })
+        .then(function (j) { if (j.ok) renderEvents(j); else { evNote.hidden = false; evNote.textContent = j.error || 'Could not load events.'; } })
+        .catch(function () { evNote.hidden = false; evNote.textContent = 'Could not reach the server.'; });
+    }
+    setInterval(loadEvents, 30000);
     load();
     setInterval(load, 10000);
   }
