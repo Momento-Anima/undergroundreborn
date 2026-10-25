@@ -22,7 +22,7 @@ DISCORD = "https://discord.gg/tudayz"
 
 # The live server, as DZSA's public list shows it (2026-10-02). Game port is what
 # players connect to; the query port is what the status check and the join link use.
-SERVER_IP = "74.50.72.74"
+SERVER_IP = "172.111.51.220"
 GAME_PORT = 2744
 QUERY_PORT = 2816
 
