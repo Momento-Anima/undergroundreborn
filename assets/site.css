@@ -427,7 +427,7 @@ body:has(.grove) > nav.nav, body:has(.grove-quiet) > nav.nav { z-index: 40; }
 .emb { display: grid; justify-items: center; gap: .35rem; text-decoration: none; color: inherit; text-align: center; }
 .emb img { display: block; height: auto; border-radius: 1rem; }
 .emb-hero img { width: min(100%, 22rem); }
-.emb-diamond-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 16.5rem)); gap: 1.25rem; justify-content: center; }
+.emb-diamond-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 24rem)); gap: 1.25rem; justify-content: center; }
 .emb-diamond-low { display: flex; justify-content: center; }
 .emb-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .4rem; font-family: var(--display); font-size: 1.2rem; letter-spacing: .06em; text-transform: uppercase; color: var(--bone); }
 .emb-head .srv-badge { margin-left: 0; }
@@ -443,13 +443,11 @@ body:has(.grove) > nav.nav, body:has(.grove-quiet) > nav.nav { z-index: 40; }
 .srv-emb { width: 100%; height: auto; border-radius: 1rem; }
 .srv-body { display: grid; gap: .6rem; min-width: 0; }
 .srv-tag { color: var(--ash); }
-@media (max-width: 46rem) { .srv { grid-template-columns: 1fr; } .emb-diamond-pair { grid-template-columns: minmax(0, 16.5rem); } }
+@media (max-width: 46rem) { .srv { grid-template-columns: 1fr; } .emb-diamond-pair { grid-template-columns: minmax(0, 24rem); } }
 
-/* launcher links under each server's connection details: Steam, DZSA, Beanz (icons to be supplied) */
-.launch-row { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
-.launch { display: inline-flex; align-items: center; gap: .4rem; padding: .3rem .6rem; border: 1px solid var(--seam); color: var(--bone); font-family: var(--mono); font-size: .75rem; letter-spacing: .06em; text-decoration: none; }
-.launch:hover { border-color: var(--ember); color: var(--ember-hot); }
-.launch img { width: 22px; height: 22px; display: block; }
-.launch-ph { display: inline-grid; place-items: center; width: 22px; height: 22px; border: 1px dashed var(--ash); color: var(--ash); font-size: .55rem; }
-.launch.pending { opacity: .6; cursor: default; }
+/* launcher buttons under each server's connection line: DayZ Vanilla (Steam), DZSA, Beanz; side by side, the card's width */
+.launch-row { display: flex; flex-wrap: nowrap; justify-content: center; gap: .5rem; width: min(100%, 24rem); margin-inline: auto; }
+.launch { display: block; flex: 1 1 0; min-width: 0; }
+.launch img { display: block; width: 100%; height: auto; border-radius: .4rem; }
+.launch:hover img { filter: brightness(1.15); }
 .emb-link { display: grid; justify-items: center; gap: .35rem; text-decoration: none; color: inherit; }

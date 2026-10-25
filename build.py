@@ -38,15 +38,15 @@ SERVERS = [
 
 
 def launch_row(sv):
-    """Three launcher links under each server: Steam, DZSA and Beanz. Steam and DZSA connect on the query port (as before); Beanz is a plain https link."""
+    """Three launcher buttons under each server: DayZ Vanilla (Steam connect), DZSA and Beanz. Steam and DZSA connect on the query port; Beanz is a plain https link."""
     ip, q = sv["ip"], sv["query"]
-    steam = (f'<a class="launch" href="steam://connect/{ip}:{q}" title="Connect through Steam">'
-             '<img src="/assets/steam-logo.png" width="22" height="22" alt="" aria-hidden="true">Steam</a>')
+    vanilla = (f'<a class="launch" href="steam://connect/{ip}:{q}" title="Connect through the DayZ Vanilla Launcher (Steam)">'
+               '<img src="/assets/launchers/vanilla.webp" width="480" height="160" alt="DayZ Vanilla Launcher"></a>')
     dzsa = (f'<a class="launch" href="dzsal://{ip}:{q}" title="Connect through the DZSA Launcher">'
-            '<span class="launch-ph" aria-hidden="true">DZSA</span>DZSA</a>')
+            '<img src="/assets/launchers/dzsa.webp" width="480" height="160" alt="DZSA Launcher"></a>')
     beanz = (f'<a class="launch" href="https://dayzbeanslauncher.com/launch/server/{sv["beanz_id"]}" title="Connect through the Beanz Launcher">'
-             '<span class="launch-ph" aria-hidden="true">BZ</span>Beanz</a>')
-    return '<div class="launch-row">' + steam + dzsa + beanz + '</div>'
+             '<img src="/assets/launchers/beanz.webp" width="480" height="160" alt="Beanz Launcher"></a>')
+    return '<div class="launch-row">' + vanilla + dzsa + beanz + '</div>'
 
 
 def server_cards(kind):
