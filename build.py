@@ -30,10 +30,10 @@ QUERY_PORT = 2993
 # Taglines are player-facing words: None until Momento approves them (the page shows a visible placeholder).
 # Keep every address here: the home page and /servers/ read from this list.
 SERVERS = [
-    {"id": "deer-isle", "name": "The Underground: Reborn | Deer Isle", "short": "Deer Isle", "ip": "172.111.51.220", "game": 2992, "query": 2993, "status": "live", "tagline": "And so it begins...<br>Solve the mystery,<br>save your soul."},
-    {"id": "hashima", "name": "The Underground: Hashima Holiday", "short": "Hashima", "ip": "172.111.51.220", "game": 2412, "query": 2413, "status": "beta", "tagline": "Ghosts in the cherry<br>bloom where the shadows gather<br>spring never ends here"},
-    {"id": "banov", "name": "The Underground : Banov Adventure", "short": "Banov", "ip": "45.22.65.71", "game": 2102, "query": 2103, "status": "beta", "tagline": "An adventure under strange skies."},
-    {"id": "dust-devils", "name": "The Underground : Nasdara - DustDevils", "short": "Dust Devils", "ip": "45.22.65.71", "game": 2502, "query": 2503, "status": "beta", "tagline": "What doesn't kill you makes you stronger."},
+    {"id": "deer-isle", "home_heading": "Deer Isle", "name": "The Underground: Reborn | Deer Isle", "short": "Deer Isle", "ip": "172.111.51.220", "game": 2992, "query": 2993, "status": "live", "tagline": "And so it begins...<br>Solve the mystery, save your soul."},
+    {"id": "hashima", "home_heading": "Haunted Hashima", "name": "The Underground: Hashima Holiday", "short": "Hashima", "ip": "172.111.51.220", "game": 2412, "query": 2413, "status": "beta", "tagline": "Ghosts in the cherry<br>bloom where the shadows gather<br>spring never ends here"},
+    {"id": "banov", "home_heading": "Banov Adventure", "name": "The Underground : Banov Adventure", "short": "Banov", "ip": "45.22.65.71", "game": 2102, "query": 2103, "status": "beta", "tagline": "An adventure under strange skies."},
+    {"id": "dust-devils", "home_heading": "Dust Devils", "name": "The Underground : Nasdara - DustDevils", "short": "Dust Devils", "ip": "45.22.65.71", "game": 2502, "query": 2503, "status": "beta", "tagline": "What doesn't kill you makes you stronger."},
 ]
 
 
@@ -63,9 +63,10 @@ def server_cards(kind):
             cls = "emb-hero" if kind == "hero" else "emb-row"
             out.append(
                 f'<a class="emb {cls}" href="/servers/#{sid}">'
+                f'<span class="emb-head">{sv["home_heading"]}{badge}</span>'
                 f'<img src="/assets/emblems/{sid}.webp" width="480" height="480" alt="{sv["short"]} server emblem">'
                 f'<span class="emb-tag">{tag}</span>'
-                f'<span class="emb-conn">{conn}</span>{badge}</a>')
+                f'<span class="emb-conn">{conn}</span></a>')
     return out
 
 
@@ -238,9 +239,12 @@ def build_page(stem):
     if stem == "news":
         body = body + "\n" + render_news()
     if stem == "index":
-        cards = server_cards("row")
-        body = body.replace("<!--DEER_ISLE_HERO-->", server_cards("hero")[0])
-        body = body.replace("<!--SERVER_ROW-->", '<div class="emb-row-wrap">' + "".join(cards[1:]) + "</div>")
+        by_id = {sv["id"]: card for sv, card in zip(SERVERS, server_cards("row"))}
+        hero = server_cards("hero")[0]
+        body = body.replace("<!--DEER_ISLE_HERO-->", hero)
+        body = body.replace("<!--SERVER_ROW-->",
+                            '<div class="emb-diamond-pair">' + by_id["dust-devils"] + by_id["banov"] + '</div>'
+                            + '<div class="emb-diamond-low">' + by_id["hashima"] + '</div>')
     if stem == "servers":
         body = body.replace("<!--SERVER_SECTIONS-->", "".join(server_cards("sections")))
     page_url = SITE_URL + ("/" if stem == "index" else f"/{stem}/")

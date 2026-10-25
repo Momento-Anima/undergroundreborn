@@ -427,7 +427,10 @@ body:has(.grove) > nav.nav, body:has(.grove-quiet) > nav.nav { z-index: 40; }
 .emb { display: grid; justify-items: center; gap: .35rem; text-decoration: none; color: inherit; text-align: center; }
 .emb img { display: block; height: auto; border-radius: 1rem; }
 .emb-hero img { width: min(100%, 22rem); }
-.emb-row-wrap { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; width: 100%; justify-items: center; }
+.emb-diamond-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 16.5rem)); gap: 1.25rem; justify-content: center; }
+.emb-diamond-low { display: flex; justify-content: center; }
+.emb-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .4rem; font-family: var(--display); font-size: 1.2rem; letter-spacing: .06em; text-transform: uppercase; color: var(--bone); }
+.emb-head .srv-badge { margin-left: 0; }
 .emb-row img { width: min(100%, 16.5rem); }
 .emb-tag { font-family: var(--display); font-size: 1.15rem; letter-spacing: .04em; text-transform: uppercase; color: var(--bone); max-width: 34ch; }
 .emb-conn { font-family: var(--mono); font-size: .85rem; color: var(--ash); user-select: all; }
@@ -440,4 +443,4 @@ body:has(.grove) > nav.nav, body:has(.grove-quiet) > nav.nav { z-index: 40; }
 .srv-emb { width: 100%; height: auto; border-radius: 1rem; }
 .srv-body { display: grid; gap: .6rem; min-width: 0; }
 .srv-tag { color: var(--ash); }
-@media (max-width: 46rem) { .srv { grid-template-columns: 1fr; } .emb-row-wrap { grid-template-columns: 1fr; } }
+@media (max-width: 46rem) { .srv { grid-template-columns: 1fr; } .emb-diamond-pair { grid-template-columns: minmax(0, 16.5rem); } }
