@@ -31,7 +31,7 @@ QUERY_PORT = 2993
 # Keep every address here: the home page and /servers/ read from this list.
 SERVERS = [
     {"id": "deer-isle", "name": "The Underground: Reborn | Deer Isle", "short": "Deer Isle", "ip": "172.111.51.220", "game": 2992, "query": 2993, "status": "live", "tagline": "And so it begins..."},
-    {"id": "hashima", "name": "The Underground: Hashima Holiday", "short": "Hashima", "ip": "172.111.51.220", "game": 2412, "query": 2413, "status": "beta", "tagline": None},
+    {"id": "hashima", "name": "The Underground: Hashima Holiday", "short": "Hashima", "ip": "172.111.51.220", "game": 2412, "query": 2413, "status": "beta", "tagline": "Death's shadow blossoms?"},
     {"id": "banov", "name": "The Underground : Banov Adventure", "short": "Banov", "ip": "45.22.65.71", "game": 2102, "query": 2103, "status": "beta", "tagline": "An adventure under strange skies."},
     {"id": "dust-devils", "name": "The Underground : Nasdara - DustDevils", "short": "Dust Devils", "ip": "45.22.65.71", "game": 2502, "query": 2503, "status": "beta", "tagline": None},
 ]
