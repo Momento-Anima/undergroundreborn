@@ -432,7 +432,7 @@ body:has(.grove) > nav.nav, body:has(.grove-quiet) > nav.nav { z-index: 40; }
 .emb-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .4rem; font-family: var(--display); font-size: 1.2rem; letter-spacing: .06em; text-transform: uppercase; color: var(--bone); }
 .emb-head .srv-badge { margin-left: 0; }
 .emb-row img { width: min(100%, 16.5rem); }
-.emb-tag { font-family: var(--display); font-size: 1.15rem; letter-spacing: .04em; text-transform: uppercase; color: var(--bone); max-width: 34ch; }
+.emb-tag { font-family: var(--display); font-size: 1.15rem; letter-spacing: .04em; text-transform: uppercase; color: var(--bone); max-width: 34ch; min-height: 4.4rem; display: grid; align-content: center; }
 .emb-conn { font-family: var(--mono); font-size: .85rem; color: var(--ash); user-select: all; }
 .emb:hover img { box-shadow: 0 0 0 2px var(--ember); }
 .srv-badge { display: inline-block; margin-left: .5rem; padding: .15rem .5rem; font-family: var(--mono); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; border: 1px solid var(--ember); color: var(--ember-hot); vertical-align: middle; }
@@ -446,7 +446,7 @@ body:has(.grove) > nav.nav, body:has(.grove-quiet) > nav.nav { z-index: 40; }
 @media (max-width: 46rem) { .srv { grid-template-columns: 1fr; } .emb-diamond-pair { grid-template-columns: minmax(0, 24rem); } }
 
 /* launcher buttons under each server's connection line: DayZ Vanilla (Steam), DZSA, Beanz; side by side, the card's width */
-.launch-row { display: flex; flex-wrap: nowrap; justify-content: center; gap: .5rem; width: min(100%, 24rem); margin-inline: auto; }
+.launch-row { display: flex; flex-wrap: nowrap; justify-content: center; gap: .45rem; width: min(100%, 20.4rem); margin-inline: auto; }
 .launch { display: block; flex: 1 1 0; min-width: 0; }
 .launch img { display: block; width: 100%; height: auto; border-radius: .4rem; }
 .launch:hover img { filter: brightness(1.15); }
