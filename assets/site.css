@@ -444,3 +444,12 @@ body:has(.grove) > nav.nav, body:has(.grove-quiet) > nav.nav { z-index: 40; }
 .srv-body { display: grid; gap: .6rem; min-width: 0; }
 .srv-tag { color: var(--ash); }
 @media (max-width: 46rem) { .srv { grid-template-columns: 1fr; } .emb-diamond-pair { grid-template-columns: minmax(0, 16.5rem); } }
+
+/* launcher links under each server's connection details: Steam, DZSA, Beanz (icons to be supplied) */
+.launch-row { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
+.launch { display: inline-flex; align-items: center; gap: .4rem; padding: .3rem .6rem; border: 1px solid var(--seam); color: var(--bone); font-family: var(--mono); font-size: .75rem; letter-spacing: .06em; text-decoration: none; }
+.launch:hover { border-color: var(--ember); color: var(--ember-hot); }
+.launch img { width: 22px; height: 22px; display: block; }
+.launch-ph { display: inline-grid; place-items: center; width: 22px; height: 22px; border: 1px dashed var(--ash); color: var(--ash); font-size: .55rem; }
+.launch.pending { opacity: .6; cursor: default; }
+.emb-link { display: grid; justify-items: center; gap: .35rem; text-decoration: none; color: inherit; }

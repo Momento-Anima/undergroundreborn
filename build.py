@@ -37,6 +37,18 @@ SERVERS = [
 ]
 
 
+def launch_row(sv):
+    """Three launcher links under each server: Steam, DZSA and Beanz. Steam and DZSA connect on the query port (as before)."""
+    ip, q = sv["ip"], sv["query"]
+    steam = (f'<a class="launch" href="steam://connect/{ip}:{q}" title="Connect through Steam">'
+             '<img src="/assets/steam-logo.png" width="22" height="22" alt="" aria-hidden="true">Steam</a>')
+    dzsa = (f'<a class="launch" href="dzsal://{ip}:{q}" title="Connect through the DZSA Launcher">'
+            '<span class="launch-ph" aria-hidden="true">DZSA</span>DZSA</a>')
+    beanz = ('<span class="launch pending" title="Beanz link not supplied yet">'
+             '<span class="launch-ph" aria-hidden="true">BZ</span>Beanz (link pending)</span>')
+    return '<div class="launch-row">' + steam + dzsa + beanz + '</div>'
+
+
 def server_cards(kind):
     """kind: 'hero' (Deer Isle, large), 'row' (the others, under the hero), or 'sections' (the /servers/ page)."""
     out = []
@@ -58,15 +70,16 @@ def server_cards(kind):
                 f'<div class="addr-box"><p><span class="addr-k">Server IP</span> <code>{sv["ip"]}</code></p>'
                 f'<p><span class="addr-k">Game port</span> <code>{sv["game"]}</code></p>'
                 f'<p><span class="addr-k">Direct connect</span> <code>{conn}</code></p></div>'
-                + links + '</div></section>')
+                + launch_row(sv) + links + '</div></section>')
         else:
             cls = "emb-hero" if kind == "hero" else "emb-row"
             out.append(
-                f'<a class="emb {cls}" href="/servers/#{sid}">'
+                f'<div class="emb {cls}">'
+                f'<a class="emb-link" href="/servers/#{sid}">'
                 f'<span class="emb-head">{sv["home_heading"]}{badge}</span>'
                 f'<img src="/assets/emblems/{sid}.webp" width="480" height="480" alt="{sv["short"]} server emblem">'
-                f'<span class="emb-tag">{tag}</span>'
-                f'<span class="emb-conn">{conn}</span></a>')
+                f'<span class="emb-tag">{tag}</span></a>'
+                f'<span class="emb-conn">{conn}</span>' + launch_row(sv) + '</div>')
     return out
 
 
