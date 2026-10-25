@@ -33,7 +33,7 @@ SERVERS = [
     {"id": "deer-isle", "beanz_id": 309203, "home_heading": "Deer Isle", "name": "The Underground: Reborn | Deer Isle", "short": "Deer Isle", "ip": "172.111.51.220", "game": 2992, "query": 2993, "status": "live", "tagline": "And so it begins...<br>Solve the mystery, save your soul."},
     {"id": "hashima", "beanz_id": 309202, "home_heading": "Haunted Hashima", "name": "The Underground: Hashima Holiday", "short": "Hashima", "ip": "172.111.51.220", "game": 2412, "query": 2413, "status": "beta", "tagline": "Ghosts in the cherry<br>bloom where the shadows gather<br>spring never ends here"},
     {"id": "banov", "beanz_id": 315612, "home_heading": "Banov Adventure", "name": "The Underground : Banov Adventure", "short": "Banov", "ip": "45.22.65.71", "game": 2102, "query": 2103, "status": "beta", "tagline": "An adventure under strange skies."},
-    {"id": "dust-devils", "beanz_id": 313834, "home_heading": "Dust Devils", "name": "The Underground : Nasdara - DustDevils", "short": "Dust Devils", "ip": "45.22.65.71", "game": 2502, "query": 2503, "status": "beta", "tagline": "What doesn't kill you makes you stronger."},
+    {"id": "dust-devils", "beanz_id": 313834, "home_heading": "Dust Devils", "name": "The Underground : Nasdara - DustDevils", "short": "Dust Devils", "ip": "45.22.65.71", "game": 2502, "query": 2503, "status": "beta", "tagline": "What doesn't kill you...<br>...makes you stronger."},
 ]
 
 
