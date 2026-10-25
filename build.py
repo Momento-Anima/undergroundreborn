@@ -26,6 +26,49 @@ SERVER_IP = "172.111.51.220"
 GAME_PORT = 2992
 QUERY_PORT = 2993
 
+# The four servers (Momento, 2026-10-25). Each emblem links to its section on /servers/. Beta servers are open but labelled.
+# Taglines are player-facing words: None until Momento approves them (the page shows a visible placeholder).
+# Keep every address here: the home page and /servers/ read from this list.
+SERVERS = [
+    {"id": "deer-isle", "name": "The Underground: Reborn | Deer Isle", "short": "Deer Isle", "ip": "172.111.51.220", "game": 2992, "query": 2993, "status": "live", "tagline": None},
+    {"id": "hashima", "name": "The Underground: Hashima Holiday", "short": "Hashima", "ip": "172.111.51.220", "game": 2412, "query": 2413, "status": "beta", "tagline": None},
+    {"id": "banov", "name": "The Underground : Banov Adventure", "short": "Banov", "ip": "45.22.65.71", "game": 2102, "query": 2103, "status": "beta", "tagline": None},
+    {"id": "dust-devils", "name": "The Underground : Nasdara - DustDevils", "short": "Dust Devils", "ip": "45.22.65.71", "game": 2502, "query": 2503, "status": "beta", "tagline": None},
+]
+
+
+def server_cards(kind):
+    """kind: 'hero' (Deer Isle, large), 'row' (the others, under the hero), or 'sections' (the /servers/ page)."""
+    out = []
+    for sv in SERVERS:
+        sid = sv["id"]
+        badge = '<span class="srv-badge">Live</span>' if sv["status"] == "live" else '<span class="srv-badge beta">Beta</span>'
+        tag = sv["tagline"] or '<em class="srv-pending">[tagline: pending Momento]</em>'
+        conn = f'{sv["ip"]}:{sv["game"]}'
+        if kind == "sections":
+            if sid == "deer-isle":
+                links = '<p><a class="more" href="/locations/">Locations</a> &middot; <a class="more" href="/quests/">Quest Log</a></p>'
+            else:
+                links = '<p class="srv-pending">Locations and quests: under construction.</p>'
+            out.append(
+                f'<section class="srv" id="{sid}">'
+                f'<img class="srv-emb" src="/assets/emblems/{sid}.webp" width="480" height="480" alt="{sv["short"]} server emblem">'
+                f'<div class="srv-body"><span class="label">{sv["short"]}</span><h2>{sv["name"]} {badge}</h2>'
+                f'<p class="srv-tag">{tag}</p>'
+                f'<div class="addr-box"><p><span class="addr-k">Server IP</span> <code>{sv["ip"]}</code></p>'
+                f'<p><span class="addr-k">Game port</span> <code>{sv["game"]}</code></p>'
+                f'<p><span class="addr-k">Direct connect</span> <code>{conn}</code></p></div>'
+                + links + '</div></section>')
+        else:
+            cls = "emb-hero" if kind == "hero" else "emb-row"
+            out.append(
+                f'<a class="emb {cls}" href="/servers/#{sid}">'
+                f'<img src="/assets/emblems/{sid}.webp" width="480" height="480" alt="{sv["short"]} server emblem">'
+                f'<span class="emb-tag">{tag}</span>'
+                f'<span class="emb-conn">{conn}</span>{badge}</a>')
+    return out
+
+
 # Fill these in when Momento has the IDs. Empty = the tag is not emitted.
 GA_ID = "G-6Y451GF7E2"          # Google Analytics measurement ID, "G-XXXXXXXXXX"
 ADSENSE_ID = ""     # AdSense publisher ID, "ca-pub-XXXXXXXXXXXXXXXX"
@@ -194,6 +237,12 @@ def build_page(stem):
     title, desc, body = parse((ROOT / "src" / f"{stem}.html").read_text(encoding="utf-8"))
     if stem == "news":
         body = body + "\n" + render_news()
+    if stem == "index":
+        cards = server_cards("row")
+        body = body.replace("<!--DEER_ISLE_HERO-->", server_cards("hero")[0])
+        body = body.replace("<!--SERVER_ROW-->", '<div class="emb-row-wrap">' + "".join(cards[1:]) + "</div>")
+    if stem == "servers":
+        body = body.replace("<!--SERVER_SECTIONS-->", "".join(server_cards("sections")))
     page_url = SITE_URL + ("/" if stem == "index" else f"/{stem}/")
     config = (f'<script>window.TUR={{ip:"{SERVER_IP}",gamePort:{GAME_PORT},queryPort:{QUERY_PORT},'
               f'discord:"{DISCORD}"' + (f',api:"{API_BASE}"' if LOGIN_ENABLED else '') + '};</script>')

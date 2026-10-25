@@ -421,3 +421,23 @@ body:has(.grove) > nav.nav, body:has(.grove-quiet) > nav.nav { z-index: 40; }
 .addr-k { font-family: var(--mono); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ash); display: inline-block; min-width: 14ch; }
 .btn-steam { display: inline-flex; align-items: center; gap: .55rem; }
 .btn-steam img { width: 22px; height: 22px; display: block; }
+
+/* home: Deer Isle emblem large, the other three beneath at 75%; each emblem links to its server section */
+.emb-servers { display: grid; justify-items: center; gap: 1.5rem; margin: 1.5rem 0 2.5rem; }
+.emb { display: grid; justify-items: center; gap: .35rem; text-decoration: none; color: inherit; text-align: center; }
+.emb img { display: block; height: auto; border-radius: 1rem; }
+.emb-hero img { width: min(100%, 22rem); }
+.emb-row-wrap { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; width: 100%; justify-items: center; }
+.emb-row img { width: min(100%, 16.5rem); }
+.emb-tag { font-family: var(--display); font-size: 1.15rem; letter-spacing: .04em; text-transform: uppercase; color: var(--bone); max-width: 22ch; }
+.emb-conn { font-family: var(--mono); font-size: .85rem; color: var(--ash); user-select: all; }
+.emb:hover img { box-shadow: 0 0 0 2px var(--ember); }
+.srv-badge { display: inline-block; margin-left: .5rem; padding: .15rem .5rem; font-family: var(--mono); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; border: 1px solid var(--ember); color: var(--ember-hot); vertical-align: middle; }
+.srv-badge.beta { border-color: var(--ash); color: var(--ash); }
+.srv-pending { color: var(--ember-hot); }
+/* /servers/ page */
+.srv { display: grid; grid-template-columns: minmax(0, 14rem) minmax(0, 1fr); gap: 1.5rem; align-items: start; padding-block: 2rem; border-top: 1px solid var(--seam); scroll-margin-top: 1rem; }
+.srv-emb { width: 100%; height: auto; border-radius: 1rem; }
+.srv-body { display: grid; gap: .6rem; min-width: 0; }
+.srv-tag { color: var(--ash); }
+@media (max-width: 46rem) { .srv { grid-template-columns: 1fr; } .emb-row-wrap { grid-template-columns: 1fr; } }
