@@ -429,7 +429,7 @@ body:has(.grove) > nav.nav, body:has(.grove-quiet) > nav.nav { z-index: 40; }
 .emb-hero img { width: min(100%, 22rem); }
 .emb-row-wrap { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; width: 100%; justify-items: center; }
 .emb-row img { width: min(100%, 16.5rem); }
-.emb-tag { font-family: var(--display); font-size: 1.15rem; letter-spacing: .04em; text-transform: uppercase; color: var(--bone); max-width: 22ch; }
+.emb-tag { font-family: var(--display); font-size: 1.15rem; letter-spacing: .04em; text-transform: uppercase; color: var(--bone); max-width: 34ch; }
 .emb-conn { font-family: var(--mono); font-size: .85rem; color: var(--ash); user-select: all; }
 .emb:hover img { box-shadow: 0 0 0 2px var(--ember); }
 .srv-badge { display: inline-block; margin-left: .5rem; padding: .15rem .5rem; font-family: var(--mono); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; border: 1px solid var(--ember); color: var(--ember-hot); vertical-align: middle; }
