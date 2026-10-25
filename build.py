@@ -23,8 +23,8 @@ DISCORD = "https://discord.gg/tudayz"
 # The live server, as DZSA's public list shows it (2026-10-02). Game port is what
 # players connect to; the query port is what the status check and the join link use.
 SERVER_IP = "172.111.51.220"
-GAME_PORT = 2744
-QUERY_PORT = 2816
+GAME_PORT = 2992
+QUERY_PORT = 2993
 
 # Fill these in when Momento has the IDs. Empty = the tag is not emitted.
 GA_ID = "G-6Y451GF7E2"          # Google Analytics measurement ID, "G-XXXXXXXXXX"
