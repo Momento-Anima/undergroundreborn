@@ -30,22 +30,22 @@ QUERY_PORT = 2993
 # Taglines are player-facing words: None until Momento approves them (the page shows a visible placeholder).
 # Keep every address here: the home page and /servers/ read from this list.
 SERVERS = [
-    {"id": "deer-isle", "home_heading": "Deer Isle", "name": "The Underground: Reborn | Deer Isle", "short": "Deer Isle", "ip": "172.111.51.220", "game": 2992, "query": 2993, "status": "live", "tagline": "And so it begins...<br>Solve the mystery, save your soul."},
-    {"id": "hashima", "home_heading": "Haunted Hashima", "name": "The Underground: Hashima Holiday", "short": "Hashima", "ip": "172.111.51.220", "game": 2412, "query": 2413, "status": "beta", "tagline": "Ghosts in the cherry<br>bloom where the shadows gather<br>spring never ends here"},
-    {"id": "banov", "home_heading": "Banov Adventure", "name": "The Underground : Banov Adventure", "short": "Banov", "ip": "45.22.65.71", "game": 2102, "query": 2103, "status": "beta", "tagline": "An adventure under strange skies."},
-    {"id": "dust-devils", "home_heading": "Dust Devils", "name": "The Underground : Nasdara - DustDevils", "short": "Dust Devils", "ip": "45.22.65.71", "game": 2502, "query": 2503, "status": "beta", "tagline": "What doesn't kill you makes you stronger."},
+    {"id": "deer-isle", "beanz_id": 309203, "home_heading": "Deer Isle", "name": "The Underground: Reborn | Deer Isle", "short": "Deer Isle", "ip": "172.111.51.220", "game": 2992, "query": 2993, "status": "live", "tagline": "And so it begins...<br>Solve the mystery, save your soul."},
+    {"id": "hashima", "beanz_id": 309202, "home_heading": "Haunted Hashima", "name": "The Underground: Hashima Holiday", "short": "Hashima", "ip": "172.111.51.220", "game": 2412, "query": 2413, "status": "beta", "tagline": "Ghosts in the cherry<br>bloom where the shadows gather<br>spring never ends here"},
+    {"id": "banov", "beanz_id": 315612, "home_heading": "Banov Adventure", "name": "The Underground : Banov Adventure", "short": "Banov", "ip": "45.22.65.71", "game": 2102, "query": 2103, "status": "beta", "tagline": "An adventure under strange skies."},
+    {"id": "dust-devils", "beanz_id": 313834, "home_heading": "Dust Devils", "name": "The Underground : Nasdara - DustDevils", "short": "Dust Devils", "ip": "45.22.65.71", "game": 2502, "query": 2503, "status": "beta", "tagline": "What doesn't kill you makes you stronger."},
 ]
 
 
 def launch_row(sv):
-    """Three launcher links under each server: Steam, DZSA and Beanz. Steam and DZSA connect on the query port (as before)."""
+    """Three launcher links under each server: Steam, DZSA and Beanz. Steam and DZSA connect on the query port (as before); Beanz is a plain https link."""
     ip, q = sv["ip"], sv["query"]
     steam = (f'<a class="launch" href="steam://connect/{ip}:{q}" title="Connect through Steam">'
              '<img src="/assets/steam-logo.png" width="22" height="22" alt="" aria-hidden="true">Steam</a>')
     dzsa = (f'<a class="launch" href="dzsal://{ip}:{q}" title="Connect through the DZSA Launcher">'
             '<span class="launch-ph" aria-hidden="true">DZSA</span>DZSA</a>')
-    beanz = ('<span class="launch pending" title="Beanz link not supplied yet">'
-             '<span class="launch-ph" aria-hidden="true">BZ</span>Beanz (link pending)</span>')
+    beanz = (f'<a class="launch" href="https://dayzbeanslauncher.com/launch/server/{sv["beanz_id"]}" title="Connect through the Beanz Launcher">'
+             '<span class="launch-ph" aria-hidden="true">BZ</span>Beanz</a>')
     return '<div class="launch-row">' + steam + dzsa + beanz + '</div>'
 
 
