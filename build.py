@@ -26,6 +26,63 @@ SERVER_IP = "172.111.51.220"
 GAME_PORT = 2992
 QUERY_PORT = 2993
 
+# The four servers (Momento, 2026-10-25). Each emblem links to its section on /servers/. Beta servers are open but labelled.
+# Taglines are player-facing words: None until Momento approves them (the page shows a visible placeholder).
+# Keep every address here: the home page and /servers/ read from this list.
+SERVERS = [
+    {"id": "deer-isle", "beanz_id": 309203, "home_heading": "Deer Isle", "name": "The Underground: Reborn | Deer Isle", "short": "Deer Isle", "ip": "172.111.51.220", "game": 2992, "query": 2993, "status": "live", "tagline": "And so it begins...<br>Solve the mystery, save your soul."},
+    {"id": "hashima", "beanz_id": 309202, "home_heading": "Haunted Hashima", "name": "The Underground: Hashima Holiday", "short": "Hashima", "ip": "172.111.51.220", "game": 2412, "query": 2413, "status": "beta", "tagline": "Ghosts in the cherry<br>bloom where the shadows gather<br>spring never ends here"},
+    {"id": "banov", "beanz_id": 315612, "home_heading": "Banov Adventure", "name": "The Underground : Banov Adventure", "short": "Banov", "ip": "45.22.65.71", "game": 2102, "query": 2103, "status": "beta", "tagline": "An adventure under strange skies."},
+    {"id": "dust-devils", "beanz_id": 313834, "home_heading": "Dust Devils", "name": "The Underground : Nasdara - DustDevils", "short": "Dust Devils", "ip": "45.22.65.71", "game": 2502, "query": 2503, "status": "beta", "tagline": "What doesn't kill you...<br>...makes you stronger."},
+]
+
+
+def launch_row(sv):
+    """Three launcher buttons under each server: DayZ Vanilla (Steam connect), DZSA and Beanz. Steam and DZSA connect on the query port; Beanz is a plain https link."""
+    ip, q = sv["ip"], sv["query"]
+    vanilla = (f'<a class="launch" href="steam://connect/{ip}:{q}" title="Connect through the DayZ Vanilla Launcher (Steam)">'
+               '<img src="/assets/launchers/vanilla.webp" width="480" height="160" alt="DayZ Vanilla Launcher"></a>')
+    dzsa = (f'<a class="launch" href="dzsal://{ip}:{q}" title="Connect through the DZSA Launcher">'
+            '<img src="/assets/launchers/dzsa.webp" width="480" height="160" alt="DZSA Launcher"></a>')
+    beanz = (f'<a class="launch" href="https://dayzbeanslauncher.com/launch/server/{sv["beanz_id"]}" title="Connect through the Beanz Launcher">'
+             '<img src="/assets/launchers/beanz.webp" width="480" height="160" alt="Beanz Launcher"></a>')
+    return '<div class="launch-row">' + vanilla + dzsa + beanz + '</div>'
+
+
+def server_cards(kind):
+    """kind: 'hero' (Deer Isle, large), 'row' (the others, under the hero), or 'sections' (the /servers/ page)."""
+    out = []
+    for sv in SERVERS:
+        sid = sv["id"]
+        badge = '<span class="srv-badge">Live</span>' if sv["status"] == "live" else '<span class="srv-badge beta">Beta</span>'
+        tag = sv["tagline"] or '<em class="srv-pending">[tagline: pending Momento]</em>'
+        conn = f'{sv["ip"]}:{sv["game"]}'
+        if kind == "sections":
+            if sid == "deer-isle":
+                links = '<p><a class="more" href="/locations/">Locations</a> &middot; <a class="more" href="/quests/">Quest Log</a></p>'
+            else:
+                links = '<p class="srv-pending">Locations and quests: under construction.</p>'
+            out.append(
+                f'<section class="srv" id="{sid}">'
+                f'<img class="srv-emb" src="/assets/emblems/{sid}.webp" width="480" height="480" alt="{sv["short"]} server emblem">'
+                f'<div class="srv-body"><span class="label">{sv["short"]}</span><h2>{sv["name"]} {badge}</h2>'
+                f'<p class="srv-tag">{tag}</p>'
+                f'<div class="addr-box"><p><span class="addr-k">Server IP</span> <code>{sv["ip"]}</code></p>'
+                f'<p><span class="addr-k">Game port</span> <code>{sv["game"]}</code></p>'
+                f'<p><span class="addr-k">Direct connect</span> <code>{conn}</code></p></div>'
+                + launch_row(sv) + links + '</div></section>')
+        else:
+            cls = "emb-hero" if kind == "hero" else "emb-row"
+            out.append(
+                f'<div class="emb {cls}">'
+                f'<a class="emb-link" href="/servers/#{sid}">'
+                f'<span class="emb-head">{sv["home_heading"]}{badge}</span>'
+                f'<img src="/assets/emblems/{sid}.webp" width="480" height="480" alt="{sv["short"]} server emblem">'
+                f'<span class="emb-tag">{tag}</span></a>'
+                f'<span class="emb-conn">{conn}</span>' + launch_row(sv) + '</div>')
+    return out
+
+
 # Fill these in when Momento has the IDs. Empty = the tag is not emitted.
 GA_ID = "G-6Y451GF7E2"          # Google Analytics measurement ID, "G-XXXXXXXXXX"
 ADSENSE_ID = ""     # AdSense publisher ID, "ca-pub-XXXXXXXXXXXXXXXX"
@@ -194,6 +251,15 @@ def build_page(stem):
     title, desc, body = parse((ROOT / "src" / f"{stem}.html").read_text(encoding="utf-8"))
     if stem == "news":
         body = body + "\n" + render_news()
+    if stem == "index":
+        by_id = {sv["id"]: card for sv, card in zip(SERVERS, server_cards("row"))}
+        hero = server_cards("hero")[0]
+        body = body.replace("<!--DEER_ISLE_HERO-->", hero)
+        body = body.replace("<!--SERVER_ROW-->",
+                            '<div class="emb-diamond-pair">' + by_id["dust-devils"] + by_id["banov"] + '</div>'
+                            + '<div class="emb-diamond-low">' + by_id["hashima"] + '</div>')
+    if stem == "servers":
+        body = body.replace("<!--SERVER_SECTIONS-->", "".join(server_cards("sections")))
     page_url = SITE_URL + ("/" if stem == "index" else f"/{stem}/")
     config = (f'<script>window.TUR={{ip:"{SERVER_IP}",gamePort:{GAME_PORT},queryPort:{QUERY_PORT},'
               f'discord:"{DISCORD}"' + (f',api:"{API_BASE}"' if LOGIN_ENABLED else '') + '};</script>')
